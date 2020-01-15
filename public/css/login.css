@@ -1,0 +1,25 @@
+#background{
+
+background-image:url(../images/fondo_login_2.jpg); 
+filter: blur(6px);
+z-index: -1;
+position: fixed;
+background-size: cover;
+
+background-position: center center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+height: 100vh;
+width: 100%;
+
+}
+
+#nav{
+	color:black;
+}
+#login{
+	margin-top: 10%
+}
+.text-black{
+	color:black;
+}

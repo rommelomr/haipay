@@ -1,0 +1,7 @@
+Restablecer contraseña
+	Cuando el usuario solicita recuperar su contraseña se guardará en sus datos (campo token la bd) un codigo. Ese código se concatenará en el link de restablecimiento de contraseña: email/verify/token
+
+	cuando el usuario abre el link, el sistema ubicará al usuario por ese token. 
+		Si el usuario no es encontrado quiere decir que se está ingresando a la funcion sin un codigo válido.
+
+		Si el usuario es encontrado, apenas se encuentre, se reemplazará el token por otro en bd para que el enlace no pueda volver a ser utilizado. Si el usuario cierra el asistente de recuperación de contraseña, tendrá que solicitar de nuevo la recuperación de contraseña. El nuevo token se utilizará en el formulario con el que se buscará al usuario al que se le cambiará la clave

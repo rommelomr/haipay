@@ -1,0 +1,77 @@
+15 Personas -> Guardará los datos generales de una persona
+	nombre: Guardará el nombre completo del usuario
+	cedula: Guardará la cédula de identidad
+
+1 Usuarios-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
+	id_persona: (fk)
+	password: Guardará la contraseña del usuario
+	email: Guardará el correo electronico del usuario
+	estado: Guardará si el usuario está activo, inactivo, o no verificado
+	tipo: Guardará si el usuario es cliente, moderador o administrador del sistema
+	token: Guardará el token con el que se permitirá cambiar la contraseña
+	fecha_nacimiento: Guardará la fecha de nacimiento del usuario
+
+2 Clientes-> Tipo de usuario
+	id_usuario: (fk)
+
+3 Moderadores-> Tipo de usuario
+	id_usuario: (fk)
+
+4 Tipo_Transaccion-> Guardará el nombre de los tipo de transacción  
+	nombre: nombre de las transacciones (Compra de criptomoneda, Cambio de moneda, Envio de remesa, Retiro)
+
+5 Transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
+	id_metodo_pago: (fk)
+	id_tipo_transaccion: Número que indicará qué tipo de transacción es (fk)
+	id_cliente: id del cliente que hizo la transacción
+	id_moderador: id del moderador encargado de verificar la transacción
+	fecha_hora: guardará la fecha y hora en que se realizó la transacción
+
+6 Criptomonedas-> Guardará todas las criptomonedas que se trabajaran en el sistema
+	nombre: guardará el nombre de la criptomoneda
+
+12 Cartera-> (Relación Clientes_Criptomonedas) Guardará todas las criptomonedas asociadas a una persona y su cantidad
+
+	id_cliente: (fk)
+	id_criptomoneda: (fk)
+	cantidad: Guardará un numero decimal de hasta 8 digitos despues de la coma
+
+8 Acciones-> Guardará el nombre de cada acción que se pueda realizar en el sistema
+	nombre: nombre de la accion del sistema
+
+7 Auditorias-> Guardará el id del usuario y la acción que realice cada usuario
+	id_usuario: (fk)
+	id_accion: (fk)
+	hora_fecha: Guardará la hora y la fecha en que la acción se realizó
+
+9 Imagenes_Verificacion -> Guardará las imagenes con las que se verificarán los usuarios al registrarse
+	id_cliente: (fk)
+	nombre: guardará nombre de la imagen
+
+10 Referidos -> Guardará los referidos del sistema
+	id_cliente: guardará el id del cliente que trajo al segundo cliente al sistema
+	id_referido: guardará el id del cliente que ha sido referido por el primer cliente
+	fecha_hora: guardará la fecha y hora en la que el cliente se registó al sistema
+
+11 Imagenes_Transacciones -> Guardará las imagenes con las que un usuario comprobará las las compras y remesas
+	id_transacción: guardará el id de la transacción a la que pertenece
+	nombre: guardará el nombre de la imagen
+
+13 Metodos_Pago-> Guardará los metodos de pago disponibles en el sistema
+	nombre: Nombre del metodo de pago
+	estado: indicará si el metodo esta disponible, desactivado o eliminado
+
+14 Receptor_Remesa-> Guardará las personas a las que un usuario quiere enviar una remesa pero que no estan registradas en el sistema
+	id_persona: (fk)
+	id_cliente: (fk) Para identificar a qué cliente pertenece este receptor
+
+16 Videos-> Guardará los videos que el administrador principal subirá a modo de publicidad
+	nombre: Guardará el nombre y extension del video
+
+17 Clientes_Videos-> Guardará el registro de los videos vistos por los clientes para que no les esté disponible mas de una vez
+	id_video: (fk)
+	id_cliente: (fk)
+	
+18 cliente_receptor-> tabla pivote entre clientes y receptores_remesa.
+	id_cliente: (fk)
+	id_receptor: (fk)

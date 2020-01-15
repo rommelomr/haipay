@@ -1,0 +1,104 @@
+// Paginas que tienen que ver con los clientes
+
+1 Crear cuenta: View (C) Listo
+
+//Si el usuario no ha verificado su cuenta
+2 Verifica tu cuenta: View con un mensaje (C) Listo
+
+//Esta creo que no va
+3 Espera a que la cuenta sea activada: View con un mensaje (C)
+
+4 Recuperar datos: View (C) Listo
+
+5 Iniciar sesion: View (C) LISTO
+
+9 Panel principal: View donde se realizaran las transacciones
+
+LISTO
+	-Comprar Criptomoneda: Sección donde se verá el precio de las criptomonedas (en la parte superior o lateral se verá cuantas criptomonedas se tienen de cada una)
+		°Adquirir: Boton que activará un modal donde se especificará la cantidad de criṕtomonedas que se comprarán y se calculará automaticamente:
+
+			.-cuando dinero (en $) debe transferirse para ello
+			.-cuanto equivale esa criptomoneda en las otras que el usuario ya tenga con saldo
+
+			al lado de cada cálculo se mostrará un boton "adquirir" 
+
+LISTO
+	-Comprobar pagos: Sección que mostrará todas las compras de criptomonedas y que están pendientes por que el usuario compruebe
+		Si el recibo no ha sido enviado
+			°Enviar recibo: Opción que mostrará un modal que solicitará la imagen del recibo
+		de lo contrario
+			mensaje: "Transacción pendiente por verificar por los administradores"
+			°Reenviar recibo: Opción con la que el usuario podrá cambiar las imagenes que ha subido para comprobar los pagos
+
+LISTO
+	-Enviar Remesa: Sección en la que el usuario transferirá dinero a otro usuario. Se visualizará un formulario en el que el usuario indicará el id del usuario al que se le desea transferir, la cantidad (en criptomonedas) que desea enviar y cuanto dinero ha de pagar por ello.
+
+LISTO
+	-Mis envios: Sección en la que se mostrarán todas las remesas que el usuario ha enviado. Se ordenarán por "pendientes" y "completados", de mas reciente a mas viejo.
+
+		°cancelar envio: Opción que cambiará el estado de la remesa a "cancelado"
+
+		°Modificar remesa: Opción que modificará los datos de la remesa (esto sucederá solo si esta no ha sido verificada por un moderador)
+LISTO
+	-Retirar dinero: Sección donde el usuario verá la cantidad de criptomonedas que posee y junto a ellas el valor en Dólares que corresponde para retirar.
+
+
+// Paginas que tienen que ver con los moderadores
+
+Listo
+6 Gestionar Usuarios: View
+
+	-Registrar usuario: Seccion (A)
+
+	-Consultar Usuarios: Seccion en la que se buscará a un usuario por su numero de cedula. Al encontrarlo se autorellenará el formulacio con el que se modificaran sus datos(A)
+
+		°Eliminar Usuario: Opción que desplegará un modal para confirmar
+		°Ver transacciones: Opción que redirigirá a la view 7
+Listo
+12 Consultar Usuarios Deshabilitados: View donde se mostrarán los usuarios eliminados y en lista negra
+		°Eliminar definitivamente: opcion
+		°Restaurar: opción
+
+Listo
+7 Transacciones de usuario especifico: View donde se veran las transacciones de un usuario en concreto
+
+	°Ver Transaccion: opción que redirigirpa al usuario a la view 8
+
+Listo
+8 Transaccion (m): View que mostrará los detalles de una transaccion. Estos datos aparecerán en un formulario disponibles para que sean modificados
+
+	° Ver imagen: Opción que mostrará la imagen de la transacción que el usuario ha enviado. Esta opción aparecerá si la transacción es de tipo "pago" o "remesa"
+
+	° Verificar Transacción: opción que cambiará el estado de la transacción a "Verificado"
+
+	° Cancelar Transacción: Opción que cambiará el estado de la transacción a "Cancelada"
+
+__________________________________________________________________________________
+
+Listo
+Gestionar Clientes
+
+	Consultar Clientes
+		Modificar Cliente
+		Eliminar Cliente
+		ver transacciones
+
+	Consultar Clientes Eliminados (A)
+		Eliminar definitivamente
+
+//Paginas que tienen que ver con las transacciones por parte de los moderadores
+
+Listo
+10 Consultar transacciones: View donde se veran todas las transacciones en orden de mas reciente a mas antiguo
+	
+	//Problema: Dos moderadores podrian verificar la misma transaccion. Para eso, cuando un moderador selecciones una transaccion, esta pasará a "pertenecer" a dicho moderador, de esta manera, cuando otro moderador entre a esta view, no podrá verificar esa transaccion. Y en caso de que se despliegue la transaccion a dos moderadores a la vez (en el caso de que esta aun no pertenezca a nadie), apenas uno de ellos la seleccione, en la base de datos se consultará si esta transacción no pertenece a nadie apenas se le de clic.
+
+	- Transacciones Nuevas: Seccion en donde se veran todas las transacciones que hayan generado los clientes.
+		°Verificar: Opción que realizará N acciones: 1) Hacer que la transaccion pertenezca al moderador 2) redirigir al moderador a la view 8.
+
+
+	- Mis Transacciones: Seccion en donde se veran las transacciones que pertenecen al moderador.
+		°Verificar: Opción que redirigirá al moderador a la view 8
+
+11 Consultar transacciones eliminadas: View que mostrará todas las transacciones canceladas por los usuarios

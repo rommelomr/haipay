@@ -1,0 +1,68 @@
+php artisan make:controller ClientesController
+php artisan make:model Cliente
+php artisan make:migration create_table_clientes --create=clientes
+
+php artisan make:controller ModeradoresController
+php artisan make:model Moderador
+php artisan make:migration create_table_moderadores --create=moderadores
+
+php artisan make:controller TiposTransaccionController
+php artisan make:model TipoTransaccion
+php artisan make:migration create_table_tipo_transaccion --create=tipo_transaccion
+
+php artisan make:controller TransaccionesController
+php artisan make:model Transaccion
+php artisan make:migration create_table_transacciones --create=transacciones
+
+php artisan make:controller CriptomonedasController
+php artisan make:model Criptomoneda
+php artisan make:migration create_table_criptomonedas --create=criptomonedas
+
+php artisan make:controller CarterasController
+php artisan make:model Cartera
+php artisan make:migration create_table_carteras --create=carteras
+
+php artisan make:controller AccionesController
+php artisan make:model Accion
+php artisan make:migration create_table_acciones --create=acciones
+
+php artisan make:controller AuditoriasController
+php artisan make:model Auditoria
+php artisan make:migration create_table_auditorias --create=auditorias
+
+php artisan make:controller ImagenesVerificacionController
+php artisan make:model ImagenVerificacion
+php artisan make:migration create_table_imagen_verificacion --create=imagen_verificacion
+
+php artisan make:controller ReferidosController
+php artisan make:model Referido
+php artisan make:migration create_table_referidos --create=referidos
+
+php artisan make:controller ImagenesTransaccionController
+php artisan make:model ImagenTransaccion
+php artisan make:migration create_table_imagen_transaccion --create=imagen_transaccion
+
+php artisan make:controller PersonasController
+php artisan make:model Persona
+php artisan make:migration create_table_personas --create=personas
+
+php artisan make:controller VideosController
+php artisan make:model Video
+php artisan make:migration create_table_videos --create=videos
+
+php artisan make:controller ClienteVideosController
+php artisan make:model ClienteVideo
+php artisan make:migration create_table_cliente_video --create=cliente_video
+
+php artisan make:controller MetodosPagoController
+php artisan make:model MetodoPago
+php artisan make:migration create_table_metodos_pago --create=metodos_pago
+
+php artisan make:controller ReceptoresController
+php artisan make:model Receptor
+php artisan make:migration create_table_receptores --create=receptores
+
+php artisan make:controller ClientesReceptoresController
+php artisan make:model ClienteReceptor
+php artisan make:migration create_table_clientes_receptores --create=cliente_receptor
+

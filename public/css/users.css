@@ -1,0 +1,14 @@
+body{
+	background: #eeeeee
+}
+.content{
+	padding:5%;
+	padding-top:0%;
+	padding-bottom:0%;
+}
+.icon-button{
+	cursor:pointer;
+}
+.icon-button:hover{
+	color:teal;
+}

@@ -1,0 +1,85 @@
+15 personas -> Guardará los datos generales de una persona
+	nombre: varchar(255)
+	cedula: varchar(20)
+
+19 deleted_users-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
+	id_persona:(fk)
+	email: varchar(255)
+	password: varchar(255)
+	tipo: tinyint //1: cliente 2: moderador 3: administrador
+	fecha_nacimiento: date
+	token: varchar(255)
+
+1 users-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
+	id_persona:(fk)
+	email: varchar(255)
+	password: varchar(255)
+	tipo: tinyint //1: cliente 2: moderador 3: administrador
+	fecha_nacimiento: date
+	token: varchar(255)
+	estado: tinyint // 0:eliminado 1: activo 2: Lista negra 3: Borrado definitivamente
+
+2 clientes-> Tipo de usuario
+	id_usuario: (fk)
+
+3 moderadores-> Tipo de usuario
+	id_usuario: (fk)
+
+4 tipo_transaccion-> Guardará el nombre de los tipo de transacción  
+	nombre: varchar(50)
+
+5 transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
+	id_metodo_pago: (fk)
+	id_tipo_transaccion: (fk)
+	id_cliente: (fk)
+	id_moderador: (fk)
+	fecha_hora: se usará el timestamp por defecto de laravel
+
+6 criptomonedas-> Guardará todas las criptomonedas que se trabajaran en el sistema
+	nombre: varchar(30)
+
+12 cartera-> (Relación Clientes_Criptomonedas) Guardará todas las criptomonedas asociadas a una persona y su cantidad
+
+	id_cliente: (fk)
+	id_criptomoneda: (fk)
+	cantidad: decimal (13,9)
+
+8 acciones-> Guardará el nombre de cada acción que se pueda realizar en el sistema
+	nombre: varchar(30)
+
+7 auditorias-> Guardará el id del usuario y la acción que realice cada usuario
+	id_usuario: (fk)
+	id_accion: (fk)
+	hora_fecha: se usara el timestamp por defecto de laravel
+
+9 imagen_verificacion -> Guardará las imagenes con las que se verificarán los usuarios al registrarse
+	id_cliente:  (fk)
+	nombre: varchar(255)
+
+10 referidos -> Guardará los referidos del sistema
+	id_cliente:  (fk) //es el id del cliente padre
+	id_referido: (fk) //es el id del cliente hijo
+	fecha_hora: se usara el timestamp por defecto de laravel
+
+11 imagen_transaccion -> Guardará las imagenes con las que un usuario comprobará las las compras y remesas
+	id_transacción:  (fk)
+	nombre: varchar(255)
+
+13 metodos_pago-> Guardará los metodos de pago disponibles en el sistema
+	nombre: varchar(30)
+	estado: tinyint
+
+14 receptores_remesa-> Guardará las personas a las que un usuario quiere enviar una remesa pero que no estan registradas en el sistema
+	id_persona: (fk)
+	id_cliente: (fk) // Id del cliente que le envia remesas... NO es un cliente
+
+16 videos-> Guardará los videos que el administrador principal subirá a modo de publicidad
+	nombre: Varchar(30)
+
+17 cliente_video-> Guardará el registro de los videos vistos por los clientes para que no les esté disponible mas de una vez
+	id_video: (fk)
+	id_cliente: (fk)
+
+18 cliente_receptor-> tabla pivote entre clientes y receptores_remesa.
+	id_cliente: (fk)
+	id_receptor: (fk)
