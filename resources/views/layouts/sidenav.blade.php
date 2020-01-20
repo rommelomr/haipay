@@ -10,39 +10,24 @@
     <li><a class="waves-effect" href="{{route('edit_profile')}}">My profile</a></li>
     <li><a class="waves-effect" href="{{route('users')}}">Users</a></li>
     <li><a class="waves-effect" href="{{route('clients')}}">Clients</a></li>
-    <li><a class="waves-effect" href="{{route('dashboard_clients')}}">Dashboard</a></li>
     <li><a class="waves-effect" href="{{route('watch_video')}}">Watch Video</a></li>
     <li><a class="waves-effect" href="{{route('transactions')}}">Transactions</a></li>
-    <!--li>
+    <li>
       <ul class="collapsible collapsible-accordion">
           <li>
             <a class="collapsible-header">Dashboard<i class="material-icons">arrow_drop_down</i></a>
             <div class="collapsible-body">
               <ul>
-                <li><a href="#!">Buy cripto</a></li>
-                <li><a href="#!">Verify payments</a></li>
-                <li><a href="#!">Send remittance</a></li>
-                <li><a href="#!">My sends</a></li>
-                <li><a href="#!">Retire money</a></li>
+                <li><a href="dashboard_clients?tab=1">Buy cripto</a></li>
+                <li><a href="dashboard_clients?tab=2">Verify payments</a></li>
+                <li><a href="dashboard_clients?tab=3">Send remittance</a></li>
+                <li><a href="dashboard_clients?tab=4">My sends</a></li>
+                <li><a href="dashboard_clients?tab=5">Retire money</a></li>
               </ul>
             </div>
           </li>
-          <li>
-            <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
-            <div class="collapsible-body">
-              <ul>
-                <li><a href="#!" style=""><i class="material-icons">arrow_drop_down</i>First</a></li>
-                <li><a href="#!"></a></li>
-                <li><a href="#!"></a></li>
-                <li><a href="#!"></a></li>
-                <li><a href="#!"></a></li>
-                <li><a href="#!"></a></li>
-              </ul>
-            </div>
-          </li>
-          
         </ul>
-    </li-->
+    </li>
   </ul>
 
   <div class="fixed-action-btn sidenav-trigger" data-target="slide-out">

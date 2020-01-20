@@ -3,7 +3,6 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/dash_clients.css')}}">
 @endsection
-
 @section('main')
     <div class="container-fluid">
         <div class="row">
@@ -14,19 +13,39 @@
 				    	<ul class="tabs tabs-fixed-width">
 
 				        	<li class="tab">
-				        		<a href="#comprar-criptomoneda"><span class="color-indigo hide-on-small-only">Buy Cripto</span> <i class="color-indigo material-icons">shopping_cart</i></a>
+				        		@if(isset($_GET['tab']) && $_GET['tab']==1)
+				        			<a class="active" href="#comprar-criptomoneda"><span class="color-indigo hide-on-small-only">Buy Cripto</span> <i class="color-indigo material-icons">shopping_cart</i></a>
+				        		@else
+				        			<a href="#comprar-criptomoneda"><span class="color-indigo hide-on-small-only">Buy Cripto</span> <i class="color-indigo material-icons">shopping_cart</i></a>
+				        		@endif
+				        	</li>
+				        	<li class="tab ">
+				        		@if(isset($_GET['tab']) && $_GET['tab']==2)
+				        			<a class="active" href="#comprobar-pagos"><span class="color-indigo hide-on-small-only">Verify Payments</span> <i class="color-indigo material-icons">image</i></a>
+				        		@else
+				        			<a href="#comprobar-pagos"><span class="color-indigo hide-on-small-only">Verify Payments</span> <i class="color-indigo material-icons">image</i></a>
+				        		@endif
 				        	</li>
 				        	<li class="tab">
-				        		<a href="#comprobar-pagos"><span class="color-indigo hide-on-small-only">Verify Payments</span> <i class="color-indigo material-icons">image</i></a>
+				        		@if(isset($_GET['tab']) && $_GET['tab']==3)
+				        			<a class="active" href="#enviar-remesa"><span class="color-indigo hide-on-small-only">Send Remittance</span> <i class="color-indigo material-icons">people</i></a>
+				        		@else
+				        			<a href="#enviar-remesa"><span class="color-indigo hide-on-small-only">Send Remittance</span> <i class="color-indigo material-icons">people</i></a>
+				        		@endif
 				        	</li>
 				        	<li class="tab">
-				        		<a href="#enviar-remesa"><span class="color-indigo hide-on-small-only">Send Remittance</span> <i class="color-indigo material-icons">people</i></a>
+				        		@if(isset($_GET['tab']) && $_GET['tab']==4)
+				        			<a class="active" href="#mis-envios"><span class="color-indigo hide-on-small-only">My Sends</span><i class="color-indigo material-icons">person</i></a>
+				        		@else
+				        			<a href="#mis-envios"><span class="color-indigo hide-on-small-only">My Sends</span><i class="color-indigo material-icons">person</i></a>
+				        		@endif
 				        	</li>
 				        	<li class="tab">
-				        		<a href="#mis-envios"><span class="color-indigo hide-on-small-only">My Sends</span><i class="color-indigo material-icons">person</i></a>
-				        	</li>
-				        	<li class="tab">
-				        		<a class="active" href="#rerirar-dinero"><span class="color-indigo hide-on-small-only">Retire Money</span><i class="color-indigo material-icons">system_update_alt</i></a>
+				        		@if(isset($_GET['tab']) && $_GET['tab']==5)
+				        			<a class="active" href="#rerirar-dinero"><span class="color-indigo hide-on-small-only">Retire Money</span><i class="color-indigo material-icons">system_update_alt</i></a>
+				        		@else
+				        			<a href="#rerirar-dinero"><span class="color-indigo hide-on-small-only">Retire Money</span><i class="color-indigo material-icons">system_update_alt</i></a>
+				        		@endif
 				        	</li>
 				        	
 				      	</ul>
@@ -731,7 +750,7 @@
     			'Persona 3':null,
     		}
     	});
-	var prueba = document.getElementById('nombre-receiver');
+	var prueba = document.$_getElementById('nombre-receiver');
 	
 	prueba.onchange = function(){
 		alert();
