@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@extends('layouts.sidenav')
 @section('head')
     <link rel="stylesheet" href="{{asset('css/users.css')}}">
 @endsection

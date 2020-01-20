@@ -33,12 +33,13 @@ Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVer
 
 
 //Dashboard
-Route::get('dashboard_clients', 'ClientesController@showDashboard');//Listo
+Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
 
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
-	Route::get('users', 'UsersController@showViewUsers');//Listo
+	Route::get('users', 'UsersController@showViewUsers')->name('users');//Listo
 });
+
 Route::post('create_user','UsersController@create_user');
 Route::get('search_user','UsersController@search_user');
 Route::get('search_user/{cedula}','UsersController@search_user');
@@ -49,12 +50,12 @@ Route::get('search_client/{cedula}','ClientesController@search_client');
 Route::post('modify_client','ClientesController@modify_client');
 
 Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
-Route::get('clients', 'ClientesController@showViewClients');//Listo
-Route::get('edit_profile', 'PersonasController@showViewEditProfile');//Listo
-Route::get('watch_video', 'VideosController@showViewWatchVideo');//Listo
+Route::get('clients', 'ClientesController@showViewClients')->name('clients');;//Listo
+Route::get('edit_profile', 'PersonasController@showViewEditProfile')->name('edit_profile');//Listo
+Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');//Listo
 
 //Transactions
-Route::get('transactions', 'TransaccionesController@showViewTransactions');//Listo
+Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');//Listo
 Route::get('transactions/{id_user}', 'TransaccionesController@showViewTransactions');//Listo
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');

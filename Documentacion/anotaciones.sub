@@ -6,6 +6,11 @@ hay que cambiarle el fondo de pantalla a
 Hay que agregar una manera de ver TODOS los pagos verificados (por los administradores) que ha hecho una persona
 
 Hay que agregar la seccion en la que los usuarios ven el mensaje que el administrador les devuelve si la verificacion no fue exitosa
+
+Hay que agregar una interfaz mas en la que un moderador pueda ver un listado de todas las remesas que se han hecho y poder filtrarlas por varios criterios
+
+	- Si va dirigida a un cliente o a alguien externo
+
 _____________________________________________________________________
 Orden de desarrollo
 

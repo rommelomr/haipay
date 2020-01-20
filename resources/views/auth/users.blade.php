@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@extends('layouts.sidenav')
 @section('head')
     <link rel="stylesheet" href="{{asset('css/users.css')}}">
 @endsection
@@ -110,94 +111,94 @@
 						<div class=" row">
 								<div class="col s12">
 									@if(session('data'))
-									<?php 
-										$persona = session('data');
-										//dd($persona->fecha_nacimiento);
-									?>
+										<?php 
+											$persona = session('data');
+											//dd($persona->fecha_nacimiento);
+										?>
 
-									<form method="post" action="modifyUser">
-										@csrf
-										<input hidden value="{{$persona->id}}" name="id">
-										<div class="content row">
+										<form method="post" action="modifyUser">
+											@csrf
+											<input hidden value="{{$persona->id}}" name="id">
+											<div class="content row">
+													
+												<div class="input-field col s5">
+													<i class="material-icons prefix">person</i>
+													<label for="nombre">Name</label>
+													<input class="input-editable" readonly id="nombre" type="text" name="nombre" value="{{$persona->nombre}}">
+													<i data-brother="nombre" class="icon-button edit material-icons prefix">edit</i>
+												</div>
+												<div class="input-field col offset-s1 s5">
+													<i class="material-icons prefix">email</i>
+													<label for="email">Email</label>
+													<input class="input-editable " readonly id="email" type="email" name="email" value="{{$persona->usuario->email}}">
+													<i data-brother="email" class="icon-button edit material-icons prefix">edit</i>
+												</div>
+												<div class="input-field col s5">
+													<i class="material-icons prefix">credit_card</i>
+													<label for="cedula">ID</label>
+													<input class="input-editable " readonly id="cedula" type="text" name="cedula" value="{{$persona->cedula}}">
+													<i data-brother="cedula" class="icon-button edit material-icons prefix">edit</i>
+												</div>
+
+												<div class="input-field col s5 offset-s1">
+													<i class="material-icons prefix">locked</i>
+													<label for="pass">Password</label>
+													<input class="input-editable " readonly id="pass" type="text" name="password">
+													<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
+												</div>
+												<div class="input-field col s5 offset-s1">
+													<i class="material-icons prefix">locked</i>
+													<input class="input-editable " readonly id="pass" type="date" name="fecha_nacimiento" value="{{$persona->usuario->fecha_nacimiento}}">
+													<label for="pass">birthday</label>
+													<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
+												</div>
 												
-											<div class="input-field col s5">
-												<i class="material-icons prefix">person</i>
-												<label for="nombre">Name</label>
-												<input class="input-editable" readonly id="nombre" type="text" name="nombre" value="{{$persona->nombre}}">
-												<i data-brother="nombre" class="icon-button edit material-icons prefix">edit</i>
+											    <p>
+											      <label class="col offset-s1 s5">
+													<input class="check-editable with-gap" type="radio" name="id_rol" value="2" @if($persona->usuario->tipo == 2) checked @endif
+													>
+											        <span>Moderator</span>
+											      </label>
+											      <label class="col offset-s1 s5">
+													<input class="check-editable with-gap" type="radio" name="id_rol" value="3" @if($persona->usuario->tipo == 3) checked @endif
+													>
+											        <span>Admin</span>
+											      </label>
+											    </p>	
 											</div>
-											<div class="input-field col offset-s1 s5">
-												<i class="material-icons prefix">email</i>
-												<label for="email">Email</label>
-												<input class="input-editable " readonly id="email" type="email" name="email" value="{{$persona->usuario->email}}">
-												<i data-brother="email" class="icon-button edit material-icons prefix">edit</i>
-											</div>
-											<div class="input-field col s5">
-												<i class="material-icons prefix">credit_card</i>
-												<label for="cedula">ID</label>
-												<input class="input-editable " readonly id="cedula" type="text" name="cedula" value="{{$persona->cedula}}">
-												<i data-brother="cedula" class="icon-button edit material-icons prefix">edit</i>
-											</div>
+										      <div class="col s12">
+										      	<center>
+										      		<button id="button-submit" class="btn green ligthen-3">Save</button>
+										      		@if($persona->usuario->estado === 0)
+										      			<label class="btn green ligthen-3 changeState" data-state="1">Activate</label>
+										      		@elseif($persona->usuario->estado === 1)
+										      			<label class="btn red	ligthen-3 changeState" data-state="0">Desactivate</label>
+										      		@elseif($persona->usuario->estado === 2)
+										      			<label class="btn black">User in black list</label>
 
-											<div class="input-field col s5 offset-s1">
-												<i class="material-icons prefix">locked</i>
-												<label for="pass">Password</label>
-												<input class="input-editable " readonly id="pass" type="text" name="password">
-												<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
-											</div>
-											<div class="input-field col s5 offset-s1">
-												<i class="material-icons prefix">locked</i>
-												<input class="input-editable " readonly id="pass" type="date" name="fecha_nacimiento" value="{{$persona->usuario->fecha_nacimiento}}">
-												<label for="pass">birthday</label>
-												<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
-											</div>
-											
-										    <p>
-										      <label class="col offset-s1 s5">
-												<input class="check-editable with-gap" type="radio" name="id_rol" value="2" @if($persona->usuario->tipo == 2) checked @endif
-												>
-										        <span>Moderator</span>
-										      </label>
-										      <label class="col offset-s1 s5">
-												<input class="check-editable with-gap" type="radio" name="id_rol" value="3" @if($persona->usuario->tipo == 3) checked @endif
-												>
-										        <span>Admin</span>
-										      </label>
-										    </p>	
-										</div>
-									      <div class="col s12">
-									      	<center>
-									      		<button id="button-submit" class="btn green ligthen-3">Save</button>
-									      		@if($persona->usuario->estado === 0)
-									      			<label class="btn green ligthen-3 changeState" data-state="1">Activate</label>
-									      		@elseif($persona->usuario->estado === 1)
-									      			<label class="btn red	ligthen-3 changeState" data-state="0">Desactivate</label>
-									      		@elseif($persona->usuario->estado === 2)
-									      			<label class="btn black">User in black list</label>
+										      		@endif
+													  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
+													  <ul id='dropdown1' class='dropdown-content'>
+													    <li><a href="#!">See transactions</a></li>
 
-									      		@endif
-												  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
-												  <ul id='dropdown1' class='dropdown-content'>
-												    <li><a href="#!">See transactions</a></li>
+										      			@if($persona->usuario->estado === 1)
+													    	<li><a href="#!" class="changeState" data-state="2">Send to black list</a></li>
 
-									      			@if($persona->usuario->estado === 1)
-												    	<li><a href="#!" class="changeState" data-state="2">Send to black list</a></li>
-
-									      			@elseif($persona->usuario->estado === 2)
-												    	<li><a href="#!" class="changeState" data-state="1">Remove from black list</a></li>
-									      			@elseif($persona->usuario->estado === 0)
-												    	<li><a href="#!" class="changeState" data-state="3">Delete definitely</li>
-									      			@endif
-												  </ul>
-									      	</center>
-									      </div>
-									</form>
-									<form id="change-state-form" action="changeState" method="post" hidden>
-										@csrf
-										<input name="user_to_change_state" value="{{$persona->id}}">
-										<input id="state" name="state">
-										<input id="changeState" type="submit">
-									</form>
+										      			@elseif($persona->usuario->estado === 2)
+													    	<li><a href="#!" class="changeState" data-state="1">Remove from black list</a></li>
+										      			@elseif($persona->usuario->estado === 0)
+													    	<li><a href="#!" class="changeState" data-state="3">Delete definitely</li>
+										      			@endif
+													  </ul>
+										      	</center>
+										      </div>
+										</form>
+										<form id="change-state-form" action="changeState" method="post" hidden>
+											@csrf
+											<input name="user_to_change_state" value="{{$persona->id}}">
+											<input id="state" name="state">
+											<input id="changeState" type="submit">
+										</form>
 									@endif
 								</div>
 							<div class="col s8 offset-s2">
