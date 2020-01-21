@@ -67,7 +67,7 @@ class UsersController extends Controller
     	}
     		if(1){
 		    	$persona = Persona::where('cedula',$ced)->with('usuario')->first();
-		    	if($persona->usuario != null && $persona->usuario->tipo !== 1){
+		    	if($persona != null && $persona->usuario->tipo !== 1){
 
 		    		return redirect()->back()->with('data',$persona);
 		    	}else{

@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="input-field">
                                     <label for="pass">Password</label>
-                                    <input id="pass" type="<password></password>" name="password">
+                                    <input id="pass" type="password" name="password">
                                 </div>
                                 <input id="submit" type="submit" hidden>
                             </form>

@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{asset('css/users.css')}}">
 @endsection
 @section('main')
+
 	<div class="row">
 		<div class="col s12 l6">
 			<div class="card">
@@ -18,21 +19,6 @@
 							</div>
 						</nav>
 						<div class="content">
-							@if(session('messages'))
-								@foreach(session('messages') as $messages)
-									{{$messages}}
-								@endforeach
-
-							@endif
-							@if ($errors->any())
-							    <div class="alert alert-danger">
-							        <ul>
-							            @foreach ($errors->all() as $error)
-							                <li>{{ $error }}</li>
-							            @endforeach
-							        </ul>
-							    </div>
-							@endif
 							<form method="post" action="create_user">
 								<input name="tipo" value="1" hidden>
 								@csrf
@@ -146,11 +132,11 @@
 													<input class="input-editable " readonly id="pass" type="text" name="password">
 													<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
 												</div>
-												<div class="input-field col s5 offset-s1">
+												<div class="input-field col s5">
 													<i class="material-icons prefix">locked</i>
-													<input class="input-editable " readonly id="pass" type="date" name="fecha_nacimiento" value="{{$persona->usuario->fecha_nacimiento}}">
-													<label for="pass">birthday</label>
-													<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
+													<input class="input-editable " readonly id="date" type="date" name="fecha_nacimiento" value="{{$persona->usuario->fecha_nacimiento}}">
+													<label for="date">birthday</label>
+													<i data-brother="date" class="icon-button edit material-icons prefix">edit</i>
 												</div>
 												
 											    <p>
@@ -290,5 +276,19 @@
     	var instances_dropdowns = M.Dropdown.init(elems_dropdowns,{
     		constrainWidth: false
     	});
+
+
+		@if(session('messages'))
+			@foreach(session('messages') as $messages)
+			  M.toast({html: '{{$messages}}'})
+			@endforeach
+
+		@endif
+		@if ($errors->any())
+		            @foreach ($errors->all() as $error)
+			  			M.toast({html: '{{ $error }}'})
+		            @endforeach
+		@endif
+
 	}
 </script>
