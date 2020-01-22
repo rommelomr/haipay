@@ -28,6 +28,7 @@
           </li>
         </ul>
     </li>
+    <li><a class="waves-effect" href="{{route('logout')}}">Log out</a></li>
   </ul>
 
   <div class="fixed-action-btn sidenav-trigger" data-target="slide-out">
