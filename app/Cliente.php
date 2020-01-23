@@ -20,7 +20,7 @@ class Cliente extends Model
     	return $this->hasMany('App\Cartera','id_cliente');
     }
     public function monedas(){
-    	return $this->belongsToMany('App\Criptomoneda','carteras','id_cliente','id_criptomoneda',);
+    	return $this->belongsToMany('App\Criptomoneda','carteras','id_cliente','id_criptomoneda');
     }
     public function transacciones(){
     	return $this->hasMany('App\Transaccion','id_cliente');

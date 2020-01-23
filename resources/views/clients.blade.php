@@ -67,26 +67,39 @@
 												<i data-brother="pass" class="icon-button edit material-icons prefix">edit</i>
 											</div>
 										</div>
-									      <div class="col s12">
-									      	<center>
-									      		<button id="button-submit" class="btn green ligthen-3">Save</button>
-									      		<label for="changeState" class="btn green ligthen-3">Activate</label>
-												  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
-												  <ul id='dropdown1' class='dropdown-content'>
-												    <li><a href="#!">See transactions</a></li>
-												    <li><a href="#!">Delete user</a></li>
-												    <li><a href="#!">Black List</a></li>
-												    <li><a href="#!">Delete Definitely</li>
-												  </ul>
-									      	</center>
-									      </div>
-									</form>
+										<div class="col s12">
+										      	<center>
+										      		<button id="button-submit" class="btn green ligthen-3">Save</button>
+										      		@if($persona->usuario->estado === 0)
+										      			<label class="btn green ligthen-3 changeState" data-state="1">Activate</label>
+										      		@elseif($persona->usuario->estado === 1)
+										      			<label class="btn red	ligthen-3 changeState" data-state="0">Desactivate</label>
+										      		@elseif($persona->usuario->estado === 2)
+										      			<label class="btn black">User in black list</label>
+
+										      		@endif
+													  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
+													  <ul id='dropdown1' class='dropdown-content'>
+													  	<li><a href="#!">See transactions</a></li>
+														<li><a href="#!">Delete user</a></li>
+														@if($persona->usuario->estado === 1)
+													    	<li><a href="#!" class="changeState" data-state="2">Send to black list</a></li>
+
+										      			@elseif($persona->usuario->estado === 2)
+													    	<li><a href="#!" class="changeState" data-state="1">Remove from black list</a></li>
+										      			@endif
+										      		
+													    	<li><a href="#!" class="changeState" data-state="3">Delete definitely</li>
+													  </ul>
+										      	</center>
+										      </div>
+										</form>
 										<form id="change-state-form" action="changeState" method="post" hidden>
-										@csrf
-										<input name="user_to_change_state" value="{{$persona->id}}">
-										<input id="state" name="state">
-										<input id="changeState" type="submit">
-									</form>
+											@csrf
+											<input name="user_to_change_state" value="{{$persona->id}}">
+											<input id="state" name="state">
+											<input id="changeState" type="submit">
+										</form>
 									@endif
 								</div>
 							<div class="col s8 offset-s2">
@@ -128,8 +141,9 @@
 							<div class="row">
 								<div class="col s10 offset-s1">
 							  <ul class="collapsible">
+								@foreach($clientes as $cliente)
 							    <li>
-							      <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#123 Nombre Apellido</div>
+							      <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}</div>
 							      <div class="collapsible-body">
 							      	<table>
 							      		<thead>
@@ -155,13 +169,13 @@
 							      				
 										      	<td>
 										      		<center>
-										      			Nombre completo
+													  {{$cliente->usuario->persona->nombre}}
 										      		</center>
 										      	</td>
 										      	<td>
 										      		<center>
 										      			
-										      			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit aperiam asperiores, labore a, beatae rem hic cumque, repellat autem eaque quos magni, tenetur delectus consequuntur minima ipsum! Cum dolorum, quia!
+										      			que o de quien o
 										      		</center>
 										      	</td>
 										      	<td>
@@ -175,100 +189,7 @@
 							      	</table>
 							    </div>
 							    </li>
-							    <li>
-							      <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#123 Nombre Apellido</div>
-							      <div class="collapsible-body">
-							      	<table>
-							      		<thead>
-							      		<tr>
-							      			
-								      	<th>
-								      		<center><b>Nombre Completo</b></center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Descripción</b>
-								      		</center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Opciones</b>
-								      		</center>
-								      	</th>
-							      		</tr>	
-							      		</thead>
-							      		<tbody>
-							      			<tr>
-							      				
-										      	<td>
-										      		<center>
-										      			Nombre completo
-										      		</center>
-										      	</td>
-										      	<td>
-										      		<center>
-										      			
-										      			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio vitae repudiandae eveniet provident, sint id iste vero corporis reprehenderit dolorum dolor dicta culpa iure sapiente, voluptates assumenda. Sint, magnam, aliquam!
-										      		</center>
-										      	</td>
-										      	<td>
-										      		<center>
-										      			<button class="btn indigo">Enable again</button><br><br>
-										      			<button class="btn red">Delete definitely</button>
-										      		</center>
-										      	</td>
-							      			</tr>
-								      </tbody>
-							      	</table>
-							    </div>
-							    </li>
-							    <li>
-							      <div class="collapsible-header"><i class="material-icons">person</i>#123 Nombre Apellido</div>
-							      <div class="collapsible-body">
-							      	<table>
-							      		<thead>
-							      		<tr>
-							      			
-								      	<th>
-								      		<center><b>Nombre Completo</b></center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Descripción</b>
-								      		</center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Opciones</b>
-								      		</center>
-								      	</th>
-							      		</tr>	
-							      		</thead>
-							      		<tbody>
-							      			<tr>
-							      				
-										      	<td>
-										      		<center>
-										      			Nombre completo
-										      		</center>
-										      	</td>
-										      	<td>
-										      		<center>
-										      			
-										      			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae optio similique repellendus. Necessitatibus ad, quidem. Repudiandae reprehenderit, ipsum officiis incidunt quasi vel vitae temporibus tempore ipsa aperiam quam, voluptatum cum!
-										      		</center>
-										      	</td>
-										      	<td>
-										      		<center>
-										      			<button class="btn indigo">Enable again</button><br><br>
-										      			<button class="btn red">Delete definitely</button>
-										      		</center>
-										      	</td>
-							      			</tr>
-								      </tbody>
-							      	</table>
-							    </div>
-							    </li>
+								@endforeach
 							  </ul>
 
 								</div>
@@ -300,6 +221,12 @@
 		  	button.removeAttribute('disabled');
 		}
 	}
+
+	function setChangeState(e){
+		var input_state = document.getElementById('state');
+		input_state.value = e.target.dataset.state;
+		document.getElementById('change-state-form').submit();
+	}
 	  
 	window.onload = function(){
 	  	var edit = document.querySelectorAll('.edit');
@@ -308,6 +235,14 @@
 
 	  		edit[i].onclick = selectInput;
 		}
+		var changeState = document.querySelectorAll('.changeState');
+		var max_change = changeState.length;
+
+	  	for(var i = 0; i<max_change; i++){
+
+	  		changeState[i].onclick = setChangeState;
+		}
+
 		@if(!session('user'))
 			document.getElementById('buscar').focus();
 		@endif

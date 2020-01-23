@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Persona;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -52,13 +53,17 @@ class RegisterController extends Controller
         $persona = Persona::create([
             'nombre'=>$data['name']
         ]);
-        User::create([
+        $user = User::create([
 
             'id_persona' => $persona->id,
             'email' => $data['email'],
             'tipo' => 1,
             'estado' => 1,
             'password' => Hash::make($data['password']),
+        ]);
+
+        Cliente::create([
+            'id_usuario' => $user->id,
         ]);
 
         return redirect()->route('login');
