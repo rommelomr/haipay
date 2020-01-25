@@ -91,18 +91,7 @@ class UsersController extends Controller
     	if($user != null){
 
     		if($req->state == 3){
-    			$deletedUser = DeletedUser::create([
-
-		    		'id_persona' => $user->id_persona,
-		    		'email' => $user->email,
-		    		'tipo' => $user->tipo,
-		    		'fecha_nacimiento' => $user->date
-    			]);
-    			$user->delete();
-
-		    	return redirect()->back()->with('messages',[
-		    		'disabled_success' => 'User deleted successfuly'
-		    	]);
+    			$user->estado = $req->state;
     		}else{
 	    		$user->estado = $req->state;
     		}

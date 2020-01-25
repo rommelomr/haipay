@@ -32,7 +32,7 @@ class ClientesController extends Controller
 		if(1){
 			$persona = Persona::where('cedula',$ced)->with('usuario')->first();
 			
-			if($persona != null && $persona->usuario->tipo == 1){
+			if($persona != null && $persona->usuario->tipo == 1 && $persona->usuario->estado != 3){
 				return redirect()->back()->with('data',$persona);
 			}else{
 				return redirect()->back()->with('messages',[
