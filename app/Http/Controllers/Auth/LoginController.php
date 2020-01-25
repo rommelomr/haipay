@@ -58,15 +58,21 @@ public function login(Request $request)
 
         if ($this->attemptLogin($request)) {
             $user = Auth::user();
-            if($user->tipo == 1){
-                $this->redirectTo = '/welcome';
-
+            if($user->estado != 3 && $user->estado != 2){
+                if($user->tipo == 1){
+                    $this->redirectTo = '/welcome';
+    
+                }else{
+                    $this->redirectTo = '/users';
+    
+                }
+    
+                return $this->sendLoginResponse($request);
             }else{
-                $this->redirectTo = '/users';
-
+                Auth::logout();
+                return redirect()->back()->withError('You are not logged in or Your session has expired');
             }
-
-            return $this->sendLoginResponse($request);
+            
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
