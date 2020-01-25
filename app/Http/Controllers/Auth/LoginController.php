@@ -70,7 +70,7 @@ public function login(Request $request)
                 return $this->sendLoginResponse($request);
             }else{
                 Auth::logout();
-                return redirect()->back()->withError('You are not logged in or Your session has expired');
+                return redirect()->back();
             }
             
         }
