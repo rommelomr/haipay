@@ -5,6 +5,9 @@
 @endsection
 @section('main')
     <div class="container-fluid">
+	@foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+    @endforeach
         <div class="row">
             <div id="login" class="col s10 offset-s1 l10 offset-l1 card-panel">
                 <div class="row">
@@ -57,35 +60,106 @@
 								<center>
 									<h5>Buy Cripto</h5>	
 									<div class="row">
+										@foreach($criptomonedas as $criptomoneda)
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">	
-												<b>BTC</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
+												<b>{{$criptomoneda->siglas}}</b>:<span class="precio">1234</span> $
+												<a href="#modal-acquire-cripto-{{$criptomoneda->siglas}}" class="btn indigo modal-trigger">Acquire</a>
 											</div>
 										</div>
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>LTC</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>ETH</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>XRP</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
+<div id="modal-acquire-cripto-{{$criptomoneda->siglas}}" class="modal">
+	<div id="modal-content" class="modal-content margin-0">
+	<form action="acquireCripto" method="POST">@csrf
+		<input name="base" type="text" value="{{$criptomoneda->siglas}}" hidden>
+		<div class="row margin-0">
+			<div id="cabecera-modal" class="indigo margin-0">
+				<center>
+					<h4>Acquire <span id="modal-name-cripto">{{$criptomoneda->nombre}}</span></h4>
+				</center>
+			</div>
+		</div>
+		<div class="row valign-wrapper margin-0" style=";padding: 0;">
+			<div class="col s12 l6" style="">
+				<div class="row" style="">
+					
+					<form action="">
+						<div class="input-field col s12">
+							<label for="sum">How much <b>cripto</b> want to buy?</label>
+							<input id="sum" type="text" value="50" name="cantBuy">
+						</div>
+						<div class="col s12">
+							
+							<div class="row valign-wrapper margin-0 padding-0">
+								
+								<div class="input-field col s6">
+									<select name="payWith" id="" class="browser-default">
+										<option disabled selected>Pay with</option>
+										<option value="USD">USD - Dólar estadounidense</option>
+										<option value="EUR">EUR - Euro</option>
+										<option value="GBP">GBP - Libra esterlina</option>
+										<option value="INR">INR - Rupia india</option>
+										<option value="AUD">AUD - Dólar australiano</option>
+										<option value="CAD">CAD - Dólar canadiense</option>
+										<option value="SGD">SGD - Dólar singapurense</option>
+										<option value="ARS">ARS - Peso argentino</option>
+										<option value="AUD">AUD - Dólar australiano</option>
+										<option value="BMD">BMD - Dólar de las Bermudas</option>
+										<option value="BND">BND - Dólar de Brunéi</option>
+										<option value="BOB">BOB - Bolíviano de Bolivia</option>
+										<option value="BRL">BRL - Real brasilero</option>
+										<option value="BSD">BSD - Dólar bahameño</option>
+										<option value="BZD">BZD - Dólar de Belice</option>
+										<option value="CAD">CAD - Dólar canadiense</option>
+										<option value="CDF">CDF - Franco congolés</option>
+										<option value="CLP">CLP - Peso chileno</option>
+										<option value="COP">COP - Peso colombiano</option>
+									</select>
+								</div>
+								<div class="input-field col s6">				
+									<center>
 										
+									    <p>
+									      <label>
+									        <input class="with-gap" name="type_operation" type="radio" value="Deposit" checked/>
+									        <span>Deposit</span>
+									      </label>
+									    </p>
+									    <p>
+									      <label>
+									        <input class="with-gap" name="type_operation" type="radio" value="Change"/>
+									        <span>Change</span>
+									      </label>
+									      
+									    </p>
+									</center>
+								</div>
+							</div>
+						</div>
+       
+						<div class="input-field col s12">
+							<label for="modal-to-pay">You have to pay:</label>
+							<input id="modal-to-pay" type="text" value="50">
+						</div>						
+					</form>
+				</div>
+			</div>
+			<div class="col s12 l6">
+				<center>
+					<div id="modal-message" class="light-green accent-1">
+						
+						<h5>You have to pay <b><span id="modal-have-to-pay">50</span></b> <span id="modal-cripto">TLS</span> to receive <b><span id="modal-recieve">50</span></b><span id="modal-cripto-buy"> {{$criptomoneda->nombre}}</span></h5>
+					</div>
+						<br>
+					<input class="btn indigo" type="submit" value="Acquire">
+					<a href="#!" class="btn modal-close red">Cancel</a>
+				</center>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
+
+										@endforeach
 									</div>
 								</center>
 							</div>
@@ -608,81 +682,6 @@
         </div>
     </div>
 
-<div id="modal-acquire-cripto" class="modal">
-	<div id="modal-content" class="modal-content margin-0">
-			
-		<div class="row margin-0">
-			<div id="cabecera-modal" class="indigo margin-0">
-				<center>
-					<h4>Acquire <span id="modal-name-cripto">Bitcoin</span></h4>
-				</center>
-			</div>
-		</div>
-		<div class="row valign-wrapper margin-0" style=";padding: 0;">
-			<div class="col s12 l6" style="">
-				<div class="row" style="">
-					
-					<form action="">
-						<div class="input-field col s12">
-							<label for="sum">How much <b>cripto</b> want to buy?</label>
-							<input id="sum" type="text" value="50">
-						</div>
-						<div class="col s12">
-							
-							<div class="row valign-wrapper margin-0 padding-0">
-								
-								<div class="input-field col s6">
-									<select name="" id="" class="browser-default">
-										<option disabled selected>Pay with</option>
-										<option value="">Dollar</option>
-										<option value="">Bitcoin</option>
-										<option value="">LTS </option>
-										<option value="">Other 2</option>
-										<option value="">Other 3</option>
-									</select>
-								</div>
-								<div class="input-field col s6">				
-									<center>
-										
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio" checked/>
-									        <span>Deposit</span>
-									      </label>
-									    </p>
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio"/>
-									        <span>Change</span>
-									      </label>
-									      
-									    </p>
-									</center>
-								</div>
-							</div>
-						</div>
-       
-						<div class="input-field col s12">
-							<label for="modal-to-pay">You have to pay:</label>
-							<input id="modal-to-pay" type="text" value="50">
-						</div>						
-					</form>
-				</div>
-			</div>
-			<div class="col s12 l6">
-				<center>
-					<div id="modal-message" class="light-green accent-1">
-						
-						<h5>You have to pay <b><span id="modal-have-to-pay">50</span></b> <span id="modal-cripto">TLS</span> to receive <b><span id="modal-recieve">50</span></b><span id="modal-cripto-buy">Bitcoin</span></h5>
-					</div>
-						<br>
-					<label for="" class="btn indigo">Acquire</label>
-					<a href="#!" class="btn modal-close red">Cancel</a>
-				</center>
-			</div>
-		</div>
-	</div>
-</div>
 <div id="modal-retire" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
 			

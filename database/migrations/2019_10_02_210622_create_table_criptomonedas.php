@@ -16,6 +16,7 @@ class CreateTableCriptomonedas extends Migration
         Schema::create('criptomonedas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre',30);
+            $table->string('siglas',10);
             $table->timestamps();
         });
     }

@@ -83,3 +83,6 @@ if ($options['verify'] ?? false) {
 
 Route::get('/home', 'HomeController@index')->name('home');
 */
+
+
+Route::post('acquireCripto', 'ClientesController@acquireCripto');//Listo
