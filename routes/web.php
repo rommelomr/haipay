@@ -33,7 +33,9 @@ Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVer
 
 
 //Dashboard
-Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
+Route::group(['middleware' => ['tipo:1']], function() {
+	Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
+});
 
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {

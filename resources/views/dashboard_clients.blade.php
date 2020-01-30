@@ -59,28 +59,28 @@
 									<div class="row">
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">	
-												<b>BTC</b>:<span class="precio">1234</span> $
+												<b>1 BTC</b>:<span class="precio">1234</span> $
 												
 												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
 											</div>
 										</div>
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
-												<b>LTC</b>:<span class="precio">1234</span> $
+												<b>1 LTC</b>:<span class="precio">1234</span> $
 												
 												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
 											</div>
 										</div>
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
-												<b>ETH</b>:<span class="precio">1234</span> $
+												<b>1 ETH</b>:<span class="precio">1234</span> $
 												
 												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
 											</div>
 										</div>
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
-												<b>XRP</b>:<span class="precio">1234</span> $
+												<b>1 XRP</b>:<span class="precio">1234</span> $
 												
 												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
 											</div>
@@ -735,7 +735,6 @@
 	
  		var elem_modal = document.querySelectorAll('.modal');
     	var instances_modal = M.Modal.init(elem_modal);
-    	instances_modal[1].open();
     	var elem_collapsible = document.querySelectorAll('.collapsible');
     	var instances_collapsible = M.Collapsible.init(elem_collapsible);
 
@@ -750,10 +749,16 @@
     			'Persona 3':null,
     		}
     	});
-	var prueba = document.$_getElementById('nombre-receiver');
-	
-	prueba.onchange = function(){
-		alert();
-	}
+    	//	
+		var exampleSocket = new WebSocket("ws://ws-feed.pro.coinbase.com");
+
+		exampleSocket.onopen = function(event){
+			console.log('sended');
+			exampleSocket.send('{"type": "subscribe","product_ids": ["LTC-USD","BTC-USD","ETH-USD","XRP-USD"],"channels": ["heartbeat"]}');
+		}
+		exampleSocket.onmessage = function (event) {
+			console.log(event.data);
+		}
+
 	});
 </script>
