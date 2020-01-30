@@ -1,0 +1,10 @@
+Actividades
+
+Dejar solamente agregar y sacar de black list a usuarios y clientes
+
+comprar criptomoneda
+	Websockets para mostrar los precios en tiempo real
+	comunicarse con la api desde el back para registrar el precio de la moneda en ese momento de manera segura
+		ver si se puede hacer con php o hacerlo con node
+
+	
