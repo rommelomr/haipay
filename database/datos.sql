@@ -13,20 +13,20 @@ INSERT INTO `tipo_transaccion` (`id`, `nombre`, `created_at`, `updated_at`) VALU
 (4, 'Retiro', NULL, NULL);
 
 INSERT INTO `metodos_pago` (`nombre`, `estado`, `created_at`, `updated_at`) VALUES
-('Mon Cash', '1', NULL, NULL);
-('Wester Union', '1', NULL, NULL);
-('MoneyGram', '1', NULL, NULL);
+('Mon Cash', '1', NULL, NULL),
+('Wester Union', '1', NULL, NULL),
+('MoneyGram', '1', NULL, NULL),
 ('paypal', '1', NULL, NULL),
 ('Skrill', '1', NULL, NULL),
 ('Uphold', '1', NULL, NULL),
 ('Zelle', '1', NULL, NULL),
 ('Payoneer', '1', NULL, NULL),
 ('Deposit', '1', NULL, NULL),
-('Bank Account', '1', NULL, NULL),
+('Bank Account', '1', NULL, NULL);
 
-INSERT INTO `criptomonedas` (`id`, `nombre`, `siglas`, `created_at`, `updated_at`) VALUES
-(NULL, 'XRP', 'XRP', NULL, NULL),
-(NULL, 'Bitcoin', 'BTC', NULL, NULL),
-(NULL, 'Litecoin', 'LTC', NULL, NULL),
-(NULL, 'Ethereum', 'ETH', NULL, NULL),
-(NULL, 'Dogecoin', 'DOGE', NULL, NULL);
+INSERT INTO `criptomonedas` (`nombre`, `siglas`, `created_at`, `updated_at`) VALUES
+('XRP', 'XRP', NULL, NULL),
+('Bitcoin', 'BTC', NULL, NULL),
+('Litecoin', 'LTC', NULL, NULL),
+('Ethereum', 'ETH', NULL, NULL),
+('Dogecoin', 'DOGE', NULL, NULL);

@@ -721,7 +721,6 @@
 	
  		var elem_modal = document.querySelectorAll('.modal');
     	var instances_modal = M.Modal.init(elem_modal);
-    	console.log(instances_modal[1]);
 
     	var elem_collapsible = document.querySelectorAll('.collapsible');
     	var instances_collapsible = M.Collapsible.init(elem_collapsible);
@@ -755,7 +754,7 @@
     	}
 
     	function setNameEvent(e){
-    		console.log(spaces_name_cripto);
+    		
     		setNameModal(e.target.dataset.nombre_cripto,e.target.dataset.siglas_cripto);
     	}
 
@@ -763,7 +762,6 @@
     		if(cripto.type == "ticker"){
 
 	    		let spaces = document.querySelectorAll('.precio-'+cripto.product_id);
-    			console.log('.precio-'+cripto.product_id);
 	    		
 	    		for(let i = 0; i<spaces.length;i++){
 	    			spaces[i].innerText = cripto.price;
@@ -773,7 +771,6 @@
 
     	//Configurará que cada vez que se abra el modal se configura con la moneda en cuestion
     	let cripto_buttons = document.querySelectorAll('.buy-cripto');
-    	console.log(cripto_buttons);
     	for (let i_cripto = 0; i_cripto < cripto_buttons.length; i_cripto++){
     		cripto_buttons[i_cripto].onclick = setNameEvent;
     	}
@@ -810,23 +807,35 @@
     	
 
     	//Consultará a la API
-		var exampleSocket = new WebSocket("ws://ws-feed.pro.coinbase.com");
+		var coinbase = new WebSocket("ws://ws-feed.pro.coinbase.com");
 
 		let cripto_arr = [];
 		@foreach($criptomonedas as $criptomoneda)
 			cripto_arr.push("{{$criptomoneda->siglas}}-USD");
 		@endforeach
-		console.log(cripto_arr);
 		//let json_to_send = JSON.stringify({"type": "subscribe","product_ids": ["ETH-USD","ETH-EUR"],"channels": ["level2","heartbeat",{"name": "ticker","product_ids":cripto_arr}]});
 		let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
-		exampleSocket.onopen = function(event){
-			console.log('sended');
-			exampleSocket.send(json_to_send);
+		coinbase.onopen = function(event){
+			coinbase.send(json_to_send);
 		}
-		exampleSocket.onmessage = function (event) {
+		coinbase.onmessage = function (event) {
 		
 			updatePrices(JSON.parse(event.data));
 		}
+			setInterval(function(){
 
+				fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
+				    return response.json();
+				}).then(function(myJson){
+
+				    console.log(myJson);
+				    //let data = JSON.parse(myJson);
+				    let object = {};
+				    object.type = 'ticker';
+				    object.product_id = 'DOGE-USD';
+				    object.price = myJson[0].price_usd;
+				    updatePrices(object);
+				});
+			},5000);
 	});
 </script>
