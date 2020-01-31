@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaccion extends Model
 {
     protected $guarded = [];
+    protected $table = "transacciones";
     public function tipoTransaccion(){
     	return $this->belongsTo('App\TipoTransaccion','id_transaccion');
     }

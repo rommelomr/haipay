@@ -29,6 +29,7 @@
 
 6 Criptomonedas-> Guardará todas las criptomonedas que se trabajaran en el sistema
 	nombre: guardará el nombre de la criptomoneda
+	siglas: Guardará las siglas de la criptomoneda
 
 12 Cartera-> (Relación Clientes_Criptomonedas) Guardará todas las criptomonedas asociadas a una persona y su cantidad
 

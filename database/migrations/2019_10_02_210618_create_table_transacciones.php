@@ -26,7 +26,7 @@ class CreateTableTransacciones extends Migration
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('clientes');
 
-            $table->unsignedBigInteger('id_moderador');
+            $table->unsignedBigInteger('id_moderador')->nullable();
             $table->foreign('id_moderador')->references('id')->on('moderadores');
 
             $table->timestamps();

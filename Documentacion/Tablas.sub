@@ -37,6 +37,7 @@
 
 6 criptomonedas-> Guardará todas las criptomonedas que se trabajaran en el sistema
 	nombre: varchar(30)
+	siglas: varchar(10)
 
 12 cartera-> (Relación Clientes_Criptomonedas) Guardará todas las criptomonedas asociadas a una persona y su cantidad
 

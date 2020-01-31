@@ -5,6 +5,9 @@
 @endsection
 @section('main')
     <div class="container-fluid">
+	@foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+    @endforeach
         <div class="row">
             <div id="login" class="col s10 offset-s1 l10 offset-l1 card-panel">
                 <div class="row">
@@ -57,35 +60,17 @@
 								<center>
 									<h5>Buy Cripto</h5>	
 									<div class="row">
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">	
-												<b>1 BTC</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
+										@foreach($criptomonedas as $criptomoneda)
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
-												<b>1 LTC</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
+												<b>1 {{$criptomoneda->siglas}}</b><br><span class="precio-{{$criptomoneda->siglas}}-USD">1234</span> $<br>
+												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->nombre}}" data-siglas_cripto="{{$criptomoneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
+
 											</div>
 										</div>
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>1 ETH</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
-										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>1 XRP</b>:<span class="precio">1234</span> $
-												
-												<a href="#modal-acquire-cripto" class="btn indigo modal-trigger">Acquire</a>
-											</div>
-										</div>
-										
+
+
+										@endforeach
 									</div>
 								</center>
 							</div>
@@ -608,81 +593,6 @@
         </div>
     </div>
 
-<div id="modal-acquire-cripto" class="modal">
-	<div id="modal-content" class="modal-content margin-0">
-			
-		<div class="row margin-0">
-			<div id="cabecera-modal" class="indigo margin-0">
-				<center>
-					<h4>Acquire <span id="modal-name-cripto">Bitcoin</span></h4>
-				</center>
-			</div>
-		</div>
-		<div class="row valign-wrapper margin-0" style=";padding: 0;">
-			<div class="col s12 l6" style="">
-				<div class="row" style="">
-					
-					<form action="">
-						<div class="input-field col s12">
-							<label for="sum">How much <b>cripto</b> want to buy?</label>
-							<input id="sum" type="text" value="50">
-						</div>
-						<div class="col s12">
-							
-							<div class="row valign-wrapper margin-0 padding-0">
-								
-								<div class="input-field col s6">
-									<select name="" id="" class="browser-default">
-										<option disabled selected>Pay with</option>
-										<option value="">Dollar</option>
-										<option value="">Bitcoin</option>
-										<option value="">LTS </option>
-										<option value="">Other 2</option>
-										<option value="">Other 3</option>
-									</select>
-								</div>
-								<div class="input-field col s6">				
-									<center>
-										
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio" checked/>
-									        <span>Deposit</span>
-									      </label>
-									    </p>
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio"/>
-									        <span>Change</span>
-									      </label>
-									      
-									    </p>
-									</center>
-								</div>
-							</div>
-						</div>
-       
-						<div class="input-field col s12">
-							<label for="modal-to-pay">You have to pay:</label>
-							<input id="modal-to-pay" type="text" value="50">
-						</div>						
-					</form>
-				</div>
-			</div>
-			<div class="col s12 l6">
-				<center>
-					<div id="modal-message" class="light-green accent-1">
-						
-						<h5>You have to pay <b><span id="modal-have-to-pay">50</span></b> <span id="modal-cripto">TLS</span> to receive <b><span id="modal-recieve">50</span></b><span id="modal-cripto-buy">Bitcoin</span></h5>
-					</div>
-						<br>
-					<label for="" class="btn indigo">Acquire</label>
-					<a href="#!" class="btn modal-close red">Cancel</a>
-				</center>
-			</div>
-		</div>
-	</div>
-</div>
 <div id="modal-retire" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
 			
@@ -725,7 +635,83 @@
 		</div>
 	</div>
 </div>
-
+<div id="modal-acquire-cripto" class="modal">
+	<div id="modal-content" class="modal-content margin-0">
+	<form action="acquireCripto" method="POST">@csrf
+		<input id="acquire-base" name="base" type="text" class="inputs-initials-cripto" hidden>
+		<div class="row margin-0">
+			<div id="cabecera-modal" class="indigo margin-0">
+				<center>
+					<h4>Acquire <span id="modal-name-cripto" class="space-name-cripto"></span></h4>
+				</center>
+			</div>
+		</div>
+		<div class="row valign-wrapper margin-0" style=";padding: 0;">
+			<div class="col s12 l6" style="">
+				<div class="row" style="">
+					
+					<form action="">
+						<div class="input-field col s12">
+							<label for="sum">How much <b class="space-name-cripto">cripto</b> want to buy?</label>
+							<input id="sum" type="text" value="50" name="cantBuy">
+						</div>
+						<div class="col s12">
+							
+							<div class="row valign-wrapper margin-0 padding-0">
+								
+								<div class="input-field col s6">
+									<select id="payWith" name="payWith" class="browser-default">
+										<option disabled selected value="none">Pay with</option>
+										<option value="USD">USD - Dólar estadounidense</option>
+										@foreach($criptomonedas as $criptomoneda)
+											<option value="{{$criptomoneda->siglas}}">{{$criptomoneda->siglas}}</option>
+										@endforeach
+										
+									</select>
+								</div>
+								<div class="input-field col s6">				
+									<center>
+										
+									    <p>
+									      <label>
+									        <input class="with-gap" name="type_operation" type="radio" value="Deposit" checked/>
+									        <span>Deposit</span>
+									      </label>
+									    </p>
+									    <p>
+									      <label>
+									        <input class="with-gap" name="type_operation" type="radio" value="Change"/>
+									        <span>Change</span>
+									      </label>
+									      
+									    </p>
+									</center>
+								</div>
+							</div>
+						</div>
+       
+						<div class="input-field col s12">
+							<label for="modal-to-pay">You have to pay:</label>
+							<input id="modal-to-pay" type="text" value="50">
+						</div>						
+					</form>
+				</div>
+			</div>
+			<div class="col s12 l6">
+				<center>
+					<div id="modal-message" class="light-green accent-1" hidden>
+						
+						<h5>You have to pay <b><span id="modal-have-to-pay">50</span></b> <span id="space-pay-with">TLS</span> to receive <b><span id="modal-recieve">50</span></b> <span id="modal-cripto-buy" class="space-name-cripto"></span></h5>
+					</div>
+						<br>
+					<input id="submit-buy" class="btn indigo" type="submit" value="Acquire">
+					<a href="#!" class="btn modal-close red">Cancel</a>
+				</center>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
 @endsection
 
 <script>
@@ -735,6 +721,8 @@
 	
  		var elem_modal = document.querySelectorAll('.modal');
     	var instances_modal = M.Modal.init(elem_modal);
+    	console.log(instances_modal[1]);
+
     	var elem_collapsible = document.querySelectorAll('.collapsible');
     	var instances_collapsible = M.Collapsible.init(elem_collapsible);
 
@@ -749,15 +737,95 @@
     			'Persona 3':null,
     		}
     	});
-    	//	
+
+    	/*
+    		Llenará en el modal todos los campos en los que se deba mostrar la criptomoneda elegida
+    	*/
+    	let spaces_name_cripto = document.querySelectorAll('.space-name-cripto');
+    	let inputs_initials_cripto = document.querySelectorAll('.inputs-initials-cripto');
+
+    	function setNameModal(nombre,siglas){
+
+    		for(let i_spaces = 0; i_spaces<spaces_name_cripto.length; i_spaces++){
+    			spaces_name_cripto[i_spaces].innerText = nombre;
+    		}
+    		for(let i_spaces = 0; i_spaces<inputs_initials_cripto.length; i_spaces++){
+    			inputs_initials_cripto[i_spaces].value = siglas;
+    		}
+    	}
+
+    	function setNameEvent(e){
+    		console.log(spaces_name_cripto);
+    		setNameModal(e.target.dataset.nombre_cripto,e.target.dataset.siglas_cripto);
+    	}
+
+    	function updatePrices(cripto){
+    		if(cripto.type == "ticker"){
+
+	    		let spaces = document.querySelectorAll('.precio-'+cripto.product_id);
+    			console.log('.precio-'+cripto.product_id);
+	    		
+	    		for(let i = 0; i<spaces.length;i++){
+	    			spaces[i].innerText = cripto.price;
+	    		}
+    		}
+    	}
+
+    	//Configurará que cada vez que se abra el modal se configura con la moneda en cuestion
+    	let cripto_buttons = document.querySelectorAll('.buy-cripto');
+    	console.log(cripto_buttons);
+    	for (let i_cripto = 0; i_cripto < cripto_buttons.length; i_cripto++){
+    		cripto_buttons[i_cripto].onclick = setNameEvent;
+    	}
+
+    	/*
+    		Configurará la visualización del mensaje del modal, y el botón para enviar la solicitud
+    	*/
+    	let space_pay_with = document.getElementById('space-pay-with');
+    	let modal_message = document.getElementById('modal-message');
+    	let submit_buy = document.getElementById('submit-buy');
+    	let pay_with = document.getElementById('payWith');
+
+    	function changePayWithModal(){
+    		if(pay_with.value!='none'){
+    			modal_message.removeAttribute('hidden');
+    			submit_buy.removeAttribute('disabled');
+    			space_pay_with.innerText = pay_with.value;
+    		}else{
+    			modal_message.setAttribute('hidden',true);
+    			submit_buy.setAttribute('disabled',true);
+    			space_pay_with.innerText = '';
+    		}
+    	}
+    	//Seteará el modal al cargar la pagina por primera vez
+    	changePayWithModal();
+    	pay_with.onchange = changePayWithModal;
+
+    	//Reseteará la configuracion del modal cada vez que se cierre
+    	function resetModal(){
+    		pay_with.value="none";
+    		changePayWithModal();
+    	}
+    	instances_modal[1].options.onCloseEnd = resetModal;
+    	
+
+    	//Consultará a la API
 		var exampleSocket = new WebSocket("ws://ws-feed.pro.coinbase.com");
 
+		let cripto_arr = [];
+		@foreach($criptomonedas as $criptomoneda)
+			cripto_arr.push("{{$criptomoneda->siglas}}-USD");
+		@endforeach
+		console.log(cripto_arr);
+		//let json_to_send = JSON.stringify({"type": "subscribe","product_ids": ["ETH-USD","ETH-EUR"],"channels": ["level2","heartbeat",{"name": "ticker","product_ids":cripto_arr}]});
+		let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
 		exampleSocket.onopen = function(event){
 			console.log('sended');
-			exampleSocket.send('{"type": "subscribe","product_ids": ["LTC-USD","BTC-USD","ETH-USD","XRP-USD"],"channels": ["heartbeat"]}');
+			exampleSocket.send(json_to_send);
 		}
 		exampleSocket.onmessage = function (event) {
-			console.log(event.data);
+		
+			updatePrices(JSON.parse(event.data));
 		}
 
 	});
