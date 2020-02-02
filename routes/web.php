@@ -39,8 +39,11 @@ Route::group(['middleware' => ['tipo:1']], function() {
 
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
-	Route::get('users', 'UsersController@showViewUsers')->name('users');//Listo
+	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
 });
+
+Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo
+Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');//Listo
 
 Route::post('create_user','UsersController@create_user');
 Route::get('search_user','UsersController@search_user');
@@ -53,7 +56,6 @@ Route::post('modify_client','ClientesController@modify_client');
 
 Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
 Route::get('clients', 'ClientesController@showViewClients')->name('clients');;//Listo
-Route::get('edit_profile', 'PersonasController@showViewEditProfile')->name('edit_profile');//Listo
 Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');//Listo
 
 //Transactions

@@ -8,6 +8,7 @@
 	password: varchar(255)
 	tipo: tinyint //1: cliente 2: moderador 3: administrador
 	fecha_nacimiento: date
+	telefono: varchar(20)
 	token: varchar(255)
 	estado: tinyint // 0:eliminado 1: activo 2: Lista negra 3: Borrado definitivamente
 

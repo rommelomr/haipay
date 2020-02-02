@@ -7,6 +7,7 @@
 	email: Guardará el correo electronico del usuario
 	password: Guardará la contraseña del usuario
 	tipo: Guardará si el usuario es cliente, moderador o administrador del sistema
+	telefono: Guardará el número de telefono de la persona
 	fecha_nacimiento: Guardará la fecha de nacimiento del usuario
 	token: Guardará el token con el que se permitirá cambiar la contraseña
 	estado: Guardará si el usuario está activo, inactivo, o no verificado

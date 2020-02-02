@@ -17,26 +17,27 @@
 				<div class="row">
 					<div class="card-content col s6">
 
-						<form class="row" action="">
+						<form class="row" action="{{route('save_profile')}}" method="POST">
+							@csrf
 							<div class="input-field col s6">
 								<label for="nombre">Name</label>
-								<input id="nombre" type="text">
+								<input id="nombre" type="text" value="{{$current_user_data->persona->nombre}}" name="nombre">
 							</div>
 							<div class="input-field col s6">
 								<label for="cedula">ID</label>
-								<input id="cedula" type="text">
+								<input id="cedula" type="text" value="{{$current_user_data->persona->cedula}}" name="cedula">
 							</div>
 							<div class="input-field col s6">
 								<label for="email">Email</label>
-								<input id="email" type="text">
+								<input id="email" type="text" value="{{$current_user_data->email}}" name="email">
 							</div>
 							<div class="input-field col s6">
 								<label for="password">Password</label>
-								<input id="password" type="text">
+								<input id="password" type="text" name="password">
 							</div>
 							<div class="input-field col s12">
 								<label for="telephone">Telephone</label>
-								<input id="telephone" type="text">
+								<input id="telephone" type="text" value="{{$current_user_data->telefono}}" name="telefono">
 							</div>
 							<div class="input-field col s12">
 								<center>
