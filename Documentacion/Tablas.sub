@@ -10,7 +10,7 @@
 	fecha_nacimiento: date
 	telefono: varchar(20)
 	token: varchar(255)
-	estado: tinyint // 0:eliminado 1: activo 2: Lista negra 3: Borrado definitivamente
+	estado: tinyint // 1:activo 2:listanegra
 
 2 clientes-> Tipo de usuario
 	id_usuario: (fk)

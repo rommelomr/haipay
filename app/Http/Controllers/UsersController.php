@@ -84,7 +84,7 @@ class UsersController extends Controller
 
     	$this->validate($req,[
     		'user_to_change_state' => 'required|numeric',
-    		'state' => 'required|numeric'
+    		'state' => 'required|numeric|in:1,2'
     	]);
     	$user = User::where('id_persona',$req->user_to_change_state)->first();
     		

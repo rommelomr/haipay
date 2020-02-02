@@ -70,26 +70,19 @@
 										<div class="col s12">
 										      	<center>
 										      		<button id="button-submit" class="btn green ligthen-3">Save</button>
-										      		@if($persona->usuario->estado === 0)
-										      			<label class="btn green ligthen-3 changeState" data-state="1">Activate</label>
-										      		@elseif($persona->usuario->estado === 1)
-										      			<label class="btn red	ligthen-3 changeState" data-state="0">Desactivate</label>
-										      		@elseif($persona->usuario->estado === 2)
+										      		@if($persona->usuario->estado === 2)
 										      			<label class="btn black">User in black list</label>
 
 										      		@endif
 													  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
 													  <ul id='dropdown1' class='dropdown-content'>
 													  	<li><a href="#!">See transactions</a></li>
-														<li><a href="#!">Delete user</a></li>
 														@if($persona->usuario->estado === 1)
 													    	<li><a href="#!" class="changeState" data-state="2">Send to black list</a></li>
 
 										      			@elseif($persona->usuario->estado === 2)
 													    	<li><a href="#!" class="changeState" data-state="1">Remove from black list</a></li>
 										      			@endif
-										      		
-													    	<li><a href="#!" class="changeState" data-state="3">Delete definitely</li>
 													  </ul>
 										      	</center>
 										      </div>

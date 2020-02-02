@@ -39,7 +39,7 @@ class ClientesController extends Controller
     		}
     	}
 		if(1){
-			$persona = Persona::where('cedula',$ced)->with('usuario')->first();
+			$persona = Persona::where('cedula',$ced)->orWhere('id',$ced)->with('usuario')->first();
 			
 			if($persona != null && $persona->usuario->tipo == 1 && $persona->usuario->estado != 3){
 				return redirect()->back()->with('data',$persona);

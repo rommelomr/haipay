@@ -664,7 +664,7 @@
 										<option disabled selected value="none">Pay with</option>
 										<option value="USD">USD - Dólar estadounidense</option>
 										@foreach($criptomonedas as $criptomoneda)
-											<option value="{{$criptomoneda->id}}">{{$criptomoneda->siglas}}</option>
+											<option value="{{$criptomoneda->id}}">{{$criptomoneda->moneda->siglas}}</option>
 										@endforeach
 										
 									</select>
