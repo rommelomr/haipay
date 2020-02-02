@@ -7,4 +7,18 @@ comprar criptomoneda
 	comunicarse con la api desde el back para registrar el precio de la moneda en ese momento de manera segura
 		ver si se puede hacer con php o hacerlo con node
 
-	
+
+a la tabla Receptor Remesa se le ha cambiado el nombre a "Receptor remesa no usuario"
+
+Eliminar tabla: 
+
+	Transacciones y tipos transaccion
+		Borrar migraciones modelos y controllers
+		imagenes Transacciones
+
+	Cliente
+
+Tablas Nuevas:
+	Monedas
+	hai_criptomonedas
+	Compras Criptomoneda

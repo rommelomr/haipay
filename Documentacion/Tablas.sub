@@ -2,14 +2,6 @@
 	nombre: varchar(255)
 	cedula: varchar(20)
 
-19 deleted_users-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
-	id_persona:(fk)
-	email: varchar(255)
-	password: varchar(255)
-	tipo: tinyint //1: cliente 2: moderador 3: administrador
-	fecha_nacimiento: date
-	token: varchar(255)
-
 1 users-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
 	id_persona:(fk)
 	email: varchar(255)
@@ -29,20 +21,19 @@
 	nombre: varchar(50)
 
 5 transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
-	id_metodo_pago: (fk)
-	id_tipo_transaccion: (fk)
 	id_cliente: (fk)
 	id_moderador: (fk)
-	fecha_hora: se usará el timestamp por defecto de laravel
+	id_tipo_transaccion: (fk) // 1 Remesa interna 2: Remesa Externa 3 Compra 4 Tradeo
+	estado: tinyint // 1: aprobada 0:cancelada null:no vista
 
-6 criptomonedas-> Guardará todas las criptomonedas que se trabajaran en el sistema
+6 monedas-> Guardará todas las monedas que se trabajaran en el sistema
 	nombre: varchar(30)
 	siglas: varchar(10)
 
-12 cartera-> (Relación Clientes_Criptomonedas) Guardará todas las criptomonedas asociadas a una persona y su cantidad
+12 carteras-> (Relación Clientes_monedas) Guardará todas las monedas asociadas a una persona y su cantidad
 
 	id_cliente: (fk)
-	id_criptomoneda: (fk)
+	id_moneda: (fk)
 	cantidad: decimal (13,9)
 
 8 acciones-> Guardará el nombre de cada acción que se pueda realizar en el sistema
@@ -62,17 +53,13 @@
 	id_referido: (fk) //es el id del cliente hijo
 	fecha_hora: se usara el timestamp por defecto de laravel
 
-11 imagen_transaccion -> Guardará las imagenes con las que un usuario comprobará las las compras y remesas
+11 imagen_transaccion -> Guardará las imagenes con las que un usuario comprobará las compras y remesas
 	id_transacción:  (fk)
 	nombre: varchar(255)
 
 13 metodos_pago-> Guardará los metodos de pago disponibles en el sistema
 	nombre: varchar(30)
 	estado: tinyint
-
-14 receptores_remesa-> Guardará las personas a las que un usuario quiere enviar una remesa pero que no estan registradas en el sistema
-	id_persona: (fk)
-	id_cliente: (fk) // Id del cliente que le envia remesas... NO es un cliente
 
 16 videos-> Guardará los videos que el administrador principal subirá a modo de publicidad
 	nombre: Varchar(30)
@@ -81,6 +68,29 @@
 	id_video: (fk)
 	id_cliente: (fk)
 
-18 cliente_receptor-> tabla pivote entre clientes y receptores_remesa.
+14 Remesas-> Guardará las remesas realizadas por los clientes
+	id_emisor: (fk id_cliente)
+	monto: longint
+	id_transaccion: (fk)
+
+20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
+	id_persona: (fk)
+
+21 remesas_no_usuario-> Guardará el destinatario no usuario de la remesa
+	id_remesa: (fk)
+	id_no_usuario: (fk)
+
+18 remesas_cliente-> Guardará el destinatario usuario de la remesa
+	id_remesa: (fk)
 	id_cliente: (fk)
-	id_receptor: (fk)
+
+24 hai_criptomoneda-> Guardará el id de las criptomonedas que se podrán comprar en la página
+	id_moneda (fk)
+
+25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
+	id_hai_criptomoneda: (fk)
+	id_moneda: (fk)
+	id_metodo_pago: (fk)
+	id_transaccion: (fk)
+	monto: longint
+	precio: decimal(13,9)

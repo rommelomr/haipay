@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeletedUser extends Model
+class TipoRemesa extends Model
 {
-    protected $guarded = [];
+    //
 }

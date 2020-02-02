@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableReceptores extends Migration
+class CreateHaiCriptomonedasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateTableReceptores extends Migration
      */
     public function up()
     {
-        Schema::create('receptores', function (Blueprint $table) {
+        Schema::create('hai_criptomonedas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_persona');
-            $table->foreign('id_persona')->references('id')->on('personas');
+            $table->unsignedBigInteger('id_moneda');
+            $table->foreign('id_moneda')->references('id')->on('monedas');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTableReceptores extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('receptores');
+        Schema::dropIfExists('hai_criptomonedas');
     }
 }

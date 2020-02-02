@@ -7,15 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use App\Persona;
 use App\User;
 use App\Cliente;
+use App\MetodoPago;
 use Illuminate\Support\Facades\Hash;
 use App\Transaccion;
-use App\Criptomoneda;
+use App\HaiCriptomoneda;
 
 class ClientesController extends Controller
 {
     public function showDashboard(){
-		$criptomonedas =Criptomoneda::all();
-    	return view('dashboard_clients', array('criptomonedas' => $criptomonedas));
+		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->get();
+		$metodos_pago =MetodoPago::all();
+    	return view('dashboard_clients', [
+    		'criptomonedas' => $hai_criptomonedas,
+    		'metodos_pago' => $metodos_pago,
+    	]);
     }
     public function showViewClients(){
 		$clientes =Cliente::all();

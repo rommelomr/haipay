@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableCriptomonedas extends Migration
+class CreateTableTiposTransaccion extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateTableCriptomonedas extends Migration
      */
     public function up()
     {
-        Schema::create('criptomonedas', function (Blueprint $table) {
+        Schema::create('tipos_transaccion', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre',30);
-            $table->string('siglas',10);
+            $table->string('nombre',50);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateTableCriptomonedas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('criptomonedas');
+        Schema::dropIfExists('tipos_transaccion');
     }
 }

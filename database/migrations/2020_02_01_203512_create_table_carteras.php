@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableClientesReceptores extends Migration
+class CreateTableCarteras extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateTableClientesReceptores extends Migration
      */
     public function up()
     {
-        Schema::create('cliente_receptor', function (Blueprint $table) {
+        Schema::create('carteras', function (Blueprint $table) {
             $table->bigIncrements('id');
+
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('clientes');
-            $table->unsignedBigInteger('id_receptor');
-            $table->foreign('id_receptor')->references('id')->on('receptores');
+            $table->unsignedBigInteger('id_hai_criptomoneda');
+            $table->foreign('id_hai_criptomoneda')->references('id')->on('hai_criptomonedas');
             
+            $table->decimal('cantidad',13,9);
+
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ class CreateTableClientesReceptores extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cliente_receptor');
+        Schema::dropIfExists('carteras');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableTipoTransaccion extends Migration
+class CreateMonedasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateTableTipoTransaccion extends Migration
      */
     public function up()
     {
-        Schema::create('tipo_transaccion', function (Blueprint $table) {
+        Schema::create('monedas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre',50);
+            $table->string('nombre',30);
+            $table->string('siglas',10);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateTableTipoTransaccion extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipo_transaccion');
+        Schema::dropIfExists('monedas');
     }
 }

@@ -63,8 +63,8 @@
 										@foreach($criptomonedas as $criptomoneda)
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
-												<b>1 {{$criptomoneda->siglas}}</b><br><span class="precio-{{$criptomoneda->siglas}}-USD">1234</span> $<br>
-												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->nombre}}" data-siglas_cripto="{{$criptomoneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
+												<b>1 {{$criptomoneda->moneda->siglas}}</b><br><span class="precio-{{$criptomoneda->moneda->siglas}}-USD">cargando</span> $<br>
+												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->moneda->nombre}}" data-siglas_cripto="{{$criptomoneda->moneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
 
 											</div>
 										</div>
@@ -653,7 +653,7 @@
 					<form action="">
 						<div class="input-field col s12">
 							<label for="sum">How much <b class="space-name-cripto">cripto</b> want to buy?</label>
-							<input id="sum" type="text" value="50" name="cantBuy">
+							<input id="sum" type="text" value="" name="cantBuy">
 						</div>
 						<div class="col s12">
 							
@@ -664,28 +664,21 @@
 										<option disabled selected value="none">Pay with</option>
 										<option value="USD">USD - Dólar estadounidense</option>
 										@foreach($criptomonedas as $criptomoneda)
-											<option value="{{$criptomoneda->siglas}}">{{$criptomoneda->siglas}}</option>
+											<option value="{{$criptomoneda->id}}">{{$criptomoneda->siglas}}</option>
 										@endforeach
 										
 									</select>
 								</div>
-								<div class="input-field col s6">				
-									<center>
+								<div class="input-field col s6">
+									<select id="payment_method" name="type_operation" class="browser-default">
+										<option disabled selected value="none">Payment Method</option>
+										<option value="USD">USD - Dólar estadounidense</option>
+										@foreach($metodos_pago as $metodo_pago)
+											<option value="{{$metodo_pago->id}}">{{$metodo_pago->nombre}}</option>
+										@endforeach
 										
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio" value="Deposit" checked/>
-									        <span>Deposit</span>
-									      </label>
-									    </p>
-									    <p>
-									      <label>
-									        <input class="with-gap" name="type_operation" type="radio" value="Change"/>
-									        <span>Change</span>
-									      </label>
-									      
-									    </p>
-									</center>
+									</select>				
+									
 								</div>
 							</div>
 						</div>
@@ -701,7 +694,7 @@
 				<center>
 					<div id="modal-message" class="light-green accent-1" hidden>
 						
-						<h5>You have to pay <b><span id="modal-have-to-pay">50</span></b> <span id="space-pay-with">TLS</span> to receive <b><span id="modal-recieve">50</span></b> <span id="modal-cripto-buy" class="space-name-cripto"></span></h5>
+						<h5>You have to pay <b><span id="modal-have-to-pay"></span></b> <span id="space-pay-with">TLS</span> to receive <b><span id="modal-recieve">50</span></b> <span id="modal-cripto-buy" class="space-name-cripto"></span></h5>
 					</div>
 						<br>
 					<input id="submit-buy" class="btn indigo" type="submit" value="Acquire">
@@ -809,33 +802,34 @@
     	//Consultará a la API
 		var coinbase = new WebSocket("ws://ws-feed.pro.coinbase.com");
 
+		//Creará el array con el que se hara el request a la api
 		let cripto_arr = [];
 		@foreach($criptomonedas as $criptomoneda)
-			cripto_arr.push("{{$criptomoneda->siglas}}-USD");
+			cripto_arr.push("{{$criptomoneda->moneda->siglas}}-USD");
 		@endforeach
-		//let json_to_send = JSON.stringify({"type": "subscribe","product_ids": ["ETH-USD","ETH-EUR"],"channels": ["level2","heartbeat",{"name": "ticker","product_ids":cripto_arr}]});
+		
 		let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
+
 		coinbase.onopen = function(event){
 			coinbase.send(json_to_send);
 		}
 		coinbase.onmessage = function (event) {
-		
+			console.log(JSON.parse(event.data));
 			updatePrices(JSON.parse(event.data));
 		}
-			setInterval(function(){
+		setInterval(function(){
 
-				fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
-				    return response.json();
-				}).then(function(myJson){
+			fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
+			    return response.json();
+			}).then(function(myJson){
 
-				    console.log(myJson);
-				    //let data = JSON.parse(myJson);
-				    let object = {};
-				    object.type = 'ticker';
-				    object.product_id = 'DOGE-USD';
-				    object.price = myJson[0].price_usd;
-				    updatePrices(object);
-				});
-			},5000);
+			    console.log(myJson);
+			    let object = {};
+			    object.type = 'ticker';
+			    object.product_id = 'DOGE-USD';
+			    object.price = myJson[0].price_usd;
+			    updatePrices(object);
+			});
+		},5000);
 	});
 </script>
