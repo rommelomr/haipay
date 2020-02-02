@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PersonasController extends Controller
 {
@@ -28,16 +30,44 @@ class PersonasController extends Controller
             'incompleted_profile' => $incompleted_profile,
     	]);
     }
-    public function saveProfile(Request $request){
-    	/*
-    		Llegan:
-	    		nombre
-	    		email
-	    		password
-	    		telefono
+    public function saveProfile(Request $req){
+        $this->validate($req,[
+    		'nombre' => 'required|regex:/^[A-Za-z\s]+$/',
+    		'cedula' => 'required|digits_between:1,20',
+    		'email' => 'required|email', 
+    		'telefono' => 'required|digits_between:1,20',
+    	]);
+    	$user = Auth::user();
+        $persona = $user->persona;
 
-    	*/
-    	dd($request->all());
+        if($req->nombre != $user->nombre){
+    	    $persona->nombre = $req->nombre;
+        }
+
+    	if($req->cedula != $user->cedula){
+    		$persona->cedula = $req->cedula;
+    	}
+
+    	if($req->email != $user->email){
+    		$user->email = $req->email;
+        }
+
+        if($req->telefono != $user->telefono){
+    		$user->telefono = $req->telefono;
+        }
+        
+    	if($req->password!=null){
+    		$user->password = Hash::make($req->password);
+        }
+        
+    	$persona->save();
+    	$user->save();
+    	
+    	return redirect()->back();
+    }
+
+    public function file_Verify(){
+    	dd(1);
     }
 
 }

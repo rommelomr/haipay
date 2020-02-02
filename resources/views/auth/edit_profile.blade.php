@@ -53,7 +53,7 @@
 							</div>
 							<div class="input-field col s12">
 								<center>
-									<button id="button-submit" class="btn indigo">Save</button>
+									<input class="btn indigo" type="submit" value="save">
 								</center>
 							</div>
 						</form>
@@ -80,7 +80,8 @@
 								Verify you account now!
 							</center>
 						</nav>
-						<form class="row">
+						<form method="post" action="{{url('file_Verify')}}" enctype="multipart/form-data">
+							@csrf
 							<div class="file-field input-field">
 						      <div class="btn">
 						        <span>Pictures</span>

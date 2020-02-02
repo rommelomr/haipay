@@ -44,6 +44,8 @@ Route::group(['middleware' => ['tipo:3']], function() {
 
 Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo
 Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');//Listo
+Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');//Listo
+
 
 Route::post('create_user','UsersController@create_user');
 Route::get('search_user','UsersController@search_user');
