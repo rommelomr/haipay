@@ -64,7 +64,7 @@
 										<div class="card-cripto col s6 l3">
 											<div class="card-panel">
 												<b>1 {{$criptomoneda->moneda->siglas}}</b><br><span class="precio-{{$criptomoneda->moneda->siglas}}-USD">cargando</span> $<br>
-												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->moneda->nombre}}" data-siglas_cripto="{{$criptomoneda->moneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
+												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->moneda->nombre}}" data-id_cripto="{{$criptomoneda->id}}" data-siglas_cripto="{{$criptomoneda->moneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
 
 											</div>
 										</div>
@@ -637,8 +637,8 @@
 </div>
 <div id="modal-acquire-cripto" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
-	<form action="acquireCripto" method="POST">@csrf
-		<input id="acquire-base" name="base" type="text" class="inputs-initials-cripto" hidden>
+	<form action="{{route('acquireCripto')}}" method="POST">@csrf
+		<input id="acquire-base" name="base" type="text" class="inputs-id-cripto" hidden>
 		<div class="row margin-0">
 			<div id="cabecera-modal" class="indigo margin-0">
 				<center>
@@ -734,21 +734,22 @@
     		Llenará en el modal todos los campos en los que se deba mostrar la criptomoneda elegida
     	*/
     	let spaces_name_cripto = document.querySelectorAll('.space-name-cripto');
-    	let inputs_initials_cripto = document.querySelectorAll('.inputs-initials-cripto');
+    	let inputs_id_cripto = document.querySelectorAll('.inputs-id-cripto');
 
-    	function setNameModal(nombre,siglas){
+    	function setNameModal(nombre,id){
 
     		for(let i_spaces = 0; i_spaces<spaces_name_cripto.length; i_spaces++){
     			spaces_name_cripto[i_spaces].innerText = nombre;
     		}
-    		for(let i_spaces = 0; i_spaces<inputs_initials_cripto.length; i_spaces++){
-    			inputs_initials_cripto[i_spaces].value = siglas;
+    		for(let i_spaces = 0; i_spaces<inputs_id_cripto.length; i_spaces++){
+    			inputs_id_cripto[i_spaces].value = id;
     		}
+    		
     	}
 
     	function setNameEvent(e){
-    		
-    		setNameModal(e.target.dataset.nombre_cripto,e.target.dataset.siglas_cripto);
+    		console.log(e);
+    		setNameModal(e.target.dataset.nombre_cripto,e.target.dataset.id_cripto);
     	}
 
     	function updatePrices(cripto){
