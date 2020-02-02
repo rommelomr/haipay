@@ -54,5 +54,7 @@ class User extends Authenticatable
     public function persona(){
         return $this->belongsTo('App\Persona','id_persona');
     } 
-
+    public function imagenes(){
+        return $this->belongsTo('App\ImagenVerificacion','id_cliente');
+    }
 }
