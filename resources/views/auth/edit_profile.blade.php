@@ -6,6 +6,13 @@
 @section('main')
 	<div class="row">
 		<div class="col s10 offset-s1">
+			@if ($errors->any())
+					<ul>
+						@foreach ($errors->all() as $error)
+							<li class="error">{{ $error }}</li>
+						@endforeach
+					</ul>
+			@endif
 			<div class="card">
 				<nav class="nav-extended indigo">
 					<div class="nav-content">
@@ -85,7 +92,17 @@
 							<div class="file-field input-field">
 						      <div class="btn">
 						        <span>Pictures</span>
-						        <input type="file" multiple required>
+						        <input type="file" required name="file">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
+						      </div>
+						    </div>
+	
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>Pictures</span>
+						        <input type="file" required name="file2">
 						      </div>
 						      <div class="file-path-wrapper">
 						        <input class="file-path validate" type="text" placeholder="Upload your pictures">

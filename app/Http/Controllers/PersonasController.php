@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PersonasController extends Controller
 {
@@ -66,8 +67,21 @@ class PersonasController extends Controller
     	return redirect()->back();
     }
 
-    public function file_Verify(){
-    	dd(1);
+    public function file_Verify(Request $request){
+        $this->validate(request(), [
+            'file' => 'required|image|max:7680',
+            'file2' => 'required|image|max:7680',
+        ]);
+        
+        $this->guardarDocumentos($request->file('file'), 'ID');
+        $this->guardarDocumentos($request->file('file2'), 'date');
+        
+        return redirect()->back();
+    }
+    
+    private function guardarDocumentos($file, $typeDocument){
+        $name=$typeDocument.'_'.auth::user()->cliente->id;
+        $file->storeAs('uploads', $name.'.'.explode(".",request()->file->getClientOriginalName())[1]);
     }
 
 }
