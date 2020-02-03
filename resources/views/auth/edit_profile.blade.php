@@ -84,12 +84,22 @@
 							<div class="file-field input-field">
 						      <div class="btn">
 						        <span>Pictures</span>
-						        <input type="file" multiple required>
+						        <input type="file" name="fecha">
 						      </div>
 						      <div class="file-path-wrapper">
 						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
 						      </div>
 						    </div>
+						    <div class="file-field input-field">
+						      <div class="btn">
+						        <span>Pictures</span>
+						        <input type="file" name="cedula">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
+						      </div>
+						    </div>
+						    
 						    <div clas="col s12">
 						    	<center>
 						    		<button class="indigo btn">Upload</button>
