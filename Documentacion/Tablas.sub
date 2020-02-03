@@ -48,6 +48,7 @@
 9 imagen_verificacion -> Guardará las imagenes con las que se verificarán los usuarios al registrarse
 	id_cliente:  (fk)
 	nombre: varchar(255)
+	estado: tinyint // 0: por revisar 1:aprobado 2:rechazada
 
 10 referidos -> Guardará los referidos del sistema
 	id_cliente:  (fk) //es el id del cliente padre

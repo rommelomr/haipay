@@ -47,6 +47,8 @@
 9 Imagenes_Verificacion -> Guardará las imagenes con las que se verificarán los usuarios al registrarse
 	id_cliente: (fk)
 	nombre: guardará nombre de la imagen
+	estado: Guarda el estado por aprobar, aprobado, rechazado
+	tipo: Guarda el tipo de documento, cedula, fecha
 
 10 Referidos -> Guardará los referidos del sistema
 	id_cliente: guardará el id del cliente que trajo al segundo cliente al sistema

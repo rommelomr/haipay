@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\ImagenVerificacion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -72,16 +73,32 @@ class PersonasController extends Controller
             'file' => 'required|image|max:7680',
             'file2' => 'required|image|max:7680',
         ]);
-        
-        $this->guardarDocumentos($request->file('file'), 'ID');
-        $this->guardarDocumentos($request->file('file2'), 'date');
-        
+
+        $idCliente = auth::user()->cliente->id;
+
+        $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file'), $idCliente,'ID'),0);
+        $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file2'), $idCliente,'date'),1);
+
         return redirect()->back();
     }
     
-    private function guardarDocumentos($file, $typeDocument){
+    private function guardarDocumentos($file, $idCliente ,$typeDocument){
         $name=$typeDocument.'_'.auth::user()->cliente->id;
-        $file->storeAs('uploads', $name.'.'.explode(".",request()->file->getClientOriginalName())[1]);
+        return $file->storeAs('uploads', $name.'.'.explode(".",request()->file->getClientOriginalName())[1]);
+    }
+
+    private function createImagenVerificacion($idCliente, $ruta,$tipo){
+        $consulta = ImagenVerificacion::where('id_cliente',$idCliente)->where('tipo',$tipo)->first();
+        if($consulta == null)
+            ImagenVerificacion::create([
+                'id_cliente' => $idCliente,
+                'nombre' => $ruta,
+                'tipo' => $tipo,
+            ]);
+        else{
+            $consulta->nombre = $ruta;
+            $consulta->save();
+        }
     }
 
 }
