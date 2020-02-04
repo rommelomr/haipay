@@ -75,7 +75,7 @@ class PersonasController extends Controller
         ]);
 
         $idCliente = auth::user()->cliente->id;
-
+        dd($this->guardarDocumentos($request->file('file'), $idCliente,'ID'))   ;
         $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file'), $idCliente,'ID'),0);
         $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file2'), $idCliente,'date'),1);
 
@@ -84,7 +84,8 @@ class PersonasController extends Controller
     
     private function guardarDocumentos($file, $idCliente ,$typeDocument){
         $name=$typeDocument.'_'.auth::user()->cliente->id;
-        return $file->storeAs('uploads', $name.'.'.explode(".",request()->file->getClientOriginalName())[1]);
+        $file->storeAs('public', $name.'.'.explode(".",request()->file->getClientOriginalName())[1]);
+        return $name.'.'.explode(".",request()->file->getClientOriginalName())[1];
     }
 
     private function createImagenVerificacion($idCliente, $ruta,$tipo){
