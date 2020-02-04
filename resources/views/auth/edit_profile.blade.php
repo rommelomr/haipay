@@ -60,7 +60,7 @@
 							</div>
 							<div class="input-field col s12">
 								<center>
-									<input class="btn indigo" type="submit" value="save">
+									<input class="btn indigo" type="submit" value="save" id="button-submit">
 								</center>
 							</div>
 						</form>
@@ -81,41 +81,98 @@
 
 						</div>
 					</div>
-					<div class="card-content col s6" >
-						<nav class="red lighten-3">
-							<center>
-								Verify you account now!
-							</center>
-						</nav>
-						<form method="post" action="{{url('file_Verify')}}" enctype="multipart/form-data">
-							@csrf
-							<div class="file-field input-field">
-						      <div class="btn">
-						        <span>Pictures</span>
-						        <input type="file" name="file">
-						      </div>
-						      <div class="file-path-wrapper">
-						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
-						      </div>
-						    </div>
-	
-							<div class="file-field input-field">
-						      <div class="btn">
-						        <span>Pictures</span>
-						        <input type="file" name="file2">
-						      </div>
-						      <div class="file-path-wrapper">
-						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
-						      </div>
-						    </div>
-						    <div clas="col s12">
-						    	<center>
-						    		<button class="indigo btn">Upload</button>
-						    	</center>
-						    </div>
+						<div class="card-content col s6" >
+							@if(!$account_verified)
+								<nav class="red lighten-3">
+									<center>
+										Verify you account now!
+									</center>
+								</nav>
+							@else
+								<nav class="green lighten-3">
+									<center>
+										Account Verified!
+									</center>
+								</nav>
+							@endif
+							<form method="post" action="{{url('file_Verify')}}" enctype="multipart/form-data">
+								@csrf
+								<div class="row">
+									@php
+										$imagen = $current_user_data->cliente->imagenesVerificacion->all();
+									@endphp
 
-						</form>
-					</div>
+									@for($i = 0; $i < 2; $i++)
+										<?php 
+											$hay_imagen = isset($imagen[$i]);
+										 ?>
+										@if(($hay_imagen) && ($imagen[$i]->estado == 1))
+											<div class="col s6">
+												<div class="card">
+											        <div class="card-image">
+											          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
+											        </div>
+											        <div class="card-content">
+											          <a class="">Image Approved</a>
+											        </div>
+											    </div>
+											</div>
+										@elseif((($hay_imagen) && ($imagen[$i]->estado===2)) || (!$hay_imagen))
+											@if($hay_imagen)
+												<div class="col s6">
+													<div class="card">
+												        <div class="card-image">
+												          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
+												        </div>
+												        <div class="card-content">
+												          <a class="">Image Refused</a>
+															<div class="file-field input-field">
+														      <div class="btn">
+														        <span>Pictures</span>
+														        <input type="file" name="file{{$i}}">
+														      </div>
+														      <div class="file-path-wrapper">
+														        <input class="file-path validate" type="text" placeholder="Upload your pictures">
+														      </div>
+														    </div>
+												        </div>
+												    </div>
+												</div>
+											@else
+												<div class="col s6 file-field input-field">
+											      <div class="btn">
+											        <span>Pictures</span>
+											        <input type="file" name="file{{$i}}">
+											      </div>
+											      <div class="file-path-wrapper">
+											        <input class="file-path validate" type="text" placeholder="Upload your pictures">
+											      </div>
+											    </div>
+											@endif
+										@elseif(($hay_imagen) && ($imagen[$i]->estado===0))
+											<div class="col s6">
+												<div class="card">
+											        <div class="card-image">
+											          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
+											        </div>
+											        <div class="card-content">
+											          <a href="#">Waiting for approval</a>
+											        </div>
+											      </div>
+											</div>
+										@endif
+
+									@endfor
+								</div>
+
+							    <div clas="col s12">
+							    	<center>
+							    		<button class="indigo btn">Upload</button>
+							    	</center>
+							    </div>
+
+							</form>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -160,5 +217,7 @@
 		  	inputs[i].setAttribute('readonly',true);
 		  	inputs[i].onkeyup = activateSubmit;
 		}
+		var elems_boxed = document.querySelectorAll('.materialboxed');
+    	var instances = M.Materialbox.init(elems_boxed);
 	}
 </script>
