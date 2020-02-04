@@ -40,6 +40,7 @@ Route::group(['middleware' => ['tipo:1']], function() {
 //Dashboard
 Route::group(['middleware' => ['tipo:2']], function() {
     Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');//Listo
+    Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');//Listo
 });
 
 //Users

@@ -161,16 +161,34 @@
 										      		</center>
 										      	</td>
 										      	<td>
+									      			@php
+									      				$num_attr = 1;
+
+									      				$max_images = count($cliente->imagenesVerificacion);
+
+									      				$str = '';	
+									      				foreach($cliente->imagenesVerificacion as $imagen){
+
+									      					$str .= '"'.$imagen->id.'":"'.$imagen->nombre.'"';
+
+									      					//$str .= $imagen->nombre.'"';
+
+										      				if($num_attr++<$max_images){
+										      					$str .= ',';
+										      				}
+									      				}
+										      				
+									      			@endphp
 										      		<center>
-										      			@foreach($cliente->imagenesVerificacion as $imagen)
-										      				<img class="responsive-img" src="{{Storage::get($imagen->nombre)}}" alt="">
-										      			@endforeach
-										      		</center>
-										      	</td>
-										      	<td>
-										      		<center>
-										      			<button class="btn indigo">Enable again</button><br><br>
-										      			<button class="btn red">Delete definitely</button>
+										      			<a
+
+										      			class="btn indigo modal-trigger see_images"
+										      			href="#see_images"
+										      			data-nombre="{{$cliente->usuario->persona->nombre}}"
+										      			data-id="{{$cliente->id}}"
+										      				data-imagenes='{ {{$str}} }'
+										      			>See images</a>
+
 										      		</center>
 										      	</td>
 							      			</tr>
@@ -189,9 +207,32 @@
 		</div>
 
 	</div>
-
+  <div id="see_images" class="modal">
+    <div class="modal-content">
+      <div class="row">
+      	<div class="col s12">
+      		<center>
+      			<h3 id="modal-client-name">Carlos Bolivar</h3>
+      		</center>
+<form action="{{asset('verify_image_moderator')}}" method="POST" id="verify_image_form" hidden>
+	@csrf
+	<input type="text" name="id_imagen" id="id_imagen">
+	<input type="text" name="estado" id="estado">
+</form>
+      	</div>
+      </div>
+      <div class="row">
+      	<div id="modal-images-container"></div>
+      	
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+  </div>
+          
 @endsection
-
+  <!-- Modal Structure -->
 <script>
 	
 	var submitEnabled = false;
@@ -257,5 +298,151 @@
     	
     	var elems_collapsible = document.querySelectorAll('.collapsible');
 	    var instances_collapsible = M.Collapsible.init(elems_collapsible);
+
+ 		var elem_modal = document.querySelectorAll('.modal');
+    	var instances_modal = M.Modal.init(elem_modal);
+
+    	let modal_client_name = document.getElementById('modal-client-name');
+
+    	function emptyNode(node){
+
+    		while(node.hasChildNodes()){
+				node.removeChild(node.firstChild);
+			}
+    	}
+		function setImagesVerification(e){
+			let id_imagen = document.getElementById('id_imagen');
+			id_imagen.value = e.target.dataset.image_id;
+			let estado = document.getElementById('estado');
+			estado.value = e.target.dataset.state;
+			console.log(e);
+			let form_verify = document.getElementById('verify_image_form');
+			form_verify.submit();
+
+		}
+    	function setModal(e){
+    		let button_clicked = e.target;
+    		//establezco el id del contenedor donde se va a agregar y eliminar la data
+    		let id_div = 'modal-images-container';
+
+    		//Obtengo el div con el id antes configurado
+    		let div = document.getElementById(id_div);
+    		//let imagenes = button_clicked.dataset.imagenes.split(",");
+    		let images_json = JSON.parse(button_clicked.dataset.imagenes);
+
+    		
+    		emptyNode(div);
+
+    		//crear los objetos (uno por cada imagen que se tenga)
+    			
+    			//Crear div.col
+    				//let images_array = Object.keys(images_json);
+    				//console.log(images_array);
+
+
+    				//for(let i = 0; i<images_array; i++){
+
+    				for(let key in images_json){
+    					let new_div = document.createElement('div');
+    					new_div.classList.add('col');
+    					new_div.classList.add('s6');
+    					//creamos objeto img
+    					let image = document.createElement('img');
+
+    					//agregar src
+    					image.setAttribute('src','/storage/'+images_json[key]);
+
+    					//agregar clases
+    					image.classList.add('responsive-img');
+
+    				//crear boton_aceptar
+	    				let boton_aceptar = document.createElement('button');
+
+    					//colocar id imagen en dataset al boton
+	    				boton_aceptar.setAttribute('data-image_id',key);
+
+    					//colocar estado (para setear el input) en dataset al boton
+	    				boton_aceptar.setAttribute('data-state',1);
+
+	    				//agregamos clases
+	    				boton_aceptar.classList.add('btn');
+	    				boton_aceptar.classList.add('green');
+	    				boton_aceptar.classList.add('verify_image');
+
+	    				//creamos texto del button
+	    				let texto_boton_aceptar = document.createTextNode('Verify');
+
+	    				//insertamos texto en el button
+	    				boton_aceptar.insertBefore(texto_boton_aceptar,null);
+
+
+    				//crear boton rechazar
+	    				let boton_cancelar = document.createElement('button');
+
+    					//colocar id imagen en dataset al boton
+	    				boton_cancelar.setAttribute('data-image_id',key);
+    					//colocar estado (para setear el input) en dataset al boton
+	    				boton_cancelar.setAttribute('data-state',2);
+
+	    				//agregamos clases
+	    				boton_cancelar.classList.add('btn');
+	    				boton_cancelar.classList.add('red');
+	    				boton_cancelar.classList.add('ligthen-3');
+	    				boton_cancelar.classList.add('verify_image');
+
+	    				//creamos texto del button
+	    				let texto_boton_cancelar = document.createTextNode('Refuse');
+
+	    				//insertamos texto en el button
+	    				boton_cancelar.insertBefore(texto_boton_cancelar,null);
+
+	    				
+    				/*
+    				*/
+    					//Insertamos imagen
+    					let row = document.createElement('div');
+    					row.classList.add('row');
+
+    					let col = document.createElement('div');
+    					col.classList.add('col');
+    					col.classList.add('s12');
+    					let center = document.createElement('center');
+
+	    				col.insertBefore(image,null);
+	    				center.insertBefore(col,null);
+	    				new_div.insertBefore(center,null);
+
+	    				//Agregamos los botones a una etiqueta center
+    					center = document.createElement('center');
+	    				center.insertBefore(boton_aceptar,null);
+	    				center.insertBefore(boton_cancelar,null);
+
+	    				//Insertamos la etiqueta center
+	    				new_div.insertBefore(center,null);
+
+	    				//agregamos todo lo anterior al div del modal
+	    				div.insertBefore(new_div,null);
+
+    				    //colocar id imagen
+    					//colocar estado (para setear el input)
+
+    					//querido amigo programador... Si ves este mensaje, mi cometido era cambiar las variables a ingles para no hacer una mezcla de idiomas. Lo hice en español porque el estres no me dejaba pensar bien como para, encima, escribir todo en un idioma que no domino del todo... Mil disculpas
+    				}	
+    				let verify_buttons = document.querySelectorAll('.verify_image');
+    				for(let key in verify_buttons){
+    					verify_buttons[key].onclick = setImagesVerification;
+
+    				}
+    				console.log(button_clicked.dataset);
+    				modal_client_name.innerText = button_clicked.dataset.nombre;
+
+
+
+    	}
+    	let buttons = document.querySelectorAll('.see_images');
+    	for(let i = 0; i<buttons.length; i++){
+    		buttons[i].onclick = setModal;
+    	}
+
 	}
 </script>

@@ -75,7 +75,7 @@ class PersonasController extends Controller
         ]);
 
         $idCliente = auth::user()->cliente->id;
-        dd($this->guardarDocumentos($request->file('file'), $idCliente,'ID'))   ;
+        //dd($this->guardarDocumentos($request->file('file'), $idCliente,'ID'))   ;
         $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file'), $idCliente,'ID'),0);
         $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file2'), $idCliente,'date'),1);
 
