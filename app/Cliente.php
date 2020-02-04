@@ -13,7 +13,7 @@ class Cliente extends Model
     public function referidos(){
     	return $this->hasMany('App\Referido','id_cliente');
     }
-    public function ImagenesVerificacion(){
+    public function imagenesVerificacion(){
     	return $this->hasMany('App\ImagenVerificacion','id_cliente');
     }
     public function carteras(){

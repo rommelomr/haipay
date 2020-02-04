@@ -16,6 +16,8 @@ class CreateTableImagenVerificacion extends Migration
         Schema::create('imagen_verificacion', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_cliente');
+            $table->tinyInteger('estado')->default(0);
+            $table->tinyInteger('tipo');
             $table->foreign('id_cliente')->references('id')->on('clientes');
             $table->string('nombre',255);
             $table->timestamps();

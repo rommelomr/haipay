@@ -4,6 +4,7 @@
 /public/material-design-icons
 /public/materialize
 /storage/*.key
+/storage
 /vendor
 .env
 .env.backup

@@ -127,7 +127,7 @@
 							<nav class="nav-extended indigo">
 								<div class="nav-content">
 									<center>
-										<span class="nav-title">Disabled Clients</span>
+										<span class="nav-title">Unverified Clients</span>
 									</center>
 								</div>
 							</nav>
@@ -136,7 +136,7 @@
 							  <ul class="collapsible">
 								@foreach($clientes as $cliente)
 							    <li>
-							      <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}</div>
+							      <div class="collapsible-header"><i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}</div>
 							      <div class="collapsible-body">
 							      	<table>
 							      		<thead>
@@ -144,11 +144,6 @@
 							      			
 								      	<th>
 								      		<center><b>Nombre Completo</b></center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Descripción</b>
-								      		</center>
 								      	</th>
 								      	<th>
 								      		<center>
@@ -167,8 +162,9 @@
 										      	</td>
 										      	<td>
 										      		<center>
-										      			
-										      			que o de quien o
+										      			@foreach($cliente->imagenesVerificacion as $imagen)
+										      				<img class="responsive-img" src="{{Storage::get($imagen->nombre)}}" alt="">
+										      			@endforeach
 										      		</center>
 										      	</td>
 										      	<td>

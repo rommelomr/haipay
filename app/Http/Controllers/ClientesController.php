@@ -23,7 +23,10 @@ class ClientesController extends Controller
     	]);
     }
     public function showViewClients(){
-		$clientes =Cliente::all();
+		$clientes =Cliente::where('estado',0)->whereHas('imagenesVerificacion')->with(['imagenesVerificacion','usuario'=>function($query){
+			$query->with(['persona']);
+		}])->paginate(15);
+		
     	return view('clients', array('clientes' => $clientes));
     }
 

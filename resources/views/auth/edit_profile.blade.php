@@ -6,6 +6,13 @@
 @section('main')
 	<div class="row">
 		<div class="col s10 offset-s1">
+			@if ($errors->any())
+					<ul>
+						@foreach ($errors->all() as $error)
+							<li class="error">{{ $error }}</li>
+						@endforeach
+					</ul>
+			@endif
 			<div class="card">
 				<nav class="nav-extended indigo">
 					<div class="nav-content">
@@ -53,7 +60,7 @@
 							</div>
 							<div class="input-field col s12">
 								<center>
-									<button id="button-submit" class="btn indigo">Save</button>
+									<input class="btn indigo" type="submit" value="save">
 								</center>
 							</div>
 						</form>
@@ -80,26 +87,27 @@
 								Verify you account now!
 							</center>
 						</nav>
-						<form class="row">
+						<form method="post" action="{{url('file_Verify')}}" enctype="multipart/form-data">
+							@csrf
 							<div class="file-field input-field">
 						      <div class="btn">
 						        <span>Pictures</span>
-						        <input type="file" name="fecha">
+						        <input type="file" name="file">
 						      </div>
 						      <div class="file-path-wrapper">
 						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
 						      </div>
 						    </div>
-						    <div class="file-field input-field">
+	
+							<div class="file-field input-field">
 						      <div class="btn">
 						        <span>Pictures</span>
-						        <input type="file" name="cedula">
+						        <input type="file" name="file2">
 						      </div>
 						      <div class="file-path-wrapper">
 						        <input class="file-path validate" type="text" placeholder="Upload your pictures">
 						      </div>
 						    </div>
-						    
 						    <div clas="col s12">
 						    	<center>
 						    		<button class="indigo btn">Upload</button>

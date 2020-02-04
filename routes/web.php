@@ -37,6 +37,11 @@ Route::group(['middleware' => ['tipo:1']], function() {
 	Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
 });
 
+//Dashboard
+Route::group(['middleware' => ['tipo:2']], function() {
+    Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');//Listo
+});
+
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
 	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
@@ -44,10 +49,13 @@ Route::group(['middleware' => ['tipo:3']], function() {
 
 Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo
 Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');//Listo
+Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');//Listo
 
 Route::post('create_user','UsersController@create_user');
 Route::get('search_user','UsersController@search_user');
-Route::get('search_user/{cedula}','UsersController@search_user');
+
+Route::get('search_user/{cedula}','UsersController@search_user');//??????????
+
 Route::post('changeState','UsersController@changeState');
 Route::post('modifyUser','UsersController@modifyUser');
 Route::get('search_client','ClientesController@search_client');
