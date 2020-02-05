@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-return view('welcome');
-});
+Route::get('/', 'UsersController@main')->middleware('auth')->name('/');
 //Login
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');//Listo (5)
 Route::post('login', 'Auth\LoginController@login');

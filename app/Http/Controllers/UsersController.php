@@ -105,6 +105,9 @@ class UsersController extends Controller
     		//Reportar error #2
     	}
     }
+    public function main(){
+        return view('welcome');
+    }
     public function modifyUser(Request $req){
     	$this->validate($req,[
 
