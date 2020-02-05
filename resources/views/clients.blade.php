@@ -348,6 +348,8 @@
     					new_div.classList.add('s6');
     					//creamos objeto img
     					let image = document.createElement('img');
+    					image.setAttribute('height',150);
+    					image.setAttribute('width',150);
 
     					//agregar src
     					image.setAttribute('src','/storage/'+images_json[key]);

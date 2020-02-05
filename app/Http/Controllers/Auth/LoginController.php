@@ -60,11 +60,14 @@ public function login(Request $request)
             $user = Auth::user();
             if($user->estado != 3 && $user->estado != 2){
                 if($user->tipo == 1){
-                    $this->redirectTo = '/welcome';
+                    $this->redirectTo = '/edit_profile';
+    
+                }else if($user->tipo == 2){
+                    $this->redirectTo = '/clients';
     
                 }else{
                     $this->redirectTo = '/users';
-    
+
                 }
     
                 return $this->sendLoginResponse($request);
