@@ -22,43 +22,69 @@ class ClientesController extends Controller
     		'metodos_pago' => $metodos_pago,
     	]);
     }
-    public function showViewClients(){
-		$clientes =Cliente::where('estado',0)->whereHas('imagenesVerificacion')->with(['imagenesVerificacion','usuario'=>function($query){
+    private function smartClientsSearcher($string){
+
+    	return Cliente::where('id','like','%'.$string.'%')
+
+    	->orWhereHas('usuario',function($query) use ($string) {
+
+    		$query->where('email','like','%'.$string.'%')
+
+	    		->orWhere('password','like','%'.$string.'%')
+
+	    		->orWhere('tipo','like','%'.$string.'%')
+
+	    		->orWhere('fecha_nacimiento','like','%'.$string.'%')
+
+	    		->orWhere('telefono','like','%'.$string.'%')
+
+	    		->orWhereHas('persona',function($query)use($string){
+
+	    			$query->where('nombre','like','%'.$string.'%')
+
+	    			->orWhere('cedula','like','%'.$string.'%');
+	    		});
+    	})
+    	->with(['usuario'=>function($query){
+    		$query->with('persona');
+    	}])->paginate(15);
+
+    }
+    public function showViewClients($string = '', $cliente_editar = null){
+
+		$clientes_verificar =Cliente::where('estado',0)->whereHas('imagenesVerificacion')->with(['imagenesVerificacion','usuario'=>function($query){
 			$query->with(['persona']);
 		}])->paginate(15);
-		
-    	return view('clients', array('clientes' => $clientes));
+
+
+		//$clientes_todos = Cliente::paginate(15);
+		$clientes_todos = $this->smartClientsSearcher($string);
+		//dd($cliente_editar);
+		$a=$cliente_editar;
+    	return view('clients', [
+    		'clientes_verificar' => $clientes_verificar,
+    		'clientes_todos' => $clientes_todos,
+    		'cliente_editar' => $a,
+    	]);
+    }
+    public function searchClients(Request $request){
+
+    	
+		 return $this->showViewClients($request->buscar);
+    	//return
     }
 
-    public function search_client($cedula = null){
-		if($cedula != null){
-			
-			$ced = $cedula;
-    	}else{
-			if(isset($_GET['buscar'])){
-				$ced = $_GET['buscar'];
-    		}else{
-				//error inesperado #1
-    		}
-    	}
-		if(1){
-			$persona = Persona::where('cedula',$ced)->orWhere('id',$ced)->with('usuario')->first();
-			
-			if($persona != null && $persona->usuario->tipo == 1 && $persona->usuario->estado != 3){
-				return redirect()->back()->with('data',$persona);
-			}else{
-				return redirect()->back()->with('messages',[
-					'user' => 'User not found']);
-		    	}
-		    	
-    		}else{
-				//error inesperado #1
-    		}
-			
-		}
-		public function modify_client(Request $req){
-			$this->validate($req,[
-				'id' =>	'required|numeric',
+    public function searchClient($id){
+	
+		$cliente = Cliente::with(['usuario'=>function($query){
+			$query->with('persona');
+		}])->find($id);
+
+		return $this->showViewClients('',$cliente);
+	}
+	public function modify_client(Request $req){
+		$this->validate($req,[
+			'id' =>	'required|numeric',
     		'nombre' =>	'regex:/^[A-Za-z\s]+$/',
     		'email' =>	'email',
 			'cedula' =>	'numeric',

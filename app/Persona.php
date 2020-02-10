@@ -10,6 +10,7 @@ class Persona extends Model
     public function usuario(){
     	return $this->hasOne('App\User','id_persona');
     }
+    
     public function receptor(){
     	return $this->hasOne('App\Receptor','id_persona');
     }

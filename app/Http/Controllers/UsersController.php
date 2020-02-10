@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Persona;
+use App\Moderador;
 use App\User;
 use App\DeletedUser;
 use Illuminate\Validation\Rule;
@@ -27,7 +28,7 @@ class UsersController extends Controller
     	$this->validate($req,[
     		'name' => 'required|regex:/^[A-Za-z\s]+$/',
     		'email' => 'required|email|unique:users', 
-    		'id' => 'required|digits_between:1,20|unique:personas',
+    		'id' => 'required|digits_between:1,20|unique:personas,cedula',
     		'password' => 'required',
     		'rol' => ['required',Rule::in(['2','3'])],
     		'date' => 'required|date',
@@ -39,7 +40,7 @@ class UsersController extends Controller
     		'cedula' => $req->id,
     	]);
 
-    	User::create([
+    	$user = User::create([
     		'id_persona' => $persona->id,
     		'email' => $req->email,
     		'password' => Hash::make($req->password),
@@ -47,6 +48,11 @@ class UsersController extends Controller
     		'fecha_nacimiento' => $req->date
     	]);
     	
+        if($req->rol == 2){
+            Moderador::create([
+                'id_usuario'=> $user->id
+            ]);
+        }
 
 
     	return redirect()->back()->with('messages',[

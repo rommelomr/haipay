@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Moderador extends Model
 {
+	protected $table = 'moderadores';
 	protected $guarded = [];
     public function transacciones(){
     	return $this->hasMany('App\Transaccion','id_moderador');

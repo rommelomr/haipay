@@ -55,10 +55,11 @@ Route::get('search_user','UsersController@search_user');
 
 Route::get('search_user/{cedula}','UsersController@search_user');//??????????
 
-Route::post('changeState','UsersController@changeState');
+Route::post('change_state','UsersController@changeState')->name('change_state');
 Route::post('modifyUser','UsersController@modifyUser');
-Route::get('search_client','ClientesController@search_client');
-Route::get('search_client/{cedula}','ClientesController@search_client');
+//Route::get('search_client','ClientesController@search_client')->name('search_client');
+Route::get('search_clients','ClientesController@searchClients')->name('search_clients');
+Route::get('clients/{cedula}','ClientesController@searchClient');
 Route::post('modify_client','ClientesController@modify_client');
 
 Route::get('disabled_users', 'UsersController@showViewDisabledUsers');

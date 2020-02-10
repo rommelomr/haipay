@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 class PersonasController extends Controller
 {
     public function showViewEditProfile(){
-    	
+
     	$data = User::with(['persona','cliente'=>function($query){
             $query->with('imagenesVerificacion');
         }])->where('id_persona',\Auth::user()->id_persona)->first();

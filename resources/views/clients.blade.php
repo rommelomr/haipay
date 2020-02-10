@@ -33,30 +33,27 @@
 							@endif
 						<div class=" row">
 								<div class="col s12">
-									@if(session('data'))
-									<?php 
-										$persona = session('data');
-									?>
+									@if($cliente_editar!=null)
 									<form method="post" action="modify_client">
 										@csrf
-										<input hidden value="{{$persona->id}}" name="id">
+										<input hidden value="{{$cliente_editar->usuario->persona->id}}" name="id">
 										<div class="content row">
 											<div class="input-field col s5">
 												<i class="material-icons prefix">person</i>
 												<label for="nombre">Name</label>
-												<input class="input-editable " readonly id="nombre" type="text" name="nombre" value="{{$persona->nombre}}">
+												<input class="input-editable " readonly id="nombre" type="text" name="nombre" value="{{$cliente_editar->usuario->persona->nombre}}">
 												<i data-brother="nombre" class="icon-button edit material-icons prefix">edit</i>
 											</div>
 											<div class="input-field col offset-s1 s5">
 												<i class="material-icons prefix">email</i>
 												<label for="email">Email</label>
-												<input class="input-editable " readonly id="email" type="email" name="email" value="{{$persona->usuario->email}}">
+												<input class="input-editable " readonly id="email" type="email" name="email" value="{{$cliente_editar->usuario->email}}">
 												<i data-brother="email" class="icon-button edit material-icons prefix">edit</i>
 											</div>
 											<div class="input-field col s5">
 												<i class="material-icons prefix">credit_card</i>
 												<label for="cedula">ID</label>
-												<input class="input-editable " readonly id="cedula" type="text" name="cedula" value="{{$persona->cedula}}">
+												<input class="input-editable " readonly id="cedula" type="text" name="cedula" value="{{$cliente_editar->usuario->persona->cedula}}">
 												<i data-brother="cedula" class="icon-button edit material-icons prefix">edit</i>
 											</div>
 
@@ -70,52 +67,79 @@
 										<div class="col s12">
 										      	<center>
 										      		<button id="button-submit" class="btn green ligthen-3">Save</button>
-										      		@if($persona->usuario->estado === 2)
+										      		@if($cliente_editar->usuario->estado === 2)
 										      			<label class="btn black">User in black list</label>
 
 										      		@endif
 													  <a class='dropdown-trigger btn indigo' href='#' data-target='dropdown1'>Options</a>
 													  <ul id='dropdown1' class='dropdown-content'>
 													  	<li><a href="#!">See transactions</a></li>
-														@if($persona->usuario->estado === 1)
+														@if($cliente_editar->usuario->estado === 1)
 													    	<li><a href="#!" class="changeState" data-state="2">Send to black list</a></li>
 
-										      			@elseif($persona->usuario->estado === 2)
+										      			@elseif($cliente_editar->usuario->estado === 2)
 													    	<li><a href="#!" class="changeState" data-state="1">Remove from black list</a></li>
 										      			@endif
 													  </ul>
 										      	</center>
 										      </div>
 										</form>
-										<form id="change-state-form" action="changeState" method="post" hidden>
+										<form id="change-state-form" action="{{route('change_state')}}" method="POST" hidden>
 											@csrf
-											<input name="user_to_change_state" value="{{$persona->id}}">
+											<input name="user_to_change_state" value="{{$cliente_editar->usuario->persona->id}}">
 											<input id="state" name="state">
 											<input id="changeState" type="submit">
 										</form>
 									@endif
 								</div>
 							<div class="col s8 offset-s2">
-								<form action="search_client" method="get">
+								<form action="{{route('search_clients')}}" method="get">
 									@csrf
 									<div class="input-field">
 									
-										<label for="buscar">search user</label>
+										<label for="buscar">Search Client</label>
 										<input id="buscar_usuario" type="submit" hidden>
 										
-										<input id="buscar" type="text" name="buscar" value="27">
+										<input id="buscar" type="text" name="buscar">
 										<span><label for="buscar_usuario"><i class="icon-button material-icons prefix">search</i></label></span>
+										<span class="helper-text"><a href="{{route('clients')}}">Show all clients</a></span>
 
 									</div>
 								</form>
-	
-								<div class="col s12">
-									<center>
-										See <a href="#">desactivated users</a>
-									</center>
-								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col s10 offset-s1">
+								<ul class="collection">
+									@forelse($clientes_todos as $cliente)
+								    	<li class="collection-item">
+											@if($cliente->estado === 0)
+									    		<span data-badge-caption="Don't verified" class="badge new red lighten-3"></span>	
+											@else
+									    		<span data-badge-caption="Verified" class="badge new green lighten-3"></span>	
+											@endif
+									    	<b>#{{$cliente->id}}:</b>
+									    	<a href="#">{{$cliente->usuario->persona->nombre}}</a>
+									    	@if($cliente->usuario->telefono!==null)
+									    		<b>Telephone:</b> {{$cliente->usuario->telefono}}
+									    	@else
+									    		This client haven't registered his telephone
+									    	@endif
+									    </li>
+									@empty
+										There's no registered clients
+									@endforelse
+
+								</ul>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col s12">
+						<center>
+							See <a href="#">desactivated users</a>
+						</center>
 					</div>
 				</div>
 			</div>
@@ -134,7 +158,7 @@
 							<div class="row">
 								<div class="col s10 offset-s1">
 							  <ul class="collapsible">
-								@foreach($clientes as $cliente)
+								@foreach($clientes_verificar as $cliente)
 							    <li>
 							      <div class="collapsible-header"><i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}</div>
 							      <div class="collapsible-body">
@@ -389,7 +413,7 @@
 	    				//agregamos clases
 	    				boton_cancelar.classList.add('btn');
 	    				boton_cancelar.classList.add('red');
-	    				boton_cancelar.classList.add('ligthen-3');
+	    				boton_cancelar.classList.add('lighten-3');
 	    				boton_cancelar.classList.add('verify_image');
 
 	    				//creamos texto del button
