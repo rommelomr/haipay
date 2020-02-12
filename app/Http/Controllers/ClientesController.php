@@ -47,19 +47,16 @@ class ClientesController extends Controller
     	})
     	->with(['usuario'=>function($query){
     		$query->with('persona');
-    	}])->paginate(15);
+    	}])->paginate(10);
 
     }
     public function showViewClients($string = '', $cliente_editar = null){
 
 		$clientes_verificar =Cliente::where('estado',0)->whereHas('imagenesVerificacion')->with(['imagenesVerificacion','usuario'=>function($query){
 			$query->with(['persona']);
-		}])->paginate(15);
+		}])->paginate(10);
 
-
-		//$clientes_todos = Cliente::paginate(15);
 		$clientes_todos = $this->smartClientsSearcher($string);
-		//dd($cliente_editar);
 		$a=$cliente_editar;
     	return view('clients', [
     		'clientes_verificar' => $clientes_verificar,

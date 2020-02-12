@@ -21,7 +21,7 @@
 						</center>
 					</div>
 				</nav>
-				<div class="row">
+				<div class="row  valign-wrapper">
 					<div class="card-content col s6">
 						@if($incompleted_profile)
 							<nav>
@@ -102,22 +102,17 @@
 										$imagen = $current_user_data->cliente->imagenesVerificacion->all();
 									@endphp
 
+									<?php $show_button = false; ?>
 									@for($i = 0; $i < 2; $i++)
 										<?php 
 											$hay_imagen = isset($imagen[$i]);
 										 ?>
-										@if(($hay_imagen) && ($imagen[$i]->estado == 1))
-											<div class="col s6">
-												<div class="card">
-											        <div class="card-image">
-											          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
-											        </div>
-											        <div class="card-content">
-											          <a class="">Image Approved</a>
-											        </div>
-											    </div>
-											</div>
-										@elseif((($hay_imagen) && ($imagen[$i]->estado===2)) || (!$hay_imagen))
+										@if((($hay_imagen) && ($imagen[$i]->estado===2)) || (!$hay_imagen))
+											<?php 
+												if(!$show_button){
+													$show_button = true;
+												}
+											?>
 											@if($hay_imagen)
 												<div class="col s6">
 													<div class="card">
@@ -164,12 +159,13 @@
 
 									@endfor
 								</div>
-
-							    <div clas="col s12">
-							    	<center>
-							    		<button class="indigo btn">Upload</button>
-							    	</center>
-							    </div>
+								@if($show_button)
+								    <div clas="col s12">
+								    	<center>
+								    		<button class="indigo btn">Upload</button>
+								    	</center>
+								    </div>
+								@endif
 
 							</form>
 						</div>

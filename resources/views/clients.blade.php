@@ -2,8 +2,12 @@
 @extends('layouts.sidenav')
 @section('head')
     <link rel="stylesheet" href="{{asset('css/users.css')}}">
+    <style>
+
+    </style>
 @endsection
 @section('main')
+
 	<div class="row">
 		<div class="col s12 l6">
 			<div class="card">
@@ -127,10 +131,25 @@
 									    	@endif
 									    </li>
 									@empty
-										There's no registered clients
+								    	<li class="collection-item">
+								    		<center>
+												Clients not found
+								    		</center>
+									    </li>
 									@endforelse
 
 								</ul>
+							</div>
+							<div class="col s10 offset-s1">
+								<center>
+
+									{{$clientes_todos->links('commons.pagination',[
+										'paginate'=>$clientes_todos,
+										'max_buttons'=>5
+										])}}
+
+								</center>
+							
 							</div>
 						</div>
 

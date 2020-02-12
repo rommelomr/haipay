@@ -653,14 +653,14 @@
 					<form action="">
 						<div class="input-field col s12">
 							<label for="sum">How much <b class="space-name-cripto">cripto</b> want to buy?</label>
-							<input id="sum" type="text" value="" name="cantBuy">
+							<input id="cuant_buy" class="re_calculate" type="text" value="" name="cuant_buy">
 						</div>
 						<div class="col s12">
 							
 							<div class="row valign-wrapper margin-0 padding-0">
 								
 								<div class="input-field col s6">
-									<select id="payWith" name="payWith" class="browser-default">
+									<select id="payWith" name="payWith" class="browser-default re_calculate_change">
 										<option disabled selected value="none">Pay with</option>
 										<option value="USD">USD - Dólar estadounidense</option>
 										@foreach($criptomonedas as $criptomoneda)
@@ -672,7 +672,6 @@
 								<div class="input-field col s6">
 									<select id="payment_method" name="type_operation" class="browser-default">
 										<option disabled selected value="none">Payment Method</option>
-										<option value="USD">USD - Dólar estadounidense</option>
 										@foreach($metodos_pago as $metodo_pago)
 											<option value="{{$metodo_pago->id}}">{{$metodo_pago->nombre}}</option>
 										@endforeach
@@ -685,7 +684,7 @@
        
 						<div class="input-field col s12">
 							<label for="modal-to-pay">You have to pay:</label>
-							<input id="modal-to-pay" type="text" value="50">
+							<input id="to_pay" type="text" value="50" class="re_calculate" name="to_pay">
 						</div>						
 					</form>
 				</div>
@@ -707,22 +706,26 @@
 </div>
 @endsection
 
-<script>
+<script type="module">
+		import {F} from "{{asset('js/global_functions.js')}}";
+		import {Ev,Me} from "{{asset('js/methods.js')}}";
+
 	document.addEventListener('DOMContentLoaded', function() {
-		var el = document.querySelector('.tabs');
-		var instance_tabs = M.Tabs.init(el);
+		let el = document.querySelector('.tabs');
+		let instance_tabs = M.Tabs.init(el);
 	
- 		var elem_modal = document.querySelectorAll('.modal');
-    	var instances_modal = M.Modal.init(elem_modal);
+ 		let elem_modal = document.querySelectorAll('.modal');
+    	let instances_modal = M.Modal.init(elem_modal);
+    	instances_modal[1].options.onCloseEnd = Me.resetModal;
 
-    	var elem_collapsible = document.querySelectorAll('.collapsible');
-    	var instances_collapsible = M.Collapsible.init(elem_collapsible);
+    	let elem_collapsible = document.querySelectorAll('.collapsible');
+    	let instances_collapsible = M.Collapsible.init(elem_collapsible);
 
-    	var elems_select = document.querySelectorAll('select');
-    	var instances_select = M.FormSelect.init(elems_select);
+    	let elems_select = document.querySelectorAll('select');
+    	let instances_select = M.FormSelect.init(elems_select);
 
-    	var elems_receiver = document.querySelectorAll('.autocomplete');
-    	var instances_receiver = M.Autocomplete.init(elems_receiver, {
+    	let elems_receiver = document.querySelectorAll('.autocomplete');
+    	let instances_receiver = M.Autocomplete.init(elems_receiver, {
     		data: {
     			'Persona 1':null,
     			'Persona 2':null,
@@ -730,107 +733,39 @@
     		}
     	});
 
-    	/*
-    		Llenará en el modal todos los campos en los que se deba mostrar la criptomoneda elegida
-    	*/
-    	let spaces_name_cripto = document.querySelectorAll('.space-name-cripto');
-    	let inputs_id_cripto = document.querySelectorAll('.inputs-id-cripto');
+		function coinbaseOnOpen(event){
 
-    	function setNameModal(nombre,id){
+			//Creará el array con el que se hara el request a la api
+			let cripto_arr = [];
 
-    		for(let i_spaces = 0; i_spaces<spaces_name_cripto.length; i_spaces++){
-    			spaces_name_cripto[i_spaces].innerText = nombre;
-    		}
-    		for(let i_spaces = 0; i_spaces<inputs_id_cripto.length; i_spaces++){
-    			inputs_id_cripto[i_spaces].value = id;
-    		}
-    		
-    	}
+			@foreach($criptomonedas as $criptomoneda)
+				cripto_arr.push("{{$criptomoneda->moneda->siglas}}-USD");
+			@endforeach
+			
+			let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
+			this.send(json_to_send);
+		}
 
-    	function setNameEvent(e){
-    		console.log(e);
-    		setNameModal(e.target.dataset.nombre_cripto,e.target.dataset.id_cripto);
-    	}
-
-    	function updatePrices(cripto){
-    		if(cripto.type == "ticker"){
-
-	    		let spaces = document.querySelectorAll('.precio-'+cripto.product_id);
-	    		
-	    		for(let i = 0; i<spaces.length;i++){
-	    			spaces[i].innerText = cripto.price;
-	    		}
-    		}
-    	}
+    	let selecter_crip_to_buy = [];
 
     	//Configurará que cada vez que se abra el modal se configura con la moneda en cuestion
-    	let cripto_buttons = document.querySelectorAll('.buy-cripto');
-    	for (let i_cripto = 0; i_cripto < cripto_buttons.length; i_cripto++){
-    		cripto_buttons[i_cripto].onclick = setNameEvent;
-    	}
+   		F.addEvent.onClick('.buy-cripto',Ev.setNameEvent);
 
-    	/*
-    		Configurará la visualización del mensaje del modal, y el botón para enviar la solicitud
-    	*/
-    	let space_pay_with = document.getElementById('space-pay-with');
-    	let modal_message = document.getElementById('modal-message');
-    	let submit_buy = document.getElementById('submit-buy');
-    	let pay_with = document.getElementById('payWith');
-
-    	function changePayWithModal(){
-    		if(pay_with.value!='none'){
-    			modal_message.removeAttribute('hidden');
-    			submit_buy.removeAttribute('disabled');
-    			space_pay_with.innerText = pay_with.value;
-    		}else{
-    			modal_message.setAttribute('hidden',true);
-    			submit_buy.setAttribute('disabled',true);
-    			space_pay_with.innerText = '';
-    		}
-    	}
     	//Seteará el modal al cargar la pagina por primera vez
-    	changePayWithModal();
-    	pay_with.onchange = changePayWithModal;
-
-    	//Reseteará la configuracion del modal cada vez que se cierre
-    	function resetModal(){
-    		pay_with.value="none";
-    		changePayWithModal();
-    	}
-    	instances_modal[1].options.onCloseEnd = resetModal;
+    	Me.changePayWithModal();
     	
-
     	//Consultará a la API
-		var coinbase = new WebSocket("ws://ws-feed.pro.coinbase.com");
+   		F.ws({
+   			url:'ws://ws-feed.pro.coinbase.com',
+   			onOpen:coinbaseOnOpen, //No se crea la funcion en Me porque necesita del PHP al iniciar la pagina
+   			onMessage:Me.coinbaseOnMessage,
+   		});
 
-		//Creará el array con el que se hara el request a la api
-		let cripto_arr = [];
-		@foreach($criptomonedas as $criptomoneda)
-			cripto_arr.push("{{$criptomoneda->moneda->siglas}}-USD");
-		@endforeach
-		
-		let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
-
-		coinbase.onopen = function(event){
-			coinbase.send(json_to_send);
-		}
-		coinbase.onmessage = function (event) {
-			console.log(JSON.parse(event.data));
-			updatePrices(JSON.parse(event.data));
-		}
 		setInterval(function(){
+			Me.consultDogecoin();
 
-			fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
-			    return response.json();
-			}).then(function(myJson){
-
-			    console.log(myJson);
-			    let object = {};
-			    object.type = 'ticker';
-			    object.product_id = 'DOGE-USD';
-			    object.price = myJson[0].price_usd;
-			    updatePrices(object);
-			});
 		},5000);
+
+		Me.calculeBuyCost();
 	});
 </script>
