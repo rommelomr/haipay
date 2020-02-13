@@ -664,7 +664,7 @@
 										<option disabled selected value="none">Pay with</option>
 										<option value="USD">USD - Dólar estadounidense</option>
 										@foreach($criptomonedas as $criptomoneda)
-											<option value="{{$criptomoneda->id}}">{{$criptomoneda->moneda->siglas}}</option>
+											<option value="{{$criptomoneda->moneda->siglas}}">{{$criptomoneda->moneda->siglas}}</option>
 										@endforeach
 										
 									</select>
@@ -735,8 +735,8 @@
     	});
 
 		let cripto_arr_calculate = [];
-		function coinbaseOnOpen(event){
 
+		function coinbaseOnOpen(event){
 			//Creará el array con el que se hara el request a la api
 			let cripto_arr_ws = [];
 
@@ -751,15 +751,6 @@
 		
     	//Cada vez que se abra el modal se configura con la moneda en cuestion
    		F.addEvent.onClick('.buy-cripto',Ev.setNameEvent);
-
-    	//Seteará el modal al cargar la pagina por primera vez
-
-    	//Me.changePayWithModal();
-    	/*
-    	let pay_with = document.getElementById('payWith');
-    	pay_with.onchange = Me.changePayWithModal;
-    	*/
-
 
     	//Consultará a la API
    		F.ws({
@@ -790,6 +781,8 @@
 		});
 
 		F.addEvent.onKeyUp('.re_calculate',function(){
+
+			Me.changePayWithModal();
 			Me.resetCost(cripto_arr_calculate);
 		});
 

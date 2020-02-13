@@ -30,14 +30,16 @@ export let Me = {
     	let space_pay_with = document.getElementById('space-pay-with');
     	let pay_with = document.getElementById('payWith');
 
-		if(pay_with.value!='none'){
-			modal_message.removeAttribute('hidden');
-			submit_buy.removeAttribute('disabled');
-			space_pay_with.innerText = pay_with.value;
+			let cuant_buy = document.getElementById('cuant_buy').value;
+			let to_pay = document.getElementById('to_pay').value;
+		if(pay_with.value!='none' && cuant_buy != '' && to_pay != ''){
+				modal_message.removeAttribute('hidden');
+				submit_buy.removeAttribute('disabled');
+				space_pay_with.innerText = pay_with.value;
 		}else{
-			modal_message.setAttribute('hidden',true);
-			submit_buy.setAttribute('disabled',true);
-			space_pay_with.innerText = '';
+				modal_message.setAttribute('hidden',true);
+				submit_buy.setAttribute('disabled',true);
+				space_pay_with.innerText = '';
 		}
 	},
 
@@ -61,23 +63,38 @@ export let Me = {
 	},
 
 	consultDogecoin:function (cripto_array) {
-		fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
-
+		fetch('https://api.coinlore.com/api/ticker/?id=2',).then(function(response){
 		    return response.json();
 		}).then(function(myJson){
 			let object = {};
 		    object.type = 'ticker';
 		    object.product_id = 'DOGE-USD';
 		    object.price = myJson[0].price_usd;
-		    cripto_array = Me.updateCriptoValues(object,cripto_array);
+		    Me.updateCriptoValues(object,cripto_array);
+		}).catch(function(error){
+			console.log(error);
 		});
+		/*
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+		    	console.log(this);
+		    }else{
+		    	console.log('status: '+this.status);
+		    }
+	  	};
+	  	xhttp.open("GET",'http://api.coinlore.com/api/ticker/?id=2',true);
+	  	xhttp.send();
+		*/
 	},
 
 	resetCost:function(criptos){
 		let cuant_buy = document.getElementById('cuant_buy').value;
 		let to_pay = document.getElementById('to_pay').value;
-		console.log(criptos);
-
+		let pay_with = document.getElementById('payWith');
+		let modal_have_to_pay = document.getElementById('modal-have-to-pay');
+		let modal_recieve = document.getElementById('modal-recieve');
+		//Si los dos campos estan llenos, mostrar el cálculo
 
 	},
 	/*

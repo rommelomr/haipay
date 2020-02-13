@@ -1,5 +1,11 @@
 export let F = {
 	//Return an element dataset array 
+	inspect:function(arr){
+		for (var i = arr.length - 1; i >= 0; i--) {
+			console.log(arr[i]);
+		}
+	},
+	//Return an element dataset array 
 	getDataset:function(el){
 		return document.getElementById(el).dataset;
 	},
@@ -34,7 +40,6 @@ export let F = {
 			let dom_elems = document.querySelectorAll(el);
 			for(let i=0; i<dom_elems.length;i++){
 				dom_elems[i].onchange = f;
-						console.log(dom_elems[i].onchange);
 			}
 		},
 		onKeyUp:function(el,f){
