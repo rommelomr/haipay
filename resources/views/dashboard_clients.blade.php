@@ -754,7 +754,7 @@
 
     	//Consultará a la API
    		F.ws({
-   			url:'ws://ws-feed.pro.coinbase.com',
+   			url:'wss://ws-feed.pro.coinbase.com',
    			onOpen:coinbaseOnOpen, //No se crea la funcion en Me porque necesita del PHP al iniciar la pagina
    			//onMessage:Me.coinbaseOnMessage,
    			onMessage:function(e){
