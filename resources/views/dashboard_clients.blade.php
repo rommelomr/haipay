@@ -717,6 +717,7 @@
  		let elem_modal = document.querySelectorAll('.modal');
     	let instances_modal = M.Modal.init(elem_modal);
     	instances_modal[1].options.onCloseEnd = Me.resetModal;
+    	instances_modal[1].options.onOpenStart = Me.resetModal;
 
     	let elem_collapsible = document.querySelectorAll('.collapsible');
     	let instances_collapsible = M.Collapsible.init(elem_collapsible);
@@ -733,39 +734,64 @@
     		}
     	});
 
+		let cripto_arr_calculate = [];
 		function coinbaseOnOpen(event){
 
 			//Creará el array con el que se hara el request a la api
-			let cripto_arr = [];
+			let cripto_arr_ws = [];
 
 			@foreach($criptomonedas as $criptomoneda)
-				cripto_arr.push("{{$criptomoneda->moneda->siglas}}-USD");
+				cripto_arr_ws.push("{{$criptomoneda->moneda->siglas}}-USD");
+				cripto_arr_calculate["{{$criptomoneda->moneda->siglas}}-USD"] = null;
 			@endforeach
 			
-			let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr}]});
+			let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr_ws}]});
 			this.send(json_to_send);
 		}
-
-    	let selecter_crip_to_buy = [];
-
-    	//Configurará que cada vez que se abra el modal se configura con la moneda en cuestion
+		
+    	//Cada vez que se abra el modal se configura con la moneda en cuestion
    		F.addEvent.onClick('.buy-cripto',Ev.setNameEvent);
 
     	//Seteará el modal al cargar la pagina por primera vez
-    	Me.changePayWithModal();
-    	
+
+    	//Me.changePayWithModal();
+    	/*
+    	let pay_with = document.getElementById('payWith');
+    	pay_with.onchange = Me.changePayWithModal;
+    	*/
+
+
     	//Consultará a la API
    		F.ws({
    			url:'ws://ws-feed.pro.coinbase.com',
    			onOpen:coinbaseOnOpen, //No se crea la funcion en Me porque necesita del PHP al iniciar la pagina
-   			onMessage:Me.coinbaseOnMessage,
+   			//onMessage:Me.coinbaseOnMessage,
+   			onMessage:function(e){
+   				Me.coinbaseOnMessage(e,cripto_arr_calculate);
+   			},
    		});
 
 		setInterval(function(){
-			Me.consultDogecoin();
+			
+			//cripto_arr_calculate = Me.consultDogecoin(cripto_arr_calculate);
+			
+			Me.consultDogecoin(cripto_arr_calculate);
 
 		},5000);
 
-		Me.calculeBuyCost();
+		//current cripto será la moneda con que se hará el calculo de la compra en el modal
+		//cambiará cuando se cambie la moneda en dicho modal
+		//Me.calculeBuyCost();
+
+		F.addEvent.onChange('.re_calculate_change',function(){
+
+			Me.changePayWithModal();
+			Me.resetCost(cripto_arr_calculate);
+		});
+
+		F.addEvent.onKeyUp('.re_calculate',function(){
+			Me.resetCost(cripto_arr_calculate);
+		});
+
 	});
-</script>
+</script>	

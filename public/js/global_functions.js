@@ -34,6 +34,7 @@ export let F = {
 			let dom_elems = document.querySelectorAll(el);
 			for(let i=0; i<dom_elems.length;i++){
 				dom_elems[i].onchange = f;
+						console.log(dom_elems[i].onchange);
 			}
 		},
 		onKeyUp:function(el,f){

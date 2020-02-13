@@ -15,17 +15,21 @@ export let Ev = {
 }
 export let Me = {
 	//Actualizará los precios de las cripto en tiempo real
-	updateCriptoValues:function(cripto){
-		if(cripto.type == "ticker"){
-			F.putContent('.precio-'+cripto.product_id,cripto.price);
+	updateCriptoValues:function(cripto_request, cripto_array){
+			
+		if(cripto_request.type == "ticker"){
+			cripto_array[cripto_request.product_id] = cripto_request.price;
+			F.putContent('.precio-'+cripto_request.product_id,cripto_request.price);
 		}
+		//console.log(cripto_array);
 	},
 	//Configurará la visualización del mensaje del modal, y el botón para enviar la solicitud
 	changePayWithModal:function(){
-    	let space_pay_with = document.getElementById('space-pay-with');
     	let modal_message = document.getElementById('modal-message');
     	let submit_buy = document.getElementById('submit-buy');
+    	let space_pay_with = document.getElementById('space-pay-with');
     	let pay_with = document.getElementById('payWith');
+
 		if(pay_with.value!='none'){
 			modal_message.removeAttribute('hidden');
 			submit_buy.removeAttribute('disabled');
@@ -35,52 +39,47 @@ export let Me = {
 			submit_buy.setAttribute('disabled',true);
 			space_pay_with.innerText = '';
 		}
-		pay_with.onchange = Me.changePayWithModal;
 	},
 
 	//Reseteará la configuracion del modal cada vez que se cierre
 	resetModal:function(){
 		let pay_with = document.getElementById('payWith');
+		let to_pay = document.getElementById('to_pay');
+		let cuant_buy = document.getElementById('cuant_buy');
 		pay_with.value="none";
+		to_pay.value = '';
+		cuant_buy.value = '';
 		Me.changePayWithModal();
 	},
 
-	coinbaseOnMessage:function (event) {
-		Me.updateCriptoValues(JSON.parse(event.data));
+	coinbaseOnMessage:function (event,cripto) {
+		Me.updateCriptoValues(JSON.parse(event.data),cripto);
 	},
 	
 	coinbaseOnError:function (event) {
 		console.log(event);
 	},
-	coinbaseOnError:function (event) {
-		console.log(event);
-	},
-	consultDogecoin:function (event) {
-		
+
+	consultDogecoin:function (cripto_array) {
 		fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
+
 		    return response.json();
 		}).then(function(myJson){
-
-		    
-		    let object = {};
+			let object = {};
 		    object.type = 'ticker';
 		    object.product_id = 'DOGE-USD';
 		    object.price = myJson[0].price_usd;
-		    Me.updateCriptoValues(object);
+		    cripto_array = Me.updateCriptoValues(object,cripto_array);
 		});
 	},
 
-	resetCost:function(e){
-		let cant_buy = getElementById('cant_buy').value;
-		let to_pay = getElementById('to_pay').value;
-		console.log(e.target);
-		//F.addEvent.onClick('.re_calculate',this.);
+	resetCost:function(criptos){
+		let cuant_buy = document.getElementById('cuant_buy').value;
+		let to_pay = document.getElementById('to_pay').value;
+		console.log(criptos);
+
 
 	},
-	calculeBuyCost:function(){
-		
-		F.addEvent.onKeyUp('.re_calculate',this.resetCost);
-		F.addEvent.onChange('.re_calculate_change',this.resetCost);
-
-	},
+	/*
+	*/
 }

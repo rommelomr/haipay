@@ -32,10 +32,10 @@
 	nombre: varchar(30)
 	siglas: varchar(10)
 
-12 carteras-> (Relación Clientes_monedas) Guardará todas las monedas asociadas a una persona y su cantidad
+12 carteras-> (Relación Clientes_id_hai_criptomonedas) Guardará todas las hai_criptomonedas asociadas a una persona y su cantidad
 
 	id_cliente: (fk)
-	id_moneda: (fk)
+	id_hai_criptomoneda: (fk)
 	cantidad: decimal (13,9)
 
 8 acciones-> Guardará el nombre de cada acción que se pueda realizar en el sistema

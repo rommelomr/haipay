@@ -30,10 +30,10 @@
 	nombre: guardará el nombre de la criptomoneda
 	siglas: Guardará las siglas de la criptomoneda
 
-12 cartera-> (Relación Clientes_monedas) Guardará todas las monedas asociadas a una persona y su cantidad
+12 cartera-> (Relación Clientes_hai_criptomonedas) Guardará todas las hai_criptomonedas asociadas a una persona y su cantidad
 
 	id_cliente: (fk)
-	id_moneda: (fk)
+	id_hai_criptomoneda: (fk)
 	cantidad: Guardará un numero decimal de hasta 8 digitos despues de la coma
 
 8 Acciones-> Guardará el nombre de cada acción que se pueda realizar en el sistema
