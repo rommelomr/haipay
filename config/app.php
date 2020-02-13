@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'HaiPay'),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +119,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY',"base64:+1G2IAEdevfBoCoa5gFaMlRFnLfBGyxnqr6+VEqQaeo="),
 
     'cipher' => 'AES-256-CBC',
 
