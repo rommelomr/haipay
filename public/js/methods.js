@@ -66,6 +66,7 @@ export let Me = {
 
 		fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
 		    return response.json();
+		    
 		}).then(function(myJson){
 			let object = {};
 		    object.type = 'ticker';
