@@ -63,10 +63,8 @@ export let Me = {
 	},
 
 	consultDogecoin:function (cripto_array) {
-		fetch('https://api.coinlore.com/api/ticker/?id=2',{
-			"mode":"no-cors",
-			"Access-Control-Allow-Origin":"*"
-		}).then(function(response){
+
+		fetch('https://api.coinlore.com/api/ticker/?id=2').then(function(response){
 		    return response.json();
 		}).then(function(myJson){
 			let object = {};
