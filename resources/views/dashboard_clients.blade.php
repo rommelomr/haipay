@@ -104,47 +104,6 @@
 												<td>Bitcoin</td>
 												<td>0.000000001</td>
 											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.00000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											
 										</tbody>
 									</table>
 								</center>
@@ -646,25 +605,30 @@
 				</center>
 			</div>
 		</div>
-		<div class="row valign-wrapper margin-0" style=";padding: 0;">
+		<div class="row margin-0" style=";padding: 0;">
 			<div class="col s12 l6" style="">
 				<div class="row" style="">
 					
 					<form action="">
-						<div class="input-field col s12">
-							<label for="sum">How much <b class="space-name-cripto">cripto</b> want to buy?</label>
-							<input id="cuant_buy" class="re_calculate" type="text" value="" name="cuant_buy">
+						<div class="input-field col s10">
+							<input id="cuant_buy" class="input_buy reset-message" type="text" value="" name="cuant_buy">
+							<span class="helper-text">How much <b class="space-name-cripto">cripto</b> want to buy?</span>
 						</div>
+						<div class="input-field col s2">
+							<center>
+								<div id="calculate-by-buy" class="calculate btn"><i class="material-icons">cached</i></div>
+							</center>
+						</div>
+						
 						<div class="col s12">
 							
 							<div class="row valign-wrapper margin-0 padding-0">
 								
 								<div class="input-field col s6">
-									<select id="payWith" name="payWith" class="browser-default re_calculate_change">
+									<select id="payWith" name="payWith" class="browser-default reset-message-change">
 										<option disabled selected value="none">Pay with</option>
-										<option value="USD">USD - Dólar estadounidense</option>
-										@foreach($criptomonedas as $criptomoneda)
-											<option value="{{$criptomoneda->moneda->siglas}}">{{$criptomoneda->moneda->siglas}}</option>
+										@foreach($monedas as $moneda)
+											<option value="{{$moneda->siglas}}">{{$moneda->siglas}}</option>
 										@endforeach
 										
 									</select>
@@ -682,22 +646,37 @@
 							</div>
 						</div>
        
+						<div class="input-field col s10">
+							<input id="to_pay" type="text" value="50" class="input_buy reset-message" name="to_pay">
+							<span class="helper-text">You have to pay:</span>
+						</div>
+						<div class="input-field col s2">
+							<center>
+								<div id="calculate-by-payment" class="btn"><i class="material-icons">cached</i></div>
+							</center>
+						</div>
 						<div class="input-field col s12">
-							<label for="modal-to-pay">You have to pay:</label>
-							<input id="to_pay" type="text" value="50" class="re_calculate" name="to_pay">
-						</div>						
+							<center>
+								<div id="buy" class="btn">Buy</div>
+							</center>
+						</div>
+						
 					</form>
 				</div>
 			</div>
-			<div class="col s12 l6">
+			<div class="col s12 l6" style="padding: 3%;	">
 				<center>
-					<div id="modal-message" class="light-green accent-1" hidden>
-						
-						<h5>You have to pay <b><span id="modal-have-to-pay"></span></b> <span id="space-pay-with">TLS</span> to receive <b><span id="modal-recieve">50</span></b> <span id="modal-cripto-buy" class="space-name-cripto"></span></h5>
+					<div id="modal-message" class="green lighten-3 accent-1 card-panel" hidden>
+						<div class="card-content">							
+							<span class="card-title">Pedido</span>
+							<p>You have to pay <b><span id="modal-have-to-pay"></span> <span id="space-pay-with"></span></b> to receive <b><span id="modal-recieve"></span> <span id="modal-cripto-buy" class="space-name-cripto"></span></b></p>
+						</div>
+						<div class="card-action">
+							
+							<input id="submit-buy" class="btn indigo" type="submit" value="Acquire">
+							<a href="#!" class="btn modal-close red">Cancel</a>
+						</div>
 					</div>
-						<br>
-					<input id="submit-buy" class="btn indigo" type="submit" value="Acquire">
-					<a href="#!" class="btn modal-close red">Cancel</a>
 				</center>
 			</div>
 		</div>
@@ -734,7 +713,10 @@
     		}
     	});
 
+
+    	//Array en el que se guardarán los valores en $ de las monedas para calcular al momento de comprar
 		let cripto_arr_calculate = [];
+
 
 		function coinbaseOnOpen(event){
 			//Creará el array con el que se hara el request a la api
@@ -750,22 +732,34 @@
 		}
 		
     	//Cada vez que se abra el modal se configura con la moneda en cuestion
-   		F.addEvent.onClick('.buy-cripto',Ev.setNameEvent);
+	    let cript_to_buy = [];
+   		F.addEvent.onClick('.buy-cripto',function(e){
+	    	cript_to_buy['name'] = e.target.dataset.nombre_cripto;
+	    	cript_to_buy['usd'] = cripto_arr_calculate[e.target.dataset.siglas_cripto+'-USD'];
+	   		Ev.setNameEvent(e);
+
+	   	});
+
+   		let htg_consulted = false;
 
     	//Consultará a la API
+
    		F.ws({
    			url:'wss://ws-feed.pro.coinbase.com',
    			onOpen:coinbaseOnOpen, //No se crea la funcion en Me porque necesita del PHP al iniciar la pagina
    			//onMessage:Me.coinbaseOnMessage,
    			onMessage:function(e){
    				Me.coinbaseOnMessage(e,cripto_arr_calculate);
+   				if(cripto_arr_calculate['BTC-USD']!==null && !htg_consulted){
+					Me.setHtgPrice(cripto_arr_calculate);
+					htg_consulted = true;
+   				}
+				//Me.setHtgPrice(cripto_arr_calculate);
    			},
    		});
-
 		setInterval(function(){
 			
 			//cripto_arr_calculate = Me.consultDogecoin(cripto_arr_calculate);
-			
 			Me.consultDogecoin(cripto_arr_calculate);
 
 		},5000);
@@ -774,17 +768,48 @@
 		//cambiará cuando se cambie la moneda en dicho modal
 		//Me.calculeBuyCost();
 
-		F.addEvent.onChange('.re_calculate_change',function(){
 
-			Me.changePayWithModal();
+		F.addEvent.onClick('#calculate-by-buy',function(){
+			let calculated = Me.calculateByBuy(cripto_arr_calculate,cript_to_buy);
+			if(calculated){
+				Me.disabledBuyButton(false);
+			}
+		});
+		F.addEvent.onClick('#calculate-by-payment',function(){
+			let calculated = Me.calculateByPayment(cripto_arr_calculate,cript_to_buy);
+			if(calculated){
+				Me.disabledBuyButton(false);
+			}
+		});
+		let modal_message_is_disabled = true;
+		function setModalMessage(){
+			Me.disabledBuyButton(true);
+			if(!modal_message_is_disabled){
+
+				Me.disableModalMessage('','','');
+				modal_message_is_disabled = true;
+			}
+		}
+		F.addEvent.onClick('#buy',Me.changePayWithModal);
+		F.addEvent.onKeyUp('.reset-message',setModalMessage);
+		F.addEvent.onChange('.reset-message-change',setModalMessage);
+		
+
+
+		
+/*
+		F.addEvent.onChange('.input_buy',function(){
+
 			Me.resetCost(cripto_arr_calculate);
+			Me.changePayWithModal();
 		});
 
-		F.addEvent.onKeyUp('.re_calculate',function(){
 
-			Me.changePayWithModal();
+		F.addEvent.onClick('.re_calculate',function(){
+
 			Me.resetCost(cripto_arr_calculate);
+			Me.changePayWithModal();
 		});
-
+*/
 	});
 </script>	

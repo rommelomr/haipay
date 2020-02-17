@@ -24,7 +24,10 @@ class CreateComprasCriptomonedaTable extends Migration
             $table->unsignedBigInteger('id_transaccion');
             $table->foreign('id_transaccion')->references('id')->on('transacciones');
 
-            $table->bigInteger('monto');
+            $table->unsignedBigInteger('id_metodo_pago');
+            $table->foreign('id_metodo_pago')->references('id')->on('metodos_pago');
+
+            $table->decimal('monto',13,9);
             $table->decimal('precio',13,9);
             $table->timestamps();
         });

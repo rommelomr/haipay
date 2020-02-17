@@ -90,7 +90,8 @@ INSERT INTO `monedas` (id, `nombre`, `siglas`, `created_at`, `updated_at`) VALUE
 (3,'Bitcoin', 'BTC', NULL, NULL),
 (4,'Litecoin', 'LTC', NULL, NULL),
 (5,'Ethereum', 'ETH', NULL, NULL),
-(6,'Dogecoin', 'DOGE', NULL, NULL);
+(6,'Dogecoin', 'DOGE', NULL, NULL),
+(7,'Gourde', 'HTG', NULL, NULL);
 
 INSERT INTO `hai_criptomonedas` (id_moneda) VALUES
 (2),

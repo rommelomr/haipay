@@ -41,6 +41,9 @@ Route::group(['middleware' => ['tipo:2']], function() {
     Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');//Listo
 });
 
+Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acquireCripto');//Listo
+
+
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
 	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
@@ -96,5 +99,3 @@ if ($options['verify'] ?? false) {
 Route::get('/home', 'HomeController@index')->name('home');
 */
 
-
-Route::post('acquireCripto', 'ClientesController@acquireCripto')->name('acquireCripto');//Listo

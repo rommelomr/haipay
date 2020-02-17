@@ -1,8 +1,11 @@
 export let F = {
 	//Return an element dataset array 
 	inspect:function(arr){
-		for (var i = arr.length - 1; i >= 0; i--) {
-			console.log(arr[i]);
+		if(!Array.isArray(arr)){
+			arr = [arr];
+		}
+		for (var key in arr) {
+			console.log(arr[key]);
 		}
 	},
 	//Return an element dataset array 
