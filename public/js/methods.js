@@ -101,7 +101,6 @@ export let Me = {
 			M.toast({html:'You must select what to pay with'});
 			return false;
 		}else{
-
 			let to_pay = document.getElementById('to_pay');
 			if(pay_with.value == 'USD'){
 				var amount_to_pay = cript_to_buy['usd']*cuant_buy.value;
