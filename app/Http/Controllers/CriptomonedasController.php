@@ -42,32 +42,31 @@ class CriptomonedasController extends Controller
 		]);
 
 		//Si la moneda que se quiere comprar es el Doge (id 5)
+		$base=HaiCriptomoneda::with('moneda')->find($req->base);
+		$currency=$req->payWith;
+		$tipo='buy';
+
 		if($req->base == 5){
-			dd('otro procedimiento para el doge');
+			$crip_to_buy = json_decode( file_get_contents('https://api.coinlore.com/api/ticker/?id=2'), true )[0]['price_usd'];
 		}else{
 
-			$base=HaiCriptomoneda::with('moneda')->find($req->base);
-			$currency=$req->payWith;
-			$tipo='buy';
-			$crip_to_buy = json_decode( file_get_contents('https://api.coinbase.com/v2/prices/'.$base->moneda->siglas.'-USD'.'/'.$tipo), true );
-			$crip_to_pay = json_decode( file_get_contents('https://api.coinbase.com/v2/prices/'.$req->payWith.'-USD'.'/'.$tipo), true );
+			$crip_to_buy = json_decode( file_get_contents('https://api.coinbase.com/v2/prices/'.$base->moneda->siglas.'-USD'.'/'.$tipo), true )['data']['amount'];
 			//dd($req->cuant_buy * $crip_to_buy['data']['amount'] * (1 / $crip_to_pay['data']['amount']));
-			$transaccion = Transaccion::create([
-	    		'id_cliente' => \Auth::user()->cliente->id,
-	    		'id_tipo_transaccion'=>1
-	    	]);
-
-
-
-	    	$compra = ComprasCriptomoneda::create([
-				'id_hai_criptomoneda' => $req->base,
-				'id_moneda' => Moneda::where('siglas',$req->payWith)->first()->id,
-				'monto' => $req->cuant_buy,
-				'precio' => $crip_to_buy['data']['amount'],
-				'id_metodo_pago' => $req->type_operation,
-				'id_transaccion' => $transaccion->id
-	    	]);
 		}
+
+		$transaccion = Transaccion::create([
+    		'id_cliente' => \Auth::user()->cliente->id,
+    		'id_tipo_transaccion'=>1
+    	]);
+
+    	$compra = ComprasCriptomoneda::create([
+			'id_hai_criptomoneda' => $req->base,
+			'id_moneda' => Moneda::where('siglas',$req->payWith)->first()->id,
+			'monto' => $req->cuant_buy,
+			'precio' => $crip_to_buy,
+			'id_metodo_pago' => $req->type_operation,
+			'id_transaccion' => $transaccion->id
+    	]);
 
 
 		return redirect()->back();

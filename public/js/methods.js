@@ -90,7 +90,7 @@ export let Me = {
 			console.log(error);
 		});
 	},
-	calculateByBuy:function (criptos,cript_to_buy) {
+	calculateByBuy:function (criptos,cript_to_buy,comision) {
 		let cuant_buy = document.getElementById('cuant_buy');
 		let pay_with = document.getElementById('payWith');
 		if(cuant_buy.value == ''){
@@ -105,11 +105,13 @@ export let Me = {
 			let to_pay = document.getElementById('to_pay');
 			if(pay_with.value == 'USD'){
 				var amount_to_pay = cript_to_buy['usd']*cuant_buy.value;
+				amount_to_pay = amount_to_pay + (amount_to_pay * comision);
 				to_pay.value = amount_to_pay;
 			}else if(cuant_buy.value!=''){
 				//Formula: Monto a pagar en $ = (cantidad de cripto a comprar) POR (precio en $ de la cripto a comprar) POR (valor de 1 $ expresado en la moneda con que voy a pagar)
 				// Monto a pagar en $ / precio en $ de la cripto con que se paga = Precio total en la criptomoneda con que voy a pagar
 				var amount_to_pay = (cuant_buy.value) * (cript_to_buy['usd']) * (1 / criptos[pay_with.value+'-USD']);
+				amount_to_pay = amount_to_pay + (amount_to_pay * comision);
 				to_pay.value = amount_to_pay;
 			}
 			this.disableModalMessage(to_pay.value,pay_with.value,cuant_buy.value);
@@ -117,7 +119,7 @@ export let Me = {
 		}
 
 	},
-	calculateByPayment:function (criptos,cript_to_buy) {
+	calculateByPayment:function (criptos,cript_to_buy,comision) {
 		let to_pay = document.getElementById('to_pay');
 		let pay_with = document.getElementById('payWith');
 		if(to_pay.value == ''){
@@ -129,14 +131,20 @@ export let Me = {
 			return false;
 		}else if(to_pay.value!=''){
 			let cuant_buy = document.getElementById('cuant_buy');
-
+			let amount_to_pay = {
+				value:parseFloat(to_pay.value)
+			};
+			alert("amount_to_pay.value: "+amount_to_pay.value);
+			//to_pay.value = parseInt(to_pay.value);
+			amount_to_pay.value = (amount_to_pay.value - (amount_to_pay.value * comision));
+			alert("to_pay.value mas comision: "+amount_to_pay.value);
 			if(pay_with.value=='USD'){
 
-				cuant_buy.value = to_pay.value / cript_to_buy['usd'];
+				cuant_buy.value = amount_to_pay.value / cript_to_buy['usd'];
 			}else{
-				cuant_buy.value = to_pay.value / (cript_to_buy['usd'] * 1 / criptos[pay_with.value+'-USD']);
+				cuant_buy.value = amount_to_pay.value / (cript_to_buy['usd'] * 1 / criptos[pay_with.value+'-USD']);
 			}
-			this.disableModalMessage(to_pay.value,pay_with.value,cuant_buy.value);
+			this.disableModalMessage(amount_to_pay.value,pay_with.value,cuant_buy.value);
 			return true;
 		}
 

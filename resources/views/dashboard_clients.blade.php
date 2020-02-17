@@ -616,7 +616,7 @@
 						</div>
 						<div class="input-field col s2">
 							<center>
-								<div id="calculate-by-buy" class="calculate btn"><i class="material-icons">cached</i></div>
+								<div id="calculate-by-buy" class="calculate btn indigo"><i class="material-icons">cached</i></div>
 							</center>
 						</div>
 						
@@ -652,12 +652,12 @@
 						</div>
 						<div class="input-field col s2">
 							<center>
-								<div id="calculate-by-payment" class="btn"><i class="material-icons">cached</i></div>
+								<div id="calculate-by-payment" class="btn indigo"><i class="material-icons">cached</i></div>
 							</center>
 						</div>
 						<div class="input-field col s12">
 							<center>
-								<div id="buy" class="btn">Buy</div>
+								<div id="buy" class="btn indigo">Buy</div>
 							</center>
 						</div>
 						
@@ -666,9 +666,9 @@
 			</div>
 			<div class="col s12 l6" style="padding: 3%;	">
 				<center>
-					<div id="modal-message" class="green lighten-3 accent-1 card-panel" hidden>
+					<div id="modal-message" class="card-panel" hidden>
 						<div class="card-content">							
-							<span class="card-title">Pedido</span>
+							<span class="card-title">Order</span>
 							<p>You have to pay <b><span id="modal-have-to-pay"></span> <span id="space-pay-with"></span></b> to receive <b><span id="modal-recieve"></span> <span id="modal-cripto-buy" class="space-name-cripto"></span></b></p>
 						</div>
 						<div class="card-action">
@@ -716,7 +716,7 @@
 
     	//Array en el que se guardarán los valores en $ de las monedas para calcular al momento de comprar
 		let cripto_arr_calculate = [];
-
+		let comision = 0.02;
 
 		function coinbaseOnOpen(event){
 			//Creará el array con el que se hara el request a la api
@@ -770,13 +770,13 @@
 
 
 		F.addEvent.onClick('#calculate-by-buy',function(){
-			let calculated = Me.calculateByBuy(cripto_arr_calculate,cript_to_buy);
+			let calculated = Me.calculateByBuy(cripto_arr_calculate,cript_to_buy,comision);
 			if(calculated){
 				Me.disabledBuyButton(false);
 			}
 		});
 		F.addEvent.onClick('#calculate-by-payment',function(){
-			let calculated = Me.calculateByPayment(cripto_arr_calculate,cript_to_buy);
+			let calculated = Me.calculateByPayment(cripto_arr_calculate,cript_to_buy,comision);
 			if(calculated){
 				Me.disabledBuyButton(false);
 			}
@@ -794,22 +794,5 @@
 		F.addEvent.onKeyUp('.reset-message',setModalMessage);
 		F.addEvent.onChange('.reset-message-change',setModalMessage);
 		
-
-
-		
-/*
-		F.addEvent.onChange('.input_buy',function(){
-
-			Me.resetCost(cripto_arr_calculate);
-			Me.changePayWithModal();
-		});
-
-
-		F.addEvent.onClick('.re_calculate',function(){
-
-			Me.resetCost(cripto_arr_calculate);
-			Me.changePayWithModal();
-		});
-*/
 	});
 </script>	
