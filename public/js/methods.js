@@ -133,10 +133,8 @@ export let Me = {
 			let amount_to_pay = {
 				value:parseFloat(to_pay.value)
 			};
-			alert("amount_to_pay.value: "+amount_to_pay.value);
 			//to_pay.value = parseInt(to_pay.value);
 			amount_to_pay.value = (amount_to_pay.value - (amount_to_pay.value * comision));
-			alert("to_pay.value mas comision: "+amount_to_pay.value);
 			if(pay_with.value=='USD'){
 
 				cuant_buy.value = amount_to_pay.value / cript_to_buy['usd'];

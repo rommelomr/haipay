@@ -601,7 +601,7 @@
 		<div class="row margin-0">
 			<div id="cabecera-modal" class="indigo margin-0">
 				<center>
-					<h4>Acquire <span id="modal-name-cripto" class="space-name-cripto"></span> TEST</h4>
+					<h4>Acquire <span id="modal-name-cripto" class="space-name-cripto"></span></h4>
 				</center>
 			</div>
 		</div>
