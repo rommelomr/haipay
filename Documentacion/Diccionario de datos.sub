@@ -22,7 +22,7 @@
 	nombre: nombre de las transacciones (Compra de criptomoneda, Cambio de moneda, Envio de remesa, Retiro)
 
 5 Transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
-	estado: guardará el estado de la transacción 1: aprobada 0:cancelada null:no vista
+	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada
 	id_moderador: (fk) identifica al moderador que verifica o rechaza la transaccion
 	id_cliente: (fk) identifica el cliente que hizo la transaccion
 
@@ -55,7 +55,7 @@
 	id_referido: guardará el id del cliente que ha sido referido por el primer cliente
 	fecha_hora: guardará la fecha y hora en la que el cliente se registó al sistema
 
-11 Imagenes_Transacciones -> Guardará las imagenes con las que un usuario comprobará las las compras y remesas
+11 Imagenes_Transaccion -> Guardará las imagenes con las que un usuario comprobará las las compras y remesas
 	id_transacción: guardará el id de la transacción a la que pertenece
 	nombre: guardará el nombre de la imagen
 

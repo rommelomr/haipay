@@ -20,8 +20,11 @@ class Transaccion extends Model
     public function moderador(){
     	return $this->belongsTo('App\Moderador','id_moderador');
     }
-    public function imagenes(){
-    	return $this->hasMany('App\ImagenTransaccion','id_transaccion');
+    public function imagen(){
+    	return $this->hasOne('App\ImagenTransaccion','id_transaccion');
+    }    
+    public function compraCriptomoneda(){
+        return $this->hasOne('App\CompraCriptomoneda','id_transaccion');
     }
     
     

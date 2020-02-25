@@ -33,12 +33,21 @@ Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVer
 //Dashboard
 Route::group(['middleware' => ['tipo:1']], function() {
 	Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
+    //Client verify a payment
+    Route::post('verify_pyment', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_pyment');//Listo
+
+    //Client resend an image
+    Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
 });
 
 //Dashboard
 Route::group(['middleware' => ['tipo:2']], function() {
-    Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');//Listo
-    Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');//Listo
+    //Client verify it's own account
+    Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');
+
+    //Moderator verify client's account
+    Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');
+
 });
 
 Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acquireCripto');//Listo

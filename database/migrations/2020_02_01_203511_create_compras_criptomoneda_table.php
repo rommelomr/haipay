@@ -28,7 +28,8 @@ class CreateComprasCriptomonedaTable extends Migration
             $table->foreign('id_metodo_pago')->references('id')->on('metodos_pago');
 
             $table->decimal('monto',13,9);
-            $table->decimal('precio',13,9);
+            $table->decimal('precio_moneda_a_comprar',13,9);
+            $table->decimal('precio_moneda_a_pagar',13,9);
             $table->timestamps();
         });
     }

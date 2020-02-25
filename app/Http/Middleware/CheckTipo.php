@@ -15,10 +15,17 @@ class CheckTipo
      */
     public function handle($request, Closure $next, ...$tipos)
     {
+        $user = $request->user();
 
-        if(!in_array($request->user()->tipo,$tipos)){
+        if(!$user){
 
-            return redirect('/home');
+            return redirect('/login');
+        }else{
+
+            if(!in_array($user->tipo,$tipos)){
+
+                return redirect('/home');
+            }
         }
 
         return $next($request);

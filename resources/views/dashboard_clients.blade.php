@@ -113,87 +113,139 @@
 				    <div id="comprobar-pagos" class="col s12 padding-0">
 				    	<br>
 				    	<div class="row margin-0 grey lighten-3">
-				    		<div class="col l4 offset-l2 s12">
+
+				    		<div class="col l3 s12">
 				    			
 					    		<center>
-					    			<h5>Payments don't Verified</h5>
+					    			<h5>To be verified</h5>
 					    		</center>
 					    		<ul class="collapsible">
+					    			@forelse($without_verify as $transaction)
 								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>100$ for 0.00000100 BTC</div>
+									    <div class="collapsible-header">
+
+									    	@if($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
+									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
+									    	@else
+									    		{{$transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar)}}
+									    	@endif
+									    	{{$transaction->compraCriptomoneda->moneda->siglas}} for
+									    	@if((float)$transaction->compraCriptomoneda->monto < 0.0001)
+									    		{{number_format((float)$transaction->compraCriptomoneda->monto,explode('-',$transaction->compraCriptomoneda->monto)[1]+3)}}
+									    	@else
+									    		{{(float)$transaction->compraCriptomoneda->monto}}
+									    	@endif
+									    	{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}</div>
 									    <div class="collapsible-body">
 									    	<div class="row margin-0">
 									    		<div class="col s12">
 									    			<center>
+									    			Please verify this transaction
+									    			<br>
+							    					<a href="#modal_send_images" class="send_image btn btn-small indigo modal-trigger" data-id_transaction="{{$transaction->id}}">Send Pictures</a>
 									    				
-									    				You must send a picture with the deposit to verify your payment
 									    			</center>
 									    		</div>
-										    	<form action="">
-										    		<div class="input-field col s12">
-										    			<center>
-										    				
-										    				<button class="btn btn-small indigo">Send Pictures</button>
-										    			</center>
-										    		</div>
-										    	</form>
 									    	</div>
 									    </div>
 								    </li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>150$ for 0.00000150 BTC</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				You must send a picture with the deposit to verify your payment
-									    			</center>
-									    		</div>
-										    	<form action="">
-										    		<div class="input-field col s12">
-										    			<center>
-										    				
-										    				<button class="btn btn-small indigo">Send Pictures</button>
-										    			</center>
-										    		</div>
-										    	</form>
-									    	</div>
-									    </div>
-									</li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>0.000000010 BTC for 0.000000008 BTC</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				You must send a picture with the deposit to verify your payment
-									    			</center>
-									    		</div>
-										    	<form action="">
-										    		<div class="input-field col s12">
-										    			<center>
-										    				
-										    				<button class="btn btn-small indigo">Send Pictures</button>
-										    			</center>
-										    		</div>
-										    	</form>
-									    	</div>
-									    </div>
-								    </li>
+					    			@empty
+					    			No results found
+					    			@endforelse
 								</ul>
 				    		</div>
-
-				    		<div class="col l4 s12">
+				    		<div class="col l3 s12">
 				    			
 					    		<center>
-					    			<h5>Payments Verified by Me</h5>
+					    			<h5>Waiting for approval</h5>
 					    		</center>
 					    		<ul class="collapsible">
+					    			@forelse($waiting_for_approval as $transaction)
+									    <li>
+										    <div class="collapsible-header">
+
+									    	@if($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
+									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
+									    	@else
+									    		{{$transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar)}}
+									    	@endif
+									    	{{$transaction->compraCriptomoneda->moneda->siglas}} for
+									    	@if((float)$transaction->compraCriptomoneda->monto < 0.0001)
+									    		{{number_format((float)$transaction->compraCriptomoneda->monto,explode('-',$transaction->compraCriptomoneda->monto)[1]+3)}}
+									    	@else
+									    		{{(float)$transaction->compraCriptomoneda->monto}}
+									    	@endif
+									    	{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
+										    </div>
+										    <div class="collapsible-body">
+										    	<div class="row margin-0">
+										    		<div class="col s12">
+										    			<center>
+										    				<div class="card">
+														        <div class="card-image">
+														        	<img src="{{Storage::url('public/'.$transaction->imagen->nombre)}}">
+														        </div>
+														        <div class="card-content">
+														        	<p>If you want, you can resend your verification image</p>
+														        </div>
+														        <div class="card-action">
+											    					<a href="#modal_send_images" data-id_transaction="{{$transaction->id}}" class="modal-trigger resend_image btn btn-small indigo">Resend</a>
+														        </div>
+														    </div>
+										    				<br>
+										    				
+										    			</center>
+										    	</div>
+										    </div>
+									    </li>
+					    			@empty
+					    				Not results found
+					    			@endforelse
+								</ul>
+				    		</div>
+				    		<div class="col l3 s12">
+				    			
+					    		<center>
+					    			<h5>Approved</h5>
+					    		</center>
+					    		<ul class="collapsible">
+					    			@forelse($approved_transactions as $transaction)
+									    <li>
+										    <div class="collapsible-header">
+										    	<i class="material-icons">indeterminate_check_box</i>100$ for 0.00000100 BTC
+										    </div>
+										    <div class="collapsible-body">
+										    	<div class="row margin-0">
+										    		<div class="col s12">
+										    			<center>
+										    				
+										    				You must send a picture with the deposit to verify your payment
+										    			</center>
+										    		</div>
+											    	<form action="">
+											    		<div class="input-field col s12">
+											    			<center>
+											    				
+											    				<button class="btn btn-small indigo">Send Pictures</button>
+											    			</center>
+											    		</div>
+											    	</form>
+										    	</div>
+										    </div>
+									    </li>
+					    			@empty
+					    				Not results found
+					    			@endforelse
+								</ul>
+				    		</div>
+				    		
+				    		<div class="col l3 s12">
+				    			
+					    		<center>
+					    			<h5>Canceled</h5>
+					    		</center>
+					    		<ul class="collapsible">
+					    			@forelse($canceled as $transaction)
 								    <li>
 									    <div class="collapsible-header"><i class="material-icons">check_box</i>100$ for 0.00000100 BTC</div>
 									    <div class="collapsible-body">
@@ -213,50 +265,14 @@
 									    	</div>
 									    </div>
 								    </li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">check_box</i>150$ for 0.00000150 BTC</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			
-									    			Wait while an Administrator verify the images
-									    		</div>
-									    		<form action="">
-									    			<div class="input-field col s12">
-									    				<center>
-									    					
-									    					<button class="btn btn-small indigo">Resend Pictures</button>
-									    				</center>
-									    			</div>
-									    		</form>
-									    	</div>
-									    </div>
-									</li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">check_box</i>0.000000010 BTC for 0.000000008 BTC</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			
-									    			Wait while an Administrator verify the images
-									    		</div>
-									    		<form action="">
-									    			<div class="input-field col s12">
-									    				<center>
-									    					
-									    					<button class="btn btn-small indigo">Resend Pictures</button>
-									    				</center>
-									    			</div>
-									    		</form>
-									    	</div>
-									    </div>
-								    </li>
+					    			@empty
+					    			No results found
+					    			@endforelse
 								</ul>
 				    		</div>
+				    		
 				    		<div class="col s12">
-				    			<center>
-				    				Watch all completed <a href="#">payments</a>
-				    			</center>
+				    			<center>Watch all completed <a href="#">payments</a></center>
 				    		</div>
 				    	</div>
 				    </div>
@@ -683,6 +699,34 @@
 	</form>
 	</div>
 </div>
+<div id="modal_send_images" class="modal">
+	<div id="modal-content" class="modal-content margin-0">
+		<center><h4>Send Verification Image</h4></center>
+	<form id="verificaction_form" method="POST" enctype="multipart/form-data">@csrf
+		<input id="id_transaction" name="id_transaction" hidden>
+		<div class="row">
+			<div class="col s6 file-field">
+				<center>
+					
+			      <div class="btn btn-small">
+			        <span>Pictures</span>
+			        <input type="file" name="file">
+			      </div>
+			      <div class="file-path-wrapper">
+			        <input class="file-path validate" type="text" placeholder="Upload your pictures">
+			      </div>
+				</center>
+		    </div>
+			<div class="col s6 input-field">
+				<center>
+					<button class="btn">Send</button>
+				</center>
+		    </div>
+		</div>
+	</form>
+	</div>
+</div>
+
 @endsection
 
 <script type="module">
@@ -796,3 +840,4 @@
 		
 	});
 </script>	
+<script src="{{asset('js/verify_payment/main.js')}}" type="module"></script>

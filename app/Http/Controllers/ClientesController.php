@@ -16,13 +16,44 @@ use App\Moneda;
 class ClientesController extends Controller
 {
     public function showDashboard(){
+        //Buy cripto
 		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->get();
 		$monedas =Moneda::all();
 		$metodos_pago =MetodoPago::all();
+
+        //Verify_pyments
+        $client = \Auth::user()->cliente;
+        //dd($client->id);
+        $without_verify = Transaccion::with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$client->id)->where('estado',null)->get();
+        $waiting_for_approval = Transaccion::with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$client->id)->where('estado',0)->get();
+        $approved_transactions = Transaccion::with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$client->id)->where('estado',1)->get();
+        $canceled = Transaccion::with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$client->id)->where('estado',2)->get();
+
+        //dd($whitout_verify);
     	return view('dashboard_clients', [
     		'criptomonedas' => $hai_criptomonedas,
     		'monedas' => $monedas,
     		'metodos_pago' => $metodos_pago,
+            'without_verify' => $without_verify,
+            'waiting_for_approval' => $waiting_for_approval,
+            'approved_transactions' => $approved_transactions,
+            'canceled' => $canceled,
     	]);
     }
     private function smartClientsSearcher($string){

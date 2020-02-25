@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableImagenesTransacciones extends Migration
+class CreateTableImagenesTransaccion extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableImagenesTransacciones extends Migration
      */
     public function up()
     {
-        Schema::create('imagen_transaccion', function (Blueprint $table) {
+        Schema::create('imagenes_transaccion', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_transaccion');
             $table->foreign('id_transaccion')->references('id')->on('transacciones');
@@ -29,6 +29,6 @@ class CreateTableImagenesTransacciones extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('imagen_transaccion');
+        Schema::dropIfExists('imagenes_transaccion');
     }
 }
