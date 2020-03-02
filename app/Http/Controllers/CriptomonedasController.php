@@ -7,10 +7,19 @@ use App\HaiCriptomoneda;
 use App\Moneda;
 use App\Transaccion;
 use App\CompraCriptomoneda;
+use App\Comision;
 
 class CriptomonedasController extends Controller
 {
 
+	/*
+		Método que consulta a las API el precio de la moneda en cuestion
+		Recibe un arreglo con el ID y las SIGLAS de la criptomoneda
+		Ejemplo:
+			'id' => 6,
+			'siglas' => DOGE,
+		Retorna el precio de la cripto en cuestion expresado en Dólares americanos
+	*/
 	private function consultarPrecioMoneda($coin){
 		if($coin['id'] === 1){
 			return 1;
@@ -29,38 +38,24 @@ class CriptomonedasController extends Controller
 			'type_operation' =>	'required|exists:metodos_pago,id',
 		]);
 
-		//Si la moneda que se quiere comprar es el Doge (id 5)
-		/*
-		$base=HaiCriptomoneda::with('moneda')->find($req->base);
-		$crip_to_buy = $this->consultarPrecio([
-			'id'	=> $req->base,
-			'siglas'=> $base->moneda->siglas,
-		]);
-		$pay = HaiCriptomoneda::with('moneda')->find($req->payWith);
-		$crip_to_pay = $this->consultarPrecio([
-			'id'	=> $req->base,
-			'siglas'=> $pay->moneda->siglas,
-		]);
-		*/
+		dd(Comision::getComisiones());
+		exit;
+
+
 		$buy=HaiCriptomoneda::with('moneda')->find($req->base);
 		$pay=Moneda::where('siglas',$req->payWith)->first();
+
+		//obtengo el precio de la cripto que voy a comprar
 		$crip_to_buy=$this->consultarPrecioMoneda([
 			'id' => $buy->moneda->id,
 			'siglas' => $buy->moneda->siglas,
 		]);
+
+		//obtengo el precio de la cripto con que voy a pagar
 		$crip_to_pay=$this->consultarPrecioMoneda([
 			'id' => $pay->id,
 			'siglas' => $req->payWith,
 		]);
-		/*
-		if($req->base == 5){
-			//$crip_to_buy = json_decode( file_get_contents('https://api.coinlore.com/api/ticker/?id=2'), true )[0]['price_usd'];
-		}else{
-
-			$crip_to_buy = json_decode( file_get_contents('https://api.coinbase.com/v2/prices/'.$base->moneda->siglas.'-USD'.'/buy'), true )['data']['amount'];
-			//dd($req->cuant_buy * $crip_to_buy['data']['amount'] * (1 / $crip_to_pay['data']['amount']));
-		}
-		*/
 
 		$transaccion = Transaccion::create([
     		'id_cliente' => \Auth::user()->cliente->id,

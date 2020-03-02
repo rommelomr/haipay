@@ -93,7 +93,16 @@
 25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
 	id_hai_criptomoneda: (fk)
 	id_moneda: (fk)
-	id_metodo_pago: (fk)
-	id_transaccion: (fk)
 	monto: longint
 	precio: decimal(13,9)
+	id_metodo_pago: (fk)
+	id_transaccion: (fk)
+	comision_general: tinyint
+	comision_compra: tinyint
+
+26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
+	general: tinyint
+	compra: tinyint
+	cambio: tinyint
+	remesa: tinyint
+	retiro: tinyint

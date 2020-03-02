@@ -97,3 +97,12 @@
 	precio:decimal precio de la moneda en el momento de la compra
 	id_metodo_pago: (fk)
 	id_transaccion: (fk)
+	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
+	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
+
+26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
+	general: Comision que se le aplicará a todas las monedas que se vayan a comprar en el sistema
+	compra: Comision que se le aplicará a la compra de haicriptomonedas
+	cambio: Comision que se le aplicará al cambio de criptomonedas
+	remesa: Comision que se le aplicará al envio de remesas
+	retiro: Comision que se le aplicará al retiro de dinero
