@@ -38,10 +38,8 @@ class CriptomonedasController extends Controller
 			'type_operation' =>	'required|exists:metodos_pago,id',
 		]);
 
-		dd(Comision::getComisiones());
-		exit;
-
-
+		
+		$comision = Comision::getComisiones();
 		$buy=HaiCriptomoneda::with('moneda')->find($req->base);
 		$pay=Moneda::where('siglas',$req->payWith)->first();
 
@@ -69,7 +67,9 @@ class CriptomonedasController extends Controller
 			'precio_moneda_a_comprar' => $crip_to_buy,
 			'precio_moneda_a_pagar' => $crip_to_pay,
 			'id_metodo_pago' => $req->type_operation,
-			'id_transaccion' => $transaccion->id
+			'id_transaccion' => $transaccion->id,
+			'comision_general' => $comision['general'],
+			'comision_compra' => $comision['compra'],
     	]);
 
 
