@@ -17,6 +17,7 @@ class CreateTablePersonas extends Migration
             $table->bigIncrements('id');
             $table->string('nombre',255);
             $table->string('cedula',20)->nullable();
+            $table->tinyInteger('es_usuario')->default(1);
             $table->timestamps();
         });
     }

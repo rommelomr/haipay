@@ -161,9 +161,10 @@
 					    		</center>
 					    		<ul class="collapsible">
 					    			@forelse($waiting_for_approval as $transaction)
+										@if($transaction->id_tipo_transaccion == 1)
 									    <li>
 										    <div class="collapsible-header">
-
+										
 									    	@if($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
 									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
 									    	@else
@@ -176,6 +177,7 @@
 									    		{{(float)$transaction->compraCriptomoneda->monto}}
 									    	@endif
 									    	{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
+										
 										    </div>
 										    <div class="collapsible-body">
 										    	<div class="row margin-0">
@@ -198,6 +200,7 @@
 										    	</div>
 										    </div>
 									    </li>
+										@endif
 					    			@empty
 					    				Not results found
 					    			@endforelse
@@ -284,6 +287,8 @@
 					    		</h5>
 					    	</center>
 					    	<div class="col s12">
+							<form action="enviarRemesas" method="post">
+								@csrf
 					    		<div class="row">
 						    		<div class="col l6 s12">
 				    					<center>
@@ -323,11 +328,11 @@
 						    					<div class="col s12">
 						    						<div class="input-field">
 						    							<label for="nombre-receiver">Receiver's complete name</label>
-						    							<input id="nombre-receiver" type="text" class="autocomplete">
+						    							<input name="nombre" id="nombre-receiver" type="text" class="autocomplete">
 						    						</div>
 						    						<div class="input-field">
 						    							<label for="cedula-receiver">Receiver's identification number</label>
-						    							<input id="cedula-receiver"type="text">
+						    							<input name="cedula" id="cedula-receiver"type="text">
 						    						</div>
 						    						
 						    					</div>
@@ -342,21 +347,20 @@
 						    					</center>
 								    			<div class="input-field">
 								    				<label for="monto">Amount</label>
-								    				<input id="monto" type="text">
+								    				<input name="monto" id="monto" type="text">
 							    				</div>
 							    				<div class="input-field">
-								    				<select name="" id="">
-								    					<option disabled selected>Payment Method</option>
-								    					<option>Paypal</option>
-								    					<option>W.U.</option>
-								    					<option>Zelle</option>
-								    				</select>
+													<select name="type_operation" class="browser-default">
+														<option disabled selected value="none">Payment Method</option>
+														@foreach($metodos_pago as $metodo_pago)
+															<option value="{{$metodo_pago->id}}">{{$metodo_pago->nombre}}</option>
+														@endforeach
+													</select>	
 							    				</div>
 							    				
 							    				<div class="input-field">
 							    					<center>
-							    						
-							    						<button class="btn btn-small indigo">Send Remittance</button>
+							    						<input class="btn btn-small indigo" type="submit" value="Send Remittance">
 							    					</center>
 
 							    				</div>
@@ -366,6 +370,7 @@
 						    		</div>
 
 					    		</div>
+							</form>
 					    	</div>
 				    	</div>
 				    </div>

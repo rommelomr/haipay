@@ -26,6 +26,9 @@ class Transaccion extends Model
     public function compraCriptomoneda(){
         return $this->hasOne('App\CompraCriptomoneda','id_transaccion');
     }
+    public function remesa(){
+        return $this->hasOne('App\Remesa','id_transaccion');
+    }
     
     
 }

@@ -83,6 +83,10 @@ Route::get('transactions', 'TransaccionesController@showViewTransactions')->name
 Route::get('transactions/{id_user}', 'TransaccionesController@showViewTransactions');//Listo
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+//Remesas
+Route::post('enviarRemesas','RemesasController@enviarRemesas');
+
 //Users
 //Route::get('users', 'UsersController@showViewUsers');//Listo
 
