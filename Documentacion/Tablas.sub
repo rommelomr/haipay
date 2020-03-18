@@ -74,6 +74,7 @@
 14 Remesas-> Guardará las remesas realizadas por los clientes
 	id_emisor: (fk id_cliente)
 	monto: longint
+	id_tipo_remesa: (fk)
 	id_transaccion: (fk)
 
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas

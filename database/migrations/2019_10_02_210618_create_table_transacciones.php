@@ -33,7 +33,7 @@ class CreateTableTransacciones extends Migration
             $table->unsignedBigInteger('id_tipo_transaccion');
             $table->foreign('id_tipo_transaccion')->references('id')->on('tipos_transaccion');
 
-            $table->tinyInteger('estado')->nullable();
+            $table->tinyInteger('estado')->nullable()->default(null);
 
             $table->timestamps();
 

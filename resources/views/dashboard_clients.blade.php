@@ -161,7 +161,6 @@
 					    		</center>
 					    		<ul class="collapsible">
 					    			@forelse($waiting_for_approval as $transaction)
-										@if($transaction->id_tipo_transaccion == 1)
 									    <li>
 										    <div class="collapsible-header">
 										
@@ -200,7 +199,6 @@
 										    	</div>
 										    </div>
 									    </li>
-										@endif
 					    			@empty
 					    				Not results found
 					    			@endforelse
@@ -383,100 +381,34 @@
 				    			</center>
 				    			
 					    		<ul class="collapsible">
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>100$ to Alexander Tejera</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				You must verify this remittance sending a picture with the deposit<br>
-										    			<button class="btn btn-small indigo">Send picture</button>
-										    			<button class="btn btn-small red">Cancel Remittance</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-								    </li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>150$ to Leyber Corrales</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				You must verify this remittance sending a picture with the deposit<br>
-										    			<button class="btn btn-small indigo">Send picture</button>
-										    			<button class="btn btn-small red">Cancel Remittance</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-									</li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    indeterminate_check_box</i>80$ to Miguel Zamora</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				Wait while an Administrator verify the image<br>
-										    			<button class="btn btn-small indigo">Resend Pictures</button>
-										    			<button class="btn btn-small red">Cancel Remittance</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-								    </li>
+								    @forelse($remittances as $remittance)
+								    
+								    	<li>
 
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    check_box</i>100$ to German Rodriguez</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				The remittance has been completed succesfully<br>
-									    				<button class="btn btn-small indigo">See details</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-								    </li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    check_box</i>150$ to Adriana Montoya</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				The remittance has been completed succesfully<br>
-									    				<button class="btn btn-small indigo">See details</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-									</li>
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">
-									    check_box</i>80$ to Andres Partidas</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    				
-									    				The remittance has been completed succesfully<br>
-									    				<button class="btn btn-small indigo">See details</button>
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-								    </li>
+										    <div class="collapsible-header"><i class="material-icons">
+										    indeterminate_check_box</i>{{$remittance->monto}} $ to
+										    @if($remittance->id_tipo_remesa == 1)
+										    	{{$remittance->internal->cliente->usuario->persona->nombre}}
+										    @else
+										    	{{$remittance->external->noUsuario->persona->nombre}}
+										    @endif
+											</div>
+										    <div class="collapsible-body">
+										    	<div class="row margin-0">
+										    		<div class="col s12">
+										    			<center>
+										    				
+										    				You must verify this remittance sending a picture with the deposit<br>
+											    			<a href="#modal_send_images" data-id_transaction="{{$remittance->id_transaccion}}" class="send_image modal-trigger btn btn-small indigo">Send picture</a>
+											    			<button class="btn btn-small red">Cancel Remittance</button>
+										    			</center>
+										    		</div>
+										    	</div>
+										    </div>
+								    	</li>
+							    	@empty
+							    		You have not sended any remmitance
+							    	@endforelse
 								</ul>
 				    		</div>
 				    	</div>

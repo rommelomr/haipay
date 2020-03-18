@@ -17,9 +17,12 @@ class CreateRemesasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_emisor');
             $table->foreign('id_emisor')->references('id')->on('clientes');
-
+            
             $table->unsignedBigInteger('id_transaccion');
             $table->foreign('id_transaccion')->references('id')->on('transacciones');
+
+            $table->unsignedBigInteger('id_tipo_remesa')->nullable();
+            $table->foreign('id_tipo_remesa')->references('id')->on('tipos_remesa');
 
             $table->unsignedBigInteger('monto');
             

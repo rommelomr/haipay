@@ -1,7 +1,7 @@
 15 Personas -> Guardará los datos generales de una persona
 	nombre: Guardará el nombre completo del usuario
 	cedula: Guardará la cédula de identidad
-
+	es_usuario: Booleano que indicará si la persona es usuario o no (para diferenciar entre una persona usuario y una persona a la que le han hecho una remesa)
 1 Usuarios-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
 	id_persona: (fk)
 	email: Guardará el correo electronico del usuario
@@ -69,6 +69,9 @@
 21 Remesas_No_Usuario-> Guardará el destinatario no usuario de la remesa
 	id_remesa: (fk) Para identificar a la remesa a la que pertenece esta
 	id_no_usuario: (fk) Para identificar a qué persona no usuario se le envió la remesa
+	
+22 tipos_remesa-> Guardará el nombre de los tipos de remesa
+	nombre: nombre del tipo de remesa: 1 internal 2 external
 
 14 Remesas-> Guardará las remesas realizadas por los clientes
 	id_emisor: (fk id_cliente) identifica al cliente que enviará la remesa
@@ -85,7 +88,7 @@
 
 18 remesas_cliente-> Guardará el destinatario usuario de la remesa
 	id_remesa: (fk)
-	id_transaccion: (fk)
+	id_cliente: (fk)
 
 24 hai_criptomoneda-> Guardará el id de las criptomonedas que se podrán comprar en la página
 	id_moneda (fk)
