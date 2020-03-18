@@ -66,10 +66,11 @@ INSERT INTO `clientes` (id_usuario, estado, `created_at`, `updated_at`) VALUES
 (20, 0, '2020-02-10 19:05:33', '2020-02-10 19:05:33');
 
 INSERT INTO `tipos_transaccion` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'Buy Cripto', NULL, NULL),
-(2, 'Trade', NULL, NULL),
-(3, 'Remittance', NULL, NULL),
-(4, 'Retirement', NULL, NULL);
+(1, 'Internal Remittance', NULL, NULL),
+(2, 'External Remittance', NULL, NULL),
+(3, 'Buy', NULL, NULL),
+(4, 'Trade', NULL, NULL),
+(5, 'Retirement', NULL, NULL);
 
 INSERT INTO `metodos_pago` (`nombre`, `estado`, `created_at`, `updated_at`) VALUES
 ('Change (trading)', '1', NULL, NULL),
