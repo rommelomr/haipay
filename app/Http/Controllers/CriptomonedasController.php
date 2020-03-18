@@ -57,7 +57,7 @@ class CriptomonedasController extends Controller
 
 		$transaccion = Transaccion::create([
     		'id_cliente' => \Auth::user()->cliente->id,
-    		'id_tipo_transaccion'=>1
+    		'id_tipo_transaccion'=>3
     	]);
 
     	$compra = CompraCriptomoneda::create([
