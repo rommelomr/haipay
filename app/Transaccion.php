@@ -29,6 +29,22 @@ class Transaccion extends Model
     public function remesa(){
         return $this->hasOne('App\Remesa','id_transaccion');
     }
+    public static function obtenerTransaccionPago($cliente,$estado){
+        return Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$cliente->id)->where('estado',$estado);
+
+    }
+    public static function obtenerRemesa($cliente,$estado){
+        return Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            },'moneda']);
+        }])->where('id_cliente',$cliente->id)->where('estado',$estado);
+
+    }
     
     
 }

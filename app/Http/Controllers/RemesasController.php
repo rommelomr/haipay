@@ -12,6 +12,7 @@ use App\NoUsuario;
 use Auth;
 class RemesasController extends Controller
 {
+
     public function enviarRemesas(Request $req){
         $this->validate($req,[
     		'nombre' => ['regex:/^[A-Za-z\s]+$/','nullable'],
@@ -78,4 +79,8 @@ class RemesasController extends Controller
     	$remesa->save();
     	return redirect('dashboard_clients?tab=4');
     }
+    public function verificarRemesa(Request $req){
+        
+    }
+    
 }

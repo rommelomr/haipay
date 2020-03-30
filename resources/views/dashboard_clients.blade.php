@@ -374,42 +374,134 @@
 				    </div>
 				    <div id="mis-envios" class="col s12"><br>
 				    	<div class="row grey lighten-3">
-				    		<div class="col s12 l8 offset-l2">
+				    		<br>
 				    			<center>
 				    				
 				    				<h5>My Remittances</h5>
 				    			</center>
-				    			
-					    		<ul class="collapsible">
-								    @forelse($remittances as $remittance)
-								    
-								    	<li>
+				    		<div class="col s12 l6">
+				    			<div class="card-panel">
+									<b>Verify your remittances</b>
+				    				<div>
+							    		<ul class="collection">
+										    @forelse($pending_remittances as $remittance)
+										    	<li class="collection-item">
 
-										    <div class="collapsible-header"><i class="material-icons">
-										    indeterminate_check_box</i>{{$remittance->monto}} $ to
-										    @if($remittance->id_tipo_remesa == 1)
-										    	{{$remittance->internal->cliente->usuario->persona->nombre}}
-										    @else
-										    	{{$remittance->external->noUsuario->persona->nombre}}
-										    @endif
-											</div>
-										    <div class="collapsible-body">
-										    	<div class="row margin-0">
-										    		<div class="col s12">
-										    			<center>
-										    				
-										    				You must verify this remittance sending a picture with the deposit<br>
-											    			<a href="#modal_send_images" data-id_transaction="{{$remittance->id_transaccion}}" class="send_image modal-trigger btn btn-small indigo">Send picture</a>
-											    			<button class="btn btn-small red">Cancel Remittance</button>
-										    			</center>
-										    		</div>
-										    	</div>
-										    </div>
-								    	</li>
-							    	@empty
-							    		You have not sended any remmitance
-							    	@endforelse
-								</ul>
+												    <div class="collapsible-item">
+													    {{$remittance->monto}} $ to
+													    @if($remittance->id_tipo_remesa == 1)
+													    	{{$remittance->internal->cliente->usuario->persona->nombre}}
+													    @else
+													    	{{$remittance->external->noUsuario->persona->nombre}}
+													    @endif
+													    <a href="#modal_delete_transaction" class="delete_transaction modal-trigger secondary-content"><i data-id_transaction="{{$remittance->id_transaccion}}" class="material-icons">delete</i></a>
+													    <a href="#modal_send_images" class="send_image modal-trigger secondary-content"><i data-id_transaction="{{$remittance->id_transaccion}}" class="material-icons">image</i></a>
+													</div>
+										    	</li>
+									    	@empty
+									    		There's no remmitances pending
+									    	@endforelse
+										</ul>
+										<center>
+
+											{{$pending_remittances->appends(['pending_remittances'=>$pending_remittances->currentPage()])->links('commons.pagination',[
+												'paginate' => $pending_remittances,
+												'max_buttons' => 5
+											])}}
+										</center>
+				    				</div>
+				    				<b>Waiting for approval</b>
+				    				<div>
+							    		<ul class="collection">
+										    @forelse($for_approval_remmitances as $remittance)
+										    
+										    	<li class="collection-item">
+
+												    <div class="collapsible-item">
+													    {{$remittance->monto}} $ to
+													    @if($remittance->id_tipo_remesa == 1)
+													    	{{$remittance->internal->cliente->usuario->persona->nombre}}
+													    @else
+													    	{{$remittance->external->noUsuario->persona->nombre}}
+													    @endif
+													    <a href="#modal_delete_transaction" class="delete_transaction modal-trigger secondary-content"><i data-id_transaction="{{$remittance->id_transaccion}}" class="material-icons">delete</i></a>
+													    <a href="#modal_send_images" data-id_transaction="{{$remittance->id_transaccion}}"  class="resend_image modal-trigger secondary-content"><i class="material-icons" data-id_transaction="{{$remittance->id_transaccion}}">replay</i></a>
+													    <a href="#" class="secondary-content"><i class="material-icons">remove_red_eye</i></a>
+													</div>
+										    	</li>
+									    	@empty
+									    		There's no remmitances waiting for approval
+									    	@endforelse
+										</ul>
+										<center>
+											{{$for_approval_remmitances->appends(['for_approval_remmitances'=>$for_approval_remmitances->currentPage()])->links('commons.pagination',[
+												'paginate' => $for_approval_remmitances,
+												'max_buttons' => 5
+											])}}
+										</center>
+				    				</div>
+				    				
+				    			</div>
+
+				    		</div>
+				    		<div class="col s12 l6">
+				    			<div class="card-panel">
+				    				<div>
+										<b>Refused</b>
+							    		<ul class="collection">
+										    @forelse($refused_remittances as $remittance)
+										    
+										    	<li class="collection-item">
+
+												    <div class="collapsible-item">
+													    {{$remittance->monto}} $ to
+													    @if($remittance->id_tipo_remesa == 1)
+													    	{{$remittance->internal->cliente->usuario->persona->nombre}}
+													    @else
+													    	{{$remittance->external->noUsuario->persona->nombre}}
+													    @endif
+													    <a href="#modal_delete_transaction" class="delete_transaction modal-trigger secondary-content"><i class="material-icons" data-id_transaction="{{$remittance->id_transaccion}}">delete</i></a>
+													    <a href="#modal_send_images" class="resend_image modal-trigger secondary-content"><i class="material-icons" data-id_transaction="{{$remittance->id_transaccion}}">replay</i></a>
+													    <a href="#" class="secondary-content"><i class="material-icons">remove_red_eye</i></a>
+													</div>
+										    	</li>
+									    	@empty
+									    		There's no remmitances refused
+									    	@endforelse
+										</ul>
+										<center>
+											{{$refused_remittances->appends(['refused_remittances'=>$refused_remittances->currentPage()])->links('commons.pagination',[
+												'paginate' => $refused_remittances,
+												'max_buttons' => 5
+											])}}
+										</center>
+				    				</div>
+				    				<b>Approved</b>
+				    				<div>
+							    		<ul class="collection">
+										    @forelse($approved_remittances as $remittance)
+
+										    	<li class="collection-item">
+												    {{$remittance->monto}} $ to
+												    @if($remittance->id_tipo_remesa == 1)
+												    	{{$remittance->internal->cliente->usuario->persona->nombre}}
+												    @else
+												    	{{$remittance->external->noUsuario->persona->nombre}}
+												    @endif
+												    <span class="secondary-content"><i class="material-icons">check_box</i></span>
+										    	</li>
+									    	@empty
+									    		There's no remmitances approved
+									    	@endforelse
+										</ul>
+										<center>
+											{{$approved_remittances->appends(['approved_remittances'=>$approved_remittances->currentPage()])->links('commons.pagination',[
+												'paginate' => $approved_remittances,
+												'max_buttons' => 5
+											])}}
+										</center>
+				    				</div>
+				    			</div>
 				    		</div>
 				    	</div>
 				    </div>
@@ -638,7 +730,7 @@
 </div>
 <div id="modal_send_images" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
-		<center><h4>Send Verification Image</h4></center>
+		<center><h4 id="modal-title"></h4></center>
 	<form id="verificaction_form" method="POST" enctype="multipart/form-data">@csrf
 		<input id="id_transaction" name="id_transaction" hidden>
 		<div class="row">
@@ -663,6 +755,22 @@
 	</form>
 	</div>
 </div>
+<div id="modal_delete_transaction" class="modal">
+	<div id="modal-content" class="modal-content margin-0">
+		<center>Are you sure you want to delete this transaction?</center>
+	<form id="form_delete_transaction" method="POST" enctype="multipart/form-data">@csrf
+		<input id="id_transaction_delete" name="id_transaction" hidden>
+		<div class="row">
+			<div class="col s12 input-field">
+				<center>
+					<button class="btn indigo">Delete</button>
+				</center>
+		    </div>
+		</div>
+	</form>
+	</div>
+</div>
+
 
 @endsection
 

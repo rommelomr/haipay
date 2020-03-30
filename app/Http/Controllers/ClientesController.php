@@ -23,46 +23,27 @@ class ClientesController extends Controller
 		$metodos_pago =MetodoPago::all();
 
         //Verify_pyments
-        $client = \Auth::user()->cliente;
+        $cliente = \Auth::user()->cliente;
 
-        $without_verify = Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
-            $query->with(['haiCriptomoneda'=>function($query){
-                $query->with('moneda');
-            },'moneda']);
-        }])->where('id_cliente',$client->id)->where('estado',null)->get();
+        $without_verify = Transaccion::obtenerTransaccionPago($cliente,null)->paginate(5,['*'],'without_verify');
         
-        $waiting_for_approval = Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
-            $query->with(['haiCriptomoneda'=>function($query){
-                $query->with('moneda');
-            },'moneda']);
-        }])->where('id_cliente',$client->id)->where('estado',0)->get();
+        $waiting_for_approval = Transaccion::obtenerTransaccionPago($cliente,0)->paginate(5,['*'],'waiting_for_approval');
 
-        $approved_transactions = Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
-            $query->with(['haiCriptomoneda'=>function($query){
-                $query->with('moneda');
-            },'moneda']);
-        }])->where('id_cliente',$client->id)->where('estado',1)->get();
+        $approved_transactions = Transaccion::obtenerTransaccionPago($cliente,1)->paginate(5,['*'],'approved_transactions');
 
-        $canceled = Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
-            $query->with(['haiCriptomoneda'=>function($query){
-                $query->with('moneda');
-            },'moneda']);
-        }])->where('id_cliente',$client->id)->where('estado',2)->get();
+        $canceled = Transaccion::obtenerTransaccionPago($cliente,2)->paginate(5,['*'],'canceled');
 
-        $auth = \Auth::user();
-        $cliente = Cliente::where('id_usuario',$auth->id)->first();
-        $remittances = Remesa::with(['internal'=>function($query){
-            $query->with(['cliente'=>function($query){
-                $query->with(['usuario'=>function($query){
-                    $query->with('persona');
-                }]);
-            }]);
-        },'external'=>function($query){
-            $query->with(['noUsuario'=>function($query){
-                $query->with('persona');
-            }]);
-        }])->where('id_emisor',$cliente->id)->paginate(5,['*'],'my_remittances');
-        //my remittances
+        //Remesa sin imagen
+        $pending_remittances = Remesa::obtenerRemesa($cliente,null)->paginate(5,['*'],'pending_remittances');
+
+        //Remesa con imagen esperando por aprobación
+        $for_approval_remmitances = Remesa::obtenerRemesa($cliente,0)->paginate(5,['*'],'for_approval_remmitances');
+
+        //Remesa con imagen aprobada
+        $approved_remittances = Remesa::obtenerRemesa($cliente,1)->paginate(5,['*'],'approved_remittances');
+
+        //Remesa con imagen rechazada
+        $refused_remittances = Remesa::obtenerRemesa($cliente,2)->paginate(5,['*'],'refused_remittances');
 
     	return view('dashboard_clients', [
     		'criptomonedas' => $hai_criptomonedas,
@@ -72,7 +53,10 @@ class ClientesController extends Controller
             'waiting_for_approval' => $waiting_for_approval,
             'approved_transactions' => $approved_transactions,
             'canceled' => $canceled,
-            'remittances' => $remittances,
+            'pending_remittances' => $pending_remittances,
+            'approved_remittances' => $approved_remittances,
+            'for_approval_remmitances' => $for_approval_remmitances,
+            'refused_remittances' => $refused_remittances,
     	]);
     }
     private function smartClientsSearcher($string){

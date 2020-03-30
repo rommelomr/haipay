@@ -21,6 +21,7 @@ class ImagenesTransaccionController extends Controller
 	}
     public function verifyPyment(Request $request){
     	$name = $this->saveImage($request);
+        //Validar que la transacción se del usuario en cuestion
     	ImagenTransaccion::create([
     		'id_transaccion'=>$request->id_transaction,
     		'nombre'=>$name

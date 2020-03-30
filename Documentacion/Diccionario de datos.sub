@@ -2,6 +2,7 @@
 	nombre: Guardará el nombre completo del usuario
 	cedula: Guardará la cédula de identidad
 	es_usuario: Booleano que indicará si la persona es usuario o no (para diferenciar entre una persona usuario y una persona a la que le han hecho una remesa)
+
 1 Usuarios-> Tabla que guardará los datos de usuario de todas las personas del sistema (Clientes y Moderadores)
 	id_persona: (fk)
 	email: Guardará el correo electronico del usuario

@@ -34,10 +34,11 @@ Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVer
 Route::group(['middleware' => ['tipo:1']], function() {
 	Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
     //Client verify a payment
-    Route::post('verify_pyment', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_pyment');//Listo
+    Route::post('verify_transaction', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_transaction');//Listo
 
     //Client resend an image
     Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
+    Route::post('delete_transaction', 'TransaccionesController@eliminarTransaccion')->middleware('auth')->name('delete_transaction');//Listo
 });
 
 //Dashboard
