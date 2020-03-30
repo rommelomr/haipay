@@ -38,7 +38,7 @@ Route::group(['middleware' => ['tipo:1']], function() {
 
     //Client resend an image
     Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
-    Route::post('delete_transaction', 'TransaccionesController@eliminarTransaccion')->middleware('auth')->name('delete_transaction');//Listo
+    Route::post('delete_transaction', 'RemesasController@eliminarTransaccion')->middleware('auth')->name('delete_transaction');//Listo
 });
 
 //Dashboard

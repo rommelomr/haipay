@@ -83,4 +83,15 @@ class RemesasController extends Controller
         
     }
     
+    public function eliminarTransaccion(Request $req){
+        $req->request->add(['user' => Auth::user()->Cliente->id]);
+        $this->validate($req,[
+            'id_transaction' => 'required|digits_between:1,20',
+            'user' =>	'in:'.$transaccion= Transaccion::find($req->id_transaction)->id_cliente,
+        ]);
+        $transaccion= Transaccion::find($req->id_transaction) ;
+        $transaccion->estado = 3;
+        $transaccion->save();
+        return redirect()->back();
+    }
 }
