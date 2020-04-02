@@ -100,6 +100,7 @@
 	id_transaccion: (fk)
 	comision_general: tinyint
 	comision_compra: tinyint
+	monto_total: tinyint
 
 26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
 	general: tinyint

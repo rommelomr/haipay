@@ -11,177 +11,115 @@
 				<nav class="nav-extended indigo">
 					<div class="nav-content">
 						<center>
-							<span class="nav-title">Transactions</span>
+							<span class="nav-title">Pending Transactions</span>
 						</center>
 					</div>
 					
 				</nav>
-				<div id="transactions-panel">
-					<div class="row valign-wrapper">
-						<div class="col s6">
-							<div class="row">
-								
-								<form action="">
-									<div class="input-field col s11">
-										<label for="search-transaction">Search Transaction</label>
-										<input type="text" name="id_transaction">
-										<i class="material-icons prefix">search</i>
-									</div>
-								</form>
-							</div>
-							<center>								
-								<div id="dont-selected" class="" hidden>
-										Dont transaction selected
-								</div>
-								<div id="transaction">
-									<div class="card-panel">
-										<b>Name:</b> Rommel Omar Montoya Rodriguez <br><br>
-										<b>Transaction:</b> Remittance <br><br>
-										<a href="#modal-details" class="btn indigo modal-trigger">See details</a>
-										<button href="#modal-delete" class="btn red modal-trigger">Delete</button>
-									</div>
-								</div>
-							</center>
-							
-						</div>
-						<div id="transactions-container" class="col s6">
-						    <ul class="collection">
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Payment
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Payment
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      <li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Remittance
-						      </li>
-						      
-						    </ul>
-						</div>
-					</div>
-				</div>
-					
-				<div class="card-footer">
-					<center>
-						<h5>Pending Transaction</h5>
-						<ul class="collection">
-							<li class="collection-item">
-								<i class="material-icons">access_alarm</i>
-								Payment
-							</li>
-						</ul>
-					</center>
+        <div class="row">
+          <div class="col s10 offset-s1">
+            <form action="#" method="get">
+              <div class="input-field">
+                <label for="search-transaction">Search Transaction</label>
+                <input type="text" name="id_transaction">
+                <i class="material-icons prefix">search</i>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+            <div id="transactions-container" class="col s10 offset-s1">
+                <ul class="collection">
+                  @forelse($transacciones as $transaccion)
+                    <li class="collection-item transaction-item" data-url="transactions/{{$transaccion->id}}">
 
-				</div>
+                      <b>{{$transaccion->tipoTransaccion->nombre}}:</b> {{$transaccion->cliente->usuario->persona->nombre}}
+                      <i class="material-icons secondary-content">access_alarm</i>
+                    </li>
+                  @empty
+                  There's no pending transactions
+                  @endforelse
+                </ul>
+            </div>          
+        </div>
+        <!--RENOVACION-->
 			</div>
 		</div>
-		<div class="col s12 l6">
-			
-			<div class="card">
-				<nav class="nav-extended indigo">
-					<div class="nav-content">
-						<center>
-							<span class="nav-title">User's Transaction</span>
-						</center>
-					</div>
-				</nav>
-				<div class="row">
-					<div class="col s8 offset-s2">
-						<form action="">
-							
-							<div class="input-field">
-								<label for="user">Search User</label>
-								<input id="user" type="text">
-								<i class="material-icons prefix">search</i>
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="row valign-wrapper">
-					<div class="col s4">
-						<center>
-							<b>Rommel Omar Montoya Rodriguez</b><br><br>
-							<img class="responsive-img materialboxed" src="{{asset('images/profile.png')}}" alt="">
-						</center>
-					</div>
-					<div id="user-transactions-container" class="col s7">
-						<ul class="collection">
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							
-							<li class="collection-item">
-								<i class="material-icons">indeterminate_check_box</i>
-								Remittance
-							</li>
-							<li class="collection-item">
-								<i class="material-icons">check_box</i>
-								Payment
-							</li>
-							
-						</ul>
-					</div>
-				</div>
-				
-			</div>
-		</div>
+    @if($watch)
+  		<div class="col s12 l6">
+  			
+  			<div class="card-panel">
+          <center>
+            <h5>Details</h5>          
+          </center>
+          <hr>
+  				<div class="row">
+  					<div class="col s4">
+  						<center>
+                @if($transaction->cliente->imagenesVerificacion == null)
+  							 <img class="responsive-img materialboxed" src="{{asset('images/profile.png')}}" alt="">
+                @else
+                 <img class="responsive-img materialboxed" src="{{Storage::url($transaction->cliente->imagenesVerificacion[0]->nombre)}}" alt="">
+                @endif
+  						</center>
+  					</div>
+            <div class="col s8">
+              <fieldset>
+                <legend>
+                  <b>User's info</b>
+                </legend>
+                <table class="centered">
+                    <tr>
+                      <th>Name</th>
+                      <td>{{$transaccion->cliente->usuario->persona->nombre}}</td>
+                    <tr>
+                    </tr>
+                      <th>ID</th>
+                      <td>{{$transaccion->cliente->usuario->persona->cedula}}</td>
+                    </tr>
+                    </tr>
+                      <th>State</th>
+                      @if($transaccion->cliente->usuario->persona->usuario->estado == 1)
+                        <td>Active</td>
+                      @elseif($transaccion->cliente->usuario->persona->usuario->estado == 2)
+                        <td>Unactive</td>
+                      @elseif($transaccion->cliente->usuario->persona->usuario->estado == 3)
+                        <td>{{$transaccion->cliente->usuario->estado}}</td>
+                      @endif
+                    </tr>                    
+                </table>
+              </fieldset>
+            </div>
+  				</div>
+          <hr>
+          <div class="row">
+            <table>
+              <tr>
+                <td>Transaction Type</td>
+                <td>{{$transaction->tipoTransaccion->nombre}}</td>
+              </tr>
 
+              <!--Si es una Remesa-->
+              <tr>
+                <td>Monto</td>
+                <td>{{$transaction->tipoTransaccion->nombre}}</td>
+              </tr>
+              <!--Si es una Remesa interna-->
+              @if($transaction->id_tipo_transaccion <= 2)
+              <tr>
+                <td>Transaction Type</td>
+                <td>{{$transaction->tipoTransaccion->nombre}}</td>
+              </tr>
+              @elseif($transaction->id_tipo_transaccion > 2)
+              @endif
+              <!--Si es una Remesa externa-->
+              <!--Si es una Compra-->
+              
+            </table>
+          </div>
+  			</div>
+  		</div>
+    @endif
 	</div>
 <!-- Modal Structure -->
 <div id="modal-details" class="modal bottom-sheet">
@@ -580,11 +518,10 @@
 
 @endsection
 <script>
-	
   document.addEventListener('DOMContentLoaded', function() {
     var elems_modal = document.querySelectorAll('.modal');
     var instances_modal = M.Modal.init(elems_modal);
-    	instances_modal[2].open();
+    	
     var elems_images = document.querySelectorAll('.materialboxed');
     var instances_iamges = M.Materialbox.init(elems_images);
 
@@ -592,3 +529,4 @@
     var instances_collapsible = M.Collapsible.init(elems_collapsible);
   });
 </script>
+<script type="module" src="{{asset('js/transactions/main.js')}}"></script>

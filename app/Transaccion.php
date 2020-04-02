@@ -9,7 +9,7 @@ class Transaccion extends Model
     protected $guarded = [];
     protected $table = "transacciones";
     public function tipoTransaccion(){
-    	return $this->belongsTo('App\TipoTransaccion','id_transaccion');
+    	return $this->belongsTo('App\TipoTransaccion','id_tipo_transaccion');
     }
     public function metodoPago(){
     	return $this->belongsTo('App\MetodoPago','id_metodo_transaccion');
@@ -26,9 +26,21 @@ class Transaccion extends Model
     public function compraCriptomoneda(){
         return $this->hasOne('App\CompraCriptomoneda','id_transaccion');
     }
+    public function trade(){
+        return $this->belongsTo(Moderador::class,'estonosirveaunjaja');
+    }
+    public function retiro(){
+        return $this->belongsTo(Moderador::class,'estonosirveaunjaja');
+    }
+    
     public function remesa(){
         return $this->hasOne('App\Remesa','id_transaccion');
     }
+    /*
+    *
+    * Busca las transacciones de un usuario en especifico
+    * Recibe el cliente en cuestion y el estado de las transacciones a buscar
+    */
     public static function obtenerTransaccionPago($cliente,$estado){
         return Transaccion::where('id_tipo_transaccion',3)->with(['compraCriptomoneda'=>function($query){
             $query->with(['haiCriptomoneda'=>function($query){
@@ -45,6 +57,5 @@ class Transaccion extends Model
         }])->where('id_cliente',$cliente->id)->where('estado',$estado);
 
     }
-    
     
 }

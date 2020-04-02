@@ -81,7 +81,7 @@ Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_vi
 
 //Transactions
 Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');//Listo
-Route::get('transactions/{id_user}', 'TransaccionesController@showViewTransactions');//Listo
+Route::get('transactions/{id}', 'TransaccionesController@seeTransaction');//Listo
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 

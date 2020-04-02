@@ -20,12 +20,13 @@
 	id_usuario: (fk)
 
 4 Tipo_Transaccion-> Guardará el nombre de los tipo de transacción  
-	nombre: nombre de las transacciones (Compra de criptomoneda, Cambio de moneda, Envio de remesa, Retiro)
+	nombre: nombre de las transacciones
 
 5 Transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
-	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada
+	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada por el moderador 3: Eliminada
 	id_moderador: (fk) identifica al moderador que verifica o rechaza la transaccion
 	id_cliente: (fk) identifica el cliente que hizo la transaccion
+	id_tipo_transaccion: (fk) // 1 Internal Remittance 2 External Remittance 3 Buy 4 Trade 5 Retirement
 
 6 monedas-> Guardará todas las monedas que se trabajaran en el sistema
 	nombre: guardará el nombre de la criptomoneda
@@ -49,7 +50,7 @@
 	id_cliente: (fk)
 	nombre: guardará nombre de la imagen
 	estado: Guarda el estado por 0:aprobar, 1:aprobado, 2:rechazado
-	tipo: Guarda el tipo de documento, cedula, fecha
+	tipo: Guarda el tipo de documento // 0 cedula 1 fecha
 
 10 Referidos -> Guardará los referidos del sistema
 	id_cliente: guardará el id del cliente que trajo al segundo cliente al sistema
@@ -103,6 +104,7 @@
 	id_transaccion: (fk)
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
+	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
 
 26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
 	general: Comision que se le aplicará a todas las monedas que se vayan a comprar en el sistema
