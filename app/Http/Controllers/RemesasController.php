@@ -10,6 +10,8 @@ use App\RemesaCliente;
 use App\RemesaNoUsuario;
 use App\NoUsuario;
 use Auth;
+use App\Comision;
+
 class RemesasController extends Controller
 {
 
@@ -29,7 +31,13 @@ class RemesasController extends Controller
                 return redirect('dashboard_clients?tab=3')->with(['messages'=>['You must enter the full name if the receiver is not an user']]);
             }
         }
-        
+        //obtener comisiones
+        $comision = Comision::getComisiones();
+
+        //obtener el monto total
+		
+		$monto_total = $req->monto + ( $req->monto * ($comision['remesa'] / 100));
+
         $transaccion = Transaccion::create([
             'id_cliente'=>Auth::user()->cliente->id,
             'id_tipo_transaccion'=>2
@@ -39,6 +47,7 @@ class RemesasController extends Controller
             'id_emisor'=> $transaccion->id_cliente,
             'id_transaccion'=> $transaccion->id,
             'monto'=> $req->monto,
+            'monto_total'=> $monto_total,
     	]);
 
         if($buscar != null){
