@@ -20,10 +20,10 @@ class RemesasController extends Controller
     		'monto' =>	'required|numeric',
             'type_operation' =>	'required|exists:metodos_pago,id',
         ]);
-        $buscar=Persona::where('cedula',$req->cedula)->first();
+        $buscar=Persona::with(['usuario'=>function($query){
+            $query->with('cliente');
+        }])->where('cedula',$req->cedula)->first();
         if($buscar==null){
-        
-
             if($req->nombre === null || !isset($req->nombre)){
 
                 return redirect('dashboard_clients?tab=3')->with(['messages'=>['You must enter the full name if the receiver is not an user']]);
@@ -31,8 +31,7 @@ class RemesasController extends Controller
         }
         
         $transaccion = Transaccion::create([
-            'id_cliente'=>Auth::user()->cliente->id,
-            'id_tipo_transaccion'=>2
+            'id_cliente'=>Auth::user()->cliente->id
     	]);
         
         $remesa = Remesa::create([
@@ -47,16 +46,18 @@ class RemesasController extends Controller
                 //si es un usuario
                 $remesaCliente = RemesaCliente::create([
                     'id_remesa'=> $remesa->id,
-                    'id_cliente'=> $transaccion->id_cliente,
+                    'id_cliente'=> $buscar->usuario->cliente->id,
                 ]);
                 $remesa->id_tipo_remesa = 1;
+                $transaccion->id_tipo_transaccion = 1;
             }else{
                 //no es un usuario, pero esta en la BD persona
                 $remesaNoUsuario = RemesaNoUsuario::create([
                     'id_remesa'=> $remesa->id,
-                    'id_no_usuario'=> $buscar->id,
+                    'id_no_usuario'=> $buscar->usuario->cliente->id,
                 ]);
                 $remesa->id_tipo_remesa = 2;
+                $transaccion->id_tipo_transaccion = 2;
             }
         }else{
             //no existe en la BD
@@ -75,8 +76,10 @@ class RemesasController extends Controller
                     'id_no_usuario'=> $NoUsuario->id,
                 ]);
                 $remesa->id_tipo_remesa = 2;
+                $transaccion->id_tipo_transaccion = 2;
         }
     	$remesa->save();
+        $transaccion->save();
     	return redirect('dashboard_clients?tab=4');
     }
     public function verificarRemesa(Request $req){

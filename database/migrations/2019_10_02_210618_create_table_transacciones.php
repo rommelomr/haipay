@@ -30,7 +30,7 @@ class CreateTableTransacciones extends Migration
             $table->unsignedBigInteger('id_moderador')->nullable();
             $table->foreign('id_moderador')->references('id')->on('moderadores');
 
-            $table->unsignedBigInteger('id_tipo_transaccion');
+            $table->unsignedBigInteger('id_tipo_transaccion')->nullable()->default(null);
             $table->foreign('id_tipo_transaccion')->references('id')->on('tipos_transaccion');
 
             $table->tinyInteger('estado')->nullable()->default(null);

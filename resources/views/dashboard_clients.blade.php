@@ -124,9 +124,12 @@
 								    <li>
 									    <div class="collapsible-header">
 
-									    	@if($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
+									    	@if($transaction->compraCriptomoneda->monto * $transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
+
 									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
+
 									    	@else
+
 									    		{{$transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar)}}
 									    	@endif
 									    	{{$transaction->compraCriptomoneda->moneda->siglas}} for
@@ -386,7 +389,7 @@
 							    		<ul class="collection">
 										    @forelse($pending_remittances as $remittance)
 										    	<li class="collection-item">
-
+										    		
 												    <div class="collapsible-item">
 													    {{$remittance->monto}} $ to
 													    @if($remittance->id_tipo_remesa == 1)

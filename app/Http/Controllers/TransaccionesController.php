@@ -32,11 +32,21 @@ class TransaccionesController extends Controller
             }]);
         },'compraCriptomoneda'
         ,'remesa'=>function($query){
-            $query->with(['internal','external']);
+            $query->with([
+                'internal'=>function($query){
+                    $query->with(['cliente'=>function($query){
+                        $query->with(['usuario'=>function($query){
+                            $query->with('persona');
+                        }]);
+                    }]);
+                },'external'=>function($query){
+                    $query->with(['noUsuario'=>function($query){
+                        $query->with('persona');
+                    }]);
+                }]);
         }
         ,'trade'
         ,'retiro'])->find($id);
-
         $transacciones = $this->getTransactions();
         return view('transactions',[
             'transacciones' => $transacciones,

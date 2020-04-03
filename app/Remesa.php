@@ -9,8 +9,11 @@ class Remesa extends Model
     protected $table = 'remesas';
     protected $guarded = [];
 
+    public function emisor(){
+    	return $this->belongsTo(Cliente::class,'id_emisor');
+    }
     public function internal(){
-    	return $this->hasOne(RemesaCliente::class,'id_remesa');
+        return $this->hasOne(RemesaCliente::class,'id_remesa');
     }
     public function external(){
     	return $this->hasOne(RemesaNoUsuario::class,'id_remesa');

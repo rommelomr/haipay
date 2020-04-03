@@ -56,7 +56,8 @@
   				<div class="row">
   					<div class="col s4">
   						<center>
-                @if($transaction->cliente->imagenesVerificacion == null)
+                
+                @if(count($transaction->cliente->imagenesVerificacion) <= 0)
   							 <img class="responsive-img materialboxed" src="{{asset('images/profile.png')}}" alt="">
                 @else
                  <img class="responsive-img materialboxed" src="{{Storage::url($transaction->cliente->imagenesVerificacion[0]->nombre)}}" alt="">
@@ -68,16 +69,16 @@
                 <legend>
                   <b>User's info</b>
                 </legend>
-                <table class="centered">
+                <table class="striped">
                     <tr>
                       <th>Name</th>
                       <td>{{$transaccion->cliente->usuario->persona->nombre}}</td>
-                    <tr>
                     </tr>
+                    <tr>
                       <th>ID</th>
                       <td>{{$transaccion->cliente->usuario->persona->cedula}}</td>
                     </tr>
-                    </tr>
+                    <tr>
                       <th>State</th>
                       @if($transaccion->cliente->usuario->persona->usuario->estado == 1)
                         <td>Active</td>
@@ -93,27 +94,39 @@
   				</div>
           <hr>
           <div class="row">
-            <table>
+            <table class="striped">
               <tr>
-                <td>Transaction Type</td>
+                <th>Transaction Type</th>
                 <td>{{$transaction->tipoTransaccion->nombre}}</td>
               </tr>
 
               <!--Si es una Remesa-->
-              <tr>
-                <td>Monto</td>
-                <td>{{$transaction->tipoTransaccion->nombre}}</td>
-              </tr>
-              <!--Si es una Remesa interna-->
               @if($transaction->id_tipo_transaccion <= 2)
-              <tr>
-                <td>Transaction Type</td>
-                <td>{{$transaction->tipoTransaccion->nombre}}</td>
-              </tr>
-              @elseif($transaction->id_tipo_transaccion > 2)
-              @endif
-              <!--Si es una Remesa externa-->
+                <tr>
+                  <th>Amount</th>
+                  <td>{{$transaction->remesa->monto}}</td>
+                </tr>
+                <!--Si es una Remesa interna-->
+                @if($transaction->id_tipo_transaccion == 1)
+                  <tr>
+                    <th>Client</th>
+                    <td>{{$transaction->remesa->internal->cliente->usuario->persona->nombre}}</td>
+                  </tr>
+                <!--Si es una Remesa externa-->
+                @elseif($transaction->id_tipo_transaccion == 2)
+                  <tr>
+                    <th>Client</th>
+                    <td>{{$transaction->remesa->external->noUsuario->persona->nombre}}</td>
+                  </tr>
+                @endif
+
               <!--Si es una Compra-->
+              @elseif($transaction->id_tipo_transaccion == 3)
+                <tr>
+                  <th>Amount</th>
+                  <td>{{$transaction->compraCriptomoneda->monto}}</td>
+                </tr>
+              @endif
               
             </table>
           </div>

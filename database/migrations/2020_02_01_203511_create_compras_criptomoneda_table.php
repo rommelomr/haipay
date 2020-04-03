@@ -32,6 +32,7 @@ class CreateComprasCriptomonedaTable extends Migration
             $table->decimal('precio_moneda_a_pagar',13,9);
             $table->tinyInteger('comision_general');
             $table->tinyInteger('comision_compra');
+            $table->tinyInteger('monto_total');
             $table->timestamps();
         });
     }

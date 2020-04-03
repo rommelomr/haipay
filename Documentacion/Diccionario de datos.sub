@@ -78,6 +78,9 @@
 14 Remesas-> Guardará las remesas realizadas por los clientes
 	id_emisor: (fk id_cliente) identifica al cliente que enviará la remesa
 	monto: cantidad a enviar al receptor
+	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
+	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
+	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
 	id_tipo_remesa: (fk)
 	id_transaccion: (fk)
 
@@ -98,10 +101,13 @@
 25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
 	id_hai_criptomoneda: (fk) moneda de haipay que se va a comprar
 	id_moneda: (fk) moneda con la que se va a pagar
-	monto: decimal Cantidad de la moneda que se va a comprar
-	precio:decimal precio de la moneda en el momento de la compra
 	id_metodo_pago: (fk)
 	id_transaccion: (fk)
+
+	monto: decimal Cantidad de la moneda que se va a comprar
+	precio_moneda_a_comprar: decimal precio de la moneda que se va a comprar en el momento de la compra
+	precio_moneda_a_pagar: decimal precio de la moneda que se va a pagar en el momento de la compra
+	
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
 	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra

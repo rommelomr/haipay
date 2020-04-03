@@ -74,7 +74,7 @@
 14 Remesas-> Guardará las remesas realizadas por los clientes
 	id_emisor: (fk id_cliente)
 	monto: longint
-	id_tipo_remesa: (fk)
+	id_tipo_remesa: (fk) //1 internal 2 external
 	id_transaccion: (fk)
 
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
@@ -94,10 +94,11 @@
 25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
 	id_hai_criptomoneda: (fk)
 	id_moneda: (fk)
-	monto: longint
-	precio: decimal(13,9)
 	id_metodo_pago: (fk)
 	id_transaccion: (fk)
+	monto: longint
+	precio_moneda_a_comprar: decimal(13,9)
+	precio_moneda_a_pagar: decimal(13,9)
 	comision_general: tinyint
 	comision_compra: tinyint
 	monto_total: tinyint
