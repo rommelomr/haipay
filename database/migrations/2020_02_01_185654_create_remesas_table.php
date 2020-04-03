@@ -25,7 +25,7 @@ class CreateRemesasTable extends Migration
             $table->foreign('id_tipo_remesa')->references('id')->on('tipos_remesa');
 
             $table->unsignedBigInteger('monto');
-            
+            $table->bigInteger('monto_total');
             $table->timestamps();
         });
     }
