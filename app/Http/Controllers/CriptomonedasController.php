@@ -43,6 +43,7 @@ class CriptomonedasController extends Controller
 		$buy=HaiCriptomoneda::with('moneda')->find($req->base);
 		$pay=Moneda::where('siglas',$req->payWith)->first();
 
+
 		//obtengo el precio de la cripto que voy a comprar
 		$crip_to_buy=$this->consultarPrecioMoneda([
 			'id' => $buy->moneda->id,
@@ -55,10 +56,16 @@ class CriptomonedasController extends Controller
 			'siglas' => $req->payWith,
 		]);
 
+		//obtener el monto total
+		$monto_calculado =  $req->cuant_buy*$crip_to_buy*(1/$crip_to_pay);
+		$monto_total = $monto_calculado + ( $monto_calculado * ($comision['general'] / 100));
+		
 		$transaccion = Transaccion::create([
     		'id_cliente' => \Auth::user()->cliente->id,
     		'id_tipo_transaccion'=>3
     	]);
+		
+		
 
     	$compra = CompraCriptomoneda::create([
 			'id_hai_criptomoneda' => $req->base,
@@ -70,6 +77,7 @@ class CriptomonedasController extends Controller
 			'id_transaccion' => $transaccion->id,
 			'comision_general' => $comision['general'],
 			'comision_compra' => $comision['compra'],
+			'monto_total' => $monto_total,
     	]);
 
 
