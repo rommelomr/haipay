@@ -26,6 +26,7 @@ class CreateRemesasTable extends Migration
 
             $table->unsignedBigInteger('monto');
             $table->bigInteger('monto_total');
+            $table->tinyInteger('comision_remesa');
             $table->timestamps();
         });
     }
