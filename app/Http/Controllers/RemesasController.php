@@ -47,6 +47,7 @@ class RemesasController extends Controller
             'id_transaccion'=> $transaccion->id,
             'monto'=> $req->monto,
             'monto_total'=> $monto_total,
+            'comision_remesa'=> $comision['remesa'],
     	]);
 
         if($buscar != null){
