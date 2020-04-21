@@ -57,6 +57,7 @@ Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acq
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
 	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
+    Route::post('change_state_transaction', 'TransaccionesController@changeStateTransaction')->name('change_state_transaction');//Listo
 });
 
 Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo

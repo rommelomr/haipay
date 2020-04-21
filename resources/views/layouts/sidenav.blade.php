@@ -18,11 +18,11 @@
             <a class="collapsible-header">Dashboard<i class="material-icons">arrow_drop_down</i></a>
             <div class="collapsible-body">
               <ul>
-                <li><a href="dashboard_clients?tab=1">Buy cripto</a></li>
-                <li><a href="dashboard_clients?tab=2">Verify payments</a></li>
-                <li><a href="dashboard_clients?tab=3">Send remittance</a></li>
-                <li><a href="dashboard_clients?tab=4">My sends</a></li>
-                <li><a href="dashboard_clients?tab=5">Retire money</a></li>
+                <li><a href="/dashboard_clients?tab=1">Buy cripto</a></li>
+                <li><a href="/dashboard_clients?tab=2">Verify payments</a></li>
+                <li><a href="/dashboard_clients?tab=3">Send remittance</a></li>
+                <li><a href="/dashboard_clients?tab=4">My sends</a></li>
+                <li><a href="/dashboard_clients?tab=5">Retire money</a></li>
               </ul>
             </div>
           </li>

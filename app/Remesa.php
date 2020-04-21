@@ -21,7 +21,9 @@ class Remesa extends Model
     public function transaccion(){
     	return $this->belongsTo(Transaccion::class,'id_transaccion');
     }
-
+    public function metodoRetiro(){
+        return $this->belongsTo('App\MetodoRetiro','id_metodo_retiro');
+    }
     public static function obtenerRemesa($cliente,$estado){
 
         return Remesa::whereHas('transaccion',function($query)use($estado){

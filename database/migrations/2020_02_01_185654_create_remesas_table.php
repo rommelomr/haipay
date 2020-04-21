@@ -20,6 +20,9 @@ class CreateRemesasTable extends Migration
             
             $table->unsignedBigInteger('id_transaccion');
             $table->foreign('id_transaccion')->references('id')->on('transacciones');
+            
+            $table->unsignedBigInteger('id_metodo_retiro');
+            $table->foreign('id_metodo_retiro')->references('id')->on('metodos_retiro');
 
             $table->unsignedBigInteger('id_tipo_remesa')->nullable();
             $table->foreign('id_tipo_remesa')->references('id')->on('tipos_remesa');
@@ -27,6 +30,7 @@ class CreateRemesasTable extends Migration
             $table->unsignedBigInteger('monto');
             $table->bigInteger('monto_total');
             $table->tinyInteger('comision_remesa');
+            $table->tinyInteger('estado')->default(0);
             $table->timestamps();
         });
     }

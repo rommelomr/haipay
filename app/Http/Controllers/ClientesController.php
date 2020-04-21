@@ -8,6 +8,7 @@ use App\Persona;
 use App\User;
 use App\Cliente;
 use App\MetodoPago;
+use App\MetodoRetiro;
 use App\Remesa;
 use Illuminate\Support\Facades\Hash;
 use App\Transaccion;
@@ -45,6 +46,8 @@ class ClientesController extends Controller
         //Remesa con imagen rechazada
         $refused_remittances = Remesa::obtenerRemesa($cliente,2)->paginate(5,['*'],'refused_remittances');
 
+        $retirement_methods = MetodoRetiro::all();
+
     	return view('dashboard_clients', [
     		'criptomonedas' => $hai_criptomonedas,
     		'monedas' => $monedas,
@@ -53,6 +56,7 @@ class ClientesController extends Controller
             'waiting_for_approval' => $waiting_for_approval,
             'approved_transactions' => $approved_transactions,
             'canceled' => $canceled,
+            'retirement_methods' => $retirement_methods,
             'pending_remittances' => $pending_remittances,
             'approved_remittances' => $approved_remittances,
             'for_approval_remmitances' => $for_approval_remmitances,

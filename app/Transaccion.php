@@ -32,7 +32,6 @@ class Transaccion extends Model
     public function retiro(){
         return $this->belongsTo(Moderador::class,'estonosirveaunjaja');
     }
-    
     public function remesa(){
         return $this->hasOne('App\Remesa','id_transaccion');
     }
@@ -57,5 +56,25 @@ class Transaccion extends Model
         }])->where('id_cliente',$cliente->id)->where('estado',$estado);
 
     }
-    
+    public function obtenerMontoAPagar(){
+        
+        if($this->compraCriptomoneda->monto * $this->compraCriptomoneda->precio_moneda_a_comprar * (1 /$this->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001){
+
+
+            return (string)number_format($this->compraCriptomoneda->monto*$this->compraCriptomoneda->precio_moneda_a_comprar * (1 /$this->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$this->compraCriptomoneda->precio/$this->compraCriptomoneda->monto)[1]+3);
+        }else{
+
+            return (string)$this->compraCriptomoneda->monto*$this->compraCriptomoneda->precio_moneda_a_comprar * (1 /$this->compraCriptomoneda->precio_moneda_a_pagar);
+            
+        }
+        
+    }
+    public function obtenerMontoAComprar(){
+        if((float)$this->compraCriptomoneda->monto < 0.0001){
+            return number_format((float)$this->compraCriptomoneda->monto,explode('-',$this->compraCriptomoneda->monto)[1]+3);
+        }else{
+            return (float)$this->compraCriptomoneda->monto;
+        }
+    }
+
 }

@@ -21,6 +21,7 @@ class RemesasController extends Controller
     		'cedula' => 'required|digits_between:1,20',
     		'monto' =>	'required|numeric',
             'type_operation' =>	'required|exists:metodos_pago,id',
+            'retirement_method' => 'required|exists:metodos_retiro,id',
         ]);
         $buscar=Persona::with(['usuario'=>function($query){
             $query->with('cliente');
@@ -36,7 +37,7 @@ class RemesasController extends Controller
 
         //obtener el monto total
 		
-		$monto_total = $req->monto + ( $req->monto * ($comision['remesa'] / 100));
+		$monto_sin_comision = $req->monto - ( $req->monto * ($comision['remesa'] / 100));
 
         $transaccion = Transaccion::create([
             'id_cliente'=>Auth::user()->cliente->id
@@ -45,9 +46,10 @@ class RemesasController extends Controller
         $remesa = Remesa::create([
             'id_emisor'=> $transaccion->id_cliente,
             'id_transaccion'=> $transaccion->id,
-            'monto'=> $req->monto,
-            'monto_total'=> $monto_total,
+            'monto'=> $monto_sin_comision,
+            'monto_total'=> $req->monto,
             'comision_remesa'=> $comision['remesa'],
+            'id_metodo_retiro'=> $req->retirement_method,
     	]);
 
         if($buscar != null){

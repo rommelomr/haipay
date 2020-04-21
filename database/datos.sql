@@ -345,8 +345,15 @@ INSERT INTO `prefijos_telefono` (pais,codigo) VALUES
 ('Yemen', '+967'),
 ('Zambia', '+260'),
 ('Zimbabwe', '+263');
+
 insert into comisiones (general,compra,remesa,cambio,retiro,deposito,created_at,updated_at) VALUES
 (2,5,10,20,50,100,'2020-03-01','2020-03-01');
+
 insert into tipos_remesa (nombre) VALUES
 ('Internal'),
 ('External');
+
+insert into metodos_retiro (nombre) VALUES
+
+('Cash'),
+('MonCash');

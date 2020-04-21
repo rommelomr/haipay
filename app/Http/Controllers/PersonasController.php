@@ -80,6 +80,9 @@ class PersonasController extends Controller
     	
     	return redirect()->back();
     }
+    private function verifyUser(){
+        
+    }
 
     public function file_Verify(Request $request){
         $messages = [
@@ -96,14 +99,16 @@ class PersonasController extends Controller
             
             //'file1' => 'required|image|max:7680',
         ],$messages);
-        $idCliente = Auth::user()->cliente->id;
+        //$idCliente = Auth::user()->cliente->id;
+        $user = Auth::user();
+        $client = $user->cliente;
         if($request->file0!=null){
-            $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file0'), $idCliente,'ID'),0);
+            $this->createImagenVerificacion($client->id, $this->guardarDocumentos($request->file('file0'), $client->id,'ID'),0);
         }
         if($request->file1!=null){
-            $this->createImagenVerificacion($idCliente, $this->guardarDocumentos($request->file('file1'), $idCliente,'date'),1);
+            $this->createImagenVerificacion($client->id, $this->guardarDocumentos($request->file('file1'), $client->id,'date'),1);
         }
-
+        $this->verifyUser($user);
         return redirect()->back();
     }
     

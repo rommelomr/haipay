@@ -15,8 +15,26 @@ class TransaccionesController extends Controller
     		}]);
     	}])->where('estado',0)->orderBy('created_at','DESC')->paginate(10,['*'],'transacciones');
     }
+    public function changeStateTransaction(Request $request){
+        
+        $request->validate([
+            'id_transaction' => ['required','exists:transacciones,id'],
+            'id_estado' => ['required','in:1,2']
+        ]);
+        $transaccion = Transaccion::find($request->id_transaction);
+        
+        $transaccion->estado = $request->id_estado;
+        $transaccion->save();
+        if($request->id_estado == 1){
+            $message = 'Transacción aprobada';
+        }else{
+            $message = 'Transacción cancelada';
+        }
+        return redirect()->route('transactions')->with(['messages'=>[$message]]);
+    }
     public function showViewTransactions(){
         $transacciones = $this->getTransactions();
+        
     	return view('transactions',[
             'watch' => false,
     		'transacciones' => $transacciones
@@ -30,10 +48,15 @@ class TransaccionesController extends Controller
             },'imagenesVerificacion'=>function($query){
                 $query->where('tipo',0);
             }]);
-        },'compraCriptomoneda'
+        }
+        ,'imagen'
+        ,'compraCriptomoneda'=>function($query){
+            $query->with(['haiCriptomoneda','moneda']);
+        }
         ,'remesa'=>function($query){
             $query->with([
-                'internal'=>function($query){
+                'metodoRetiro'
+                ,'internal'=>function($query){
                     $query->with(['cliente'=>function($query){
                         $query->with(['usuario'=>function($query){
                             $query->with('persona');
@@ -47,11 +70,13 @@ class TransaccionesController extends Controller
         }
         ,'trade'
         ,'retiro'])->find($id);
+        
+        
         $transacciones = $this->getTransactions();
         return view('transactions',[
             'transacciones' => $transacciones,
             'watch' => true,
-            'transaction' => $transaccion
+            'transaction' => $transaccion,
         ]);
 
     }

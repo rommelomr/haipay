@@ -7,11 +7,11 @@
 	id_persona: (fk)
 	email: Guardará el correo electronico del usuario
 	password: Guardará la contraseña del usuario
-	tipo: Guardará si el usuario es cliente, moderador o administrador del sistema
+	tipo: Guardará si el usuario es 1: cliente 2:moderador 3: administrador del sistema
 	telefono: Guardará el número de telefono de la persona
 	fecha_nacimiento: Guardará la fecha de nacimiento del usuario
 	token: Guardará el token con el que se permitirá cambiar la contraseña
-	estado: Guardará si el usuario está activo, inactivo, o no verificado
+	estado: Guardará si el usuario está 1 no verificado, 2 verificado, 3 inactivo
 
 2 Clientes-> Tipo de usuario
 	id_usuario: (fk)
@@ -75,14 +75,27 @@
 22 tipos_remesa-> Guardará el nombre de los tipos de remesa
 	nombre: nombre del tipo de remesa: 1 internal 2 external
 
+  	metodos_retiro-> guardará los métodos de retiro que puede elegir una persona para retirar una remesa
+  		nombre: Nombre del metodo de retiro //1 Cash 2 Moncash
+
 14 Remesas-> Guardará las remesas realizadas por los clientes
 	id_emisor: (fk id_cliente) identifica al cliente que enviará la remesa
-	monto: cantidad a enviar al receptor
+
+	monto: cantidad en $ a enviar al receptor
+
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
+
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
-	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
-	id_tipo_remesa: (fk)
+	
+	monto_total: monto + porcentaje de comision general + porcentaje de comision de compra (Se expresará en la moneda con que se va a pagar)
+
+	id_tipo_remesa: (fk) //1 internal 2 external
+
 	id_transaccion: (fk)
+
+	estado: Estado de la remesa // 0 No entregada 1 Entregada
+
+	id_metodo_retiro: (fk)
 
 16 Videos-> Guardará los videos que el administrador principal subirá a modo de publicidad
 	nombre: Guardará el nombre y extension del video
@@ -105,12 +118,20 @@
 	id_transaccion: (fk)
 
 	monto: decimal Cantidad de la moneda que se va a comprar
+
 	precio_moneda_a_comprar: decimal precio de la moneda que se va a comprar en el momento de la compra
+
 	precio_moneda_a_pagar: decimal precio de la moneda que se va a pagar en el momento de la compra
 	
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
+
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
+
 	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
+
+	monto_sin_comision: monto de la compra expresado en la moneda que se va a pagar sin comision
+	
+	ganancia: ganancia de la transaccion 
 
 26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
 	general: Comision que se le aplicará a todas las monedas que se vayan a comprar en el sistema

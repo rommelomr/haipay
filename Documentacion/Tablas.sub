@@ -76,6 +76,8 @@
 	monto: longint
 	id_tipo_remesa: (fk) //1 internal 2 external
 	id_transaccion: (fk)
+	estado: tinyInteger
+	id_metodo_retiro: (fk)
 
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
 	id_persona: (fk)

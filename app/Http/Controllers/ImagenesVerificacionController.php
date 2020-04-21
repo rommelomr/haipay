@@ -16,10 +16,10 @@ class ImagenesVerificacionController extends Controller
     			$query->where('id','!=',$request->id_imagen);
     		}]);
     	}])->first();
-        if($imagen->cliente->estado!==1){
+        if($imagen->cliente->estado!=1){
             
         	$imagen->estado = $request->estado;
-        	if($request->estado === "1"){
+        	if($request->estado == 1){
         		$otra_imagen = $imagen->cliente->imagenesVerificacion->first();
         		
     	    	if(($otra_imagen!==null) && ($otra_imagen->estado===1)){

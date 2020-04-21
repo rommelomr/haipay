@@ -34,11 +34,14 @@ class ImagenesTransaccionController extends Controller
     }
     public function resendImage(Request $request){
     	$name = $this->saveImage($request);
-    	$imagen = ImagenTransaccion::where('id_transaccion',$request->id_transaction)->whereHas('transaccion',function($query){
-    		$query->where('estado',0);
-    	})->first();
+    	$imagen = ImagenTransaccion::where('id_transaccion',$request->id_transaction)
+        ->with('transaccion')
+        ->first();
+        
+
     	Storage::delete('public/'.$imagen->nombre);
     	$imagen->nombre = $name;
+        $imagen->transaccion->estado = 0;
     	$imagen->save();
     	return redirect()->back();
 

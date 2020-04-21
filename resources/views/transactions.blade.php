@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{asset('css/transactions.css')}}">
 @endsection
 @section('main')
+
 	<div class="row">
 		<div class="col s12 l6">
 			
@@ -54,484 +55,167 @@
           </center>
           <hr>
   				<div class="row">
-  					<div class="col s4">
-  						<center>
-                
-                @if(count($transaction->cliente->imagenesVerificacion) <= 0)
-  							 <img class="responsive-img materialboxed" src="{{asset('images/profile.png')}}" alt="">
-                @else
-                 <img class="responsive-img materialboxed" src="{{Storage::url($transaction->cliente->imagenesVerificacion[0]->nombre)}}" alt="">
-                @endif
-  						</center>
+  					<div class="col s4 offset-s1">
+              <div class="card">
+                <div class="card-image">
+                  @if(count($transaction->cliente->imagenesVerificacion) <= 0)
+    							 <img class="responsive-img" src="{{asset('images/profile.png')}}" alt="">
+                  @else
+                   <img class="responsive-img materialboxed" src="{{Storage::url($transaction->cliente->imagenesVerificacion[0]->nombre)}}" alt="">
+                  @endif
+                </div>
+                <div class="card-content">
+                  <center>
+                    <p>User's Image</p>
+                  </center>
+                </div>
+              </div> 
   					</div>
-            <div class="col s8">
-              <fieldset>
-                <legend>
-                  <b>User's info</b>
-                </legend>
-                <table class="striped">
-                    <tr>
-                      <th>Name</th>
-                      <td>{{$transaccion->cliente->usuario->persona->nombre}}</td>
-                    </tr>
-                    <tr>
-                      <th>ID</th>
-                      <td>{{$transaccion->cliente->usuario->persona->cedula}}</td>
-                    </tr>
-                    <tr>
-                      <th>State</th>
-                      @if($transaccion->cliente->usuario->persona->usuario->estado == 1)
-                        <td>Active</td>
-                      @elseif($transaccion->cliente->usuario->persona->usuario->estado == 2)
-                        <td>Unactive</td>
-                      @elseif($transaccion->cliente->usuario->persona->usuario->estado == 3)
-                        <td>{{$transaccion->cliente->usuario->estado}}</td>
+            <div class="col s4 offset-s2">
+                <div class="card">
+                  <div class="card-image">
+
+                    <img src="{{Storage::url($transaction->imagen->nombre)}}" class="responsive-img materialboxed" alt="">
+                  </div>
+                  <div class="card-content" style="padding:5%">
+                    <div class="row" style="margin:0;">
+                      @if($transaction->estado == 1 && $transaction->id_tipo_transaccion <= 2 && $transaction->remesa->estado == 0)
+                        <div class="col s12">
+                          <center>
+                            <button class="btn indigo">Entregada</button>
+                          </center>
+                        </div>
+                      @else
+                        <div class="col s12">
+                          <center>
+
+                            <button class="btn btn-small z-depth-1 green lighten-1 change-state"><i data-state="1" class="material-icons">check_circle</i></button>
+
+                            <button class="btn btn-small z-depth-1 red lighten-1 change-state"><i data-state="2"class="material-icons">cancel</i></button>
+                              
+                          </center>
+                        </div>
                       @endif
-                    </tr>                    
-                </table>
-              </fieldset>
+                    </div>
+                    <center>
+                    </center>
+                  </div>
+                </div> 
             </div>
   				</div>
           <hr>
           <div class="row">
-            <table class="striped">
+            <table class="striped centered">
               <tr>
-                <th>Transaction Type</th>
+                <td><b>Client</b></td>
+                <td>{{$transaccion->cliente->usuario->persona->nombre}} - 
+                  @if($transaccion->cliente->usuario->persona->cedula != null)
+                  {{$transaccion->cliente->usuario->persona->cedula}}
+                  @else
+                    this user hasn't completed it's profile
+                  @endif
+                </td>
+              </tr>
+              <tr>
+                <td><b>Client State</b></td>
+                @if($transaccion->cliente->usuario->persona->usuario->estado == 1)
+                  <td>Don't verified</td>
+                @elseif($transaccion->cliente->usuario->persona->usuario->estado == 2)
+                  <td>Verified</td>
+                @elseif($transaccion->cliente->usuario->persona->usuario->estado == 3)
+                  <td>Unactive</td>
+                @endif
+              </tr>     
+              <tr>
+                <td><b>Transaction Type</b></td>
                 <td>{{$transaction->tipoTransaccion->nombre}}</td>
               </tr>
 
               <!--Si es una Remesa-->
               @if($transaction->id_tipo_transaccion <= 2)
                 <tr>
-                  <th>Amount</th>
-                  <td>{{$transaction->remesa->monto}}</td>
+                  <td><b>Remittance's Commission</b></td>
+                  <td>{{$transaction->remesa->comision_remesa}} %</td>
                 </tr>
+                <tr>
+                  <td><b>Retirement Method</b></td>
+                  <td>{{$transaction->remesa->metodoRetiro->nombre}}</td>
+                </tr>
+
                 <!--Si es una Remesa interna-->
                 @if($transaction->id_tipo_transaccion == 1)
                   <tr>
-                    <th>Client</th>
-                    <td>{{$transaction->remesa->internal->cliente->usuario->persona->nombre}}</td>
+                    <td><b>Transaction without commission</b></td>
+                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->internal->cliente->usuario->persona->nombre}} - {{$transaction->remesa->internal->cliente->usuario->persona->cedula}}</td>
                   </tr>
+                  <tr>
+                    <td><b>To pay</b></td>
+                    <td>{{$transaction->remesa->monto_total}} $</td>
+                  </tr>
+                  
                 <!--Si es una Remesa externa-->
                 @elseif($transaction->id_tipo_transaccion == 2)
                   <tr>
-                    <th>Client</th>
-                    <td>{{$transaction->remesa->external->noUsuario->persona->nombre}}</td>
+                    <td><b>Transaction</b></td>
+                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->external->noUsuario->persona->nombre}} - {{$transaction->remesa->external->noUsuario->persona->cedula}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>To pay</b></td>
+                    <td>{{$transaction->remesa->monto_total}} $</td>
                   </tr>
                 @endif
 
               <!--Si es una Compra-->
               @elseif($transaction->id_tipo_transaccion == 3)
                 <tr>
-                  <th>Amount</th>
-                  <td>{{$transaction->compraCriptomoneda->monto}}</td>
+                  <td><b>Pursache</b></td>
+                  <td>{{$transaction->compraCriptomoneda->monto}} {{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}} </td>
                 </tr>
+                
+                <tr>
+                  <td><b>{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}} Real Cost</b></td>
+                  <td>{{$transaction->compraCriptomoneda->precio_moneda_a_comprar}} $</td>
+                </tr>
+                
+                <tr>
+                  <td><b>General Commission</b></td>
+                  <td>{{$transaction->compraCriptomoneda->comision_general}} %</td>
+                </tr>
+                
+                <tr>
+                  <td><b>Buy Commission</b></td>
+                  <td>{{$transaction->compraCriptomoneda->comision_compra}} %</td>
+                </tr>
+                
+                <tr>
+                  <td><b>Amount without commisions</b></td>
+                  <td>{{$transaction->compraCriptomoneda->monto_sin_comision}} {{$transaction->compraCriptomoneda->moneda->siglas}}</td>
+                </tr> 
+
+                <tr>
+                  <td><b>To Pay</b></td>
+                  <td>{{$transaction->compraCriptomoneda->monto_total}} {{$transaction->compraCriptomoneda->moneda->siglas}}
+                  </td>
+                </tr> 
               @endif
               
             </table>
           </div>
   			</div>
   		</div>
+      <form id="form-change-state" action="{{route('change_state_transaction')}}" method="post" hidden>
+        @csrf
+        <input name="id_transaction" value="{{$transaction->id}}">
+        <input id="csf-id-estado" name="id_estado">
+        
+      </form>
     @endif
 	</div>
-<!-- Modal Structure -->
-<div id="modal-details" class="modal bottom-sheet">
-	<div class="modal-content">
-		<center>
-	  		<h4>Transaction details</h4>
-		</center>
-	  	<div class="row">
-	  		<div class="col s6">
-	  			<center>
-	  				
-					<img class="materialboxed" src="{{asset('images/logo.png')}}" alt="">
-					<img class="materialboxed" src="{{asset('images/logo.png')}}" alt="">
-	  			</center>
-	  		</div>
-	  		<div class="col s6">
-	  			<center>
-		  			<b>Transaction:</b> Remittance<br>
-		  			<b>Name:</b> Rommel Omar Montoya Rodriguez<br>
-		  			<b>Amount:</b> 250$<br>
-		  			<b>Payment Method:</b> Paypal<br>
-		  			<button class="btn green lighten-1">Verify</button>
-	  			</center>
-	  		</div>
-				<form action="">
-					<div class="input-field col s8 offset-s2">
-						<label for="message">Send a Message</label>
-						<input id="message" type="text">
-						<i class="material-icons prefix">send</i>
-					</div>
-			  		
-				</form>
-	  	</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col s12">
-		<center>
-			See <a href="#modal-deleted-transactions" class="modal-trigger">deleted transactions</a>
-		</center>
-	</div>
-</div>
 
-<div id="modal-delete" class="modal">
-	<div class="modal-content">
-		<center>
-	  		<h4>Delete transaction</h4>
-			Are you sure you want to delete this transaction? <br>
-			This action can't be reversed
-		</center>
-	</div>
-	<div class="modal-footer">
-		<a href="#!" class="btn modal-close indigo">Agree</a>
-		<a href="#!" class="btn modal-close red">Cancel</a>
-	</div>
-</div>
-
-<div id="modal-deleted-transactions" class="modal modal-fixed-footer">
-	<div class="modal-content">
-		<center>
-	  		<h4>Deleted transactions</h4>
-		</center>
-
-  <ul class="collapsible">
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Remittance dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Remittance</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    <li>
-      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Payment dd/mm/aaaa</div>
-      <div class="collapsible-body">
-      	<table class="centered">
-      		<thead>
-      			<tr>
-      				<th>Author</th>
-      				<th>Transaction</th>
-      				<th>date</th>
-      				<th>Amount</th>
-      			</tr>
-      		</thead>
-      		<tbody>
-      			<tr>
-      				<td>Rommel Omar Montoya Rodriguez</td>
-      				<td>Payment</td>
-      				<td>dd/mm/aaaa</td>
-      				<td>200$</td>
-      			</tr>
-      		</tbody>
-      	</table>
-      </div>
-    </li>
-    
-  </ul>
-        
-	</div>
-	<div class="modal-footer">
-		<a href="#!" class="btn modal-close indigo">Agree</a>
-		<a href="#!" class="btn modal-close red">Cancel</a>
-	</div>
-</div>
 
 @endsection
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded',function(){
     var elems_modal = document.querySelectorAll('.modal');
     var instances_modal = M.Modal.init(elems_modal);
     	
@@ -540,6 +224,19 @@
 
     var elems_collapsible = document.querySelectorAll('.collapsible');
     var instances_collapsible = M.Collapsible.init(elems_collapsible);
+
+    @if(session('messages'))
+      @foreach(session('messages') as $messages)
+        M.toast({html: '{{$messages}}'})
+      @endforeach
+
+    @endif
+    
+    @if ($errors->any())
+      @foreach ($errors->all() as $error)
+        M.toast({html: '{{ $error }}'})
+      @endforeach
+    @endif
   });
 </script>
 <script type="module" src="{{asset('js/transactions/main.js')}}"></script>

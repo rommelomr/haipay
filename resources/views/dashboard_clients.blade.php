@@ -123,22 +123,8 @@
 					    			@forelse($without_verify as $transaction)
 								    <li>
 									    <div class="collapsible-header">
-
-									    	@if($transaction->compraCriptomoneda->monto * $transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
-
-									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
-
-									    	@else
-
-									    		{{$transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar)}}
-									    	@endif
-									    	{{$transaction->compraCriptomoneda->moneda->siglas}} for
-									    	@if((float)$transaction->compraCriptomoneda->monto < 0.0001)
-									    		{{number_format((float)$transaction->compraCriptomoneda->monto,explode('-',$transaction->compraCriptomoneda->monto)[1]+3)}}
-									    	@else
-									    		{{(float)$transaction->compraCriptomoneda->monto}}
-									    	@endif
-									    	{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}</div>
+											{{$transaction->obtenerMontoAPagar()}} {{$transaction->compraCriptomoneda->moneda->siglas}} for {{$transaction->obtenerMontoAComprar()}} {{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
+										</div>
 									    <div class="collapsible-body">
 									    	<div class="row margin-0">
 									    		<div class="col s12">
@@ -166,19 +152,7 @@
 					    			@forelse($waiting_for_approval as $transaction)
 									    <li>
 										    <div class="collapsible-header">
-										
-									    	@if($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar) < 0.0001)
-									    		{{number_format($transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar),explode('-',(string)$transaction->compraCriptomoneda->precio/$transaction->compraCriptomoneda->monto)[1]+3)}}
-									    	@else
-									    		{{$transaction->compraCriptomoneda->monto*$transaction->compraCriptomoneda->precio_moneda_a_comprar * (1 /$transaction->compraCriptomoneda->precio_moneda_a_pagar)}}
-									    	@endif
-									    	{{$transaction->compraCriptomoneda->moneda->siglas}} for
-									    	@if((float)$transaction->compraCriptomoneda->monto < 0.0001)
-									    		{{number_format((float)$transaction->compraCriptomoneda->monto,explode('-',$transaction->compraCriptomoneda->monto)[1]+3)}}
-									    	@else
-									    		{{(float)$transaction->compraCriptomoneda->monto}}
-									    	@endif
-									    	{{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
+												{{$transaction->obtenerMontoAPagar()}} {{$transaction->compraCriptomoneda->moneda->siglas}} for {{$transaction->obtenerMontoAComprar()}} {{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
 										
 										    </div>
 										    <div class="collapsible-body">
@@ -341,15 +315,19 @@
 						    			</div>
 						    		</div>
 						    		<div class="col l6 s12">
+				    					<center>
+				    						<b>Remittance<br>Info</b>
+				    					</center>
 						    			<div class="row">
 						    				<div class="col s12">
-						    					<center>
-						    						<b>Remittance<br>Info</b>
-						    					</center>
 								    			<div class="input-field">
 								    				<label for="monto">Amount</label>
 								    				<input name="monto" id="monto" type="text">
 							    				</div>
+							    			</div>
+							    		</div>
+						    			<div class="row">
+						    				<div class="col s6">
 							    				<div class="input-field">
 													<select name="type_operation" class="browser-default">
 														<option disabled selected value="none">Payment Method</option>
@@ -358,16 +336,34 @@
 														@endforeach
 													</select>	
 							    				</div>
-							    				
+							    			</div>
+							    			<div class="col s6">
+							    				<div class="input-field">
+													<select name="retirement_method" class="browser-default">
+														<option disabled selected value="none">Retirement Method</option>
+														@foreach($retirement_methods as $retirement_method)
+															<option value="{{$retirement_method->id}}">{{$retirement_method->nombre}}</option>
+														@endforeach
+													</select>	
+							    				</div>
+							    			</div>
+							    			
+							    			
+						    			</div>
+						    			<div class="row">
+						    				<div class="col s12">
+						    					<center>
+						    						
 							    				<div class="input-field">
 							    					<center>
 							    						<input class="btn btn-small indigo" type="submit" value="Send Remittance">
 							    					</center>
 
 							    				</div>
-							    				
-							    			</div>
+						    					</center>
+						    				</div>
 						    			</div>
+
 						    		</div>
 
 					    		</div>

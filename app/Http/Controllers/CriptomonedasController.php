@@ -59,7 +59,7 @@ class CriptomonedasController extends Controller
 		//obtener el monto total
 		$monto_calculado =  $req->cuant_buy*$crip_to_buy*(1/$crip_to_pay);
 		$monto_total = $monto_calculado + ( $monto_calculado * ($comision['general'] / 100));
-		
+
 		$transaccion = Transaccion::create([
     		'id_cliente' => \Auth::user()->cliente->id,
     		'id_tipo_transaccion'=>3
@@ -77,6 +77,8 @@ class CriptomonedasController extends Controller
 			'id_transaccion' => $transaccion->id,
 			'comision_general' => $comision['general'],
 			'comision_compra' => $comision['compra'],
+			'monto_sin_comision' => $monto_calculado,
+			'ganancia' => $monto_total-$monto_calculado,
 			'monto_total' => $monto_total,
     	]);
 
