@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html >
 <head>
     <meta charset="UTF-8">
 
@@ -15,7 +15,11 @@
 
     @yield('head')
     <title>@yield('title')</title>
-
+    <style>
+        body{
+            background: #eeeeee;
+        }
+    </style>
 </head>
 <body>
     @yield('main')

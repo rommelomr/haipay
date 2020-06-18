@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Cartera extends Model
 {
 	protected $guarded = [];
- 	public function criptomonedas(){
+ 	public function haiCriptomoneda(){
 
- 		return belongsTo('App\Criptomoneda','id_criptomoneda');   
+ 		return $this->belongsTo('App\HaiCriptomoneda','id_hai_criptomoneda');   
  	}
  	public function clientes(){
 
- 		return belongsTo('App\Cliente','id_cliente');   
+ 		return $this->belongsTo('App\Cliente','id_cliente');   
  	}
  	
 }

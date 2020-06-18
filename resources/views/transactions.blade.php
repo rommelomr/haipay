@@ -89,9 +89,11 @@
                         <div class="col s12">
                           <center>
 
-                            <button class="btn btn-small z-depth-1 green lighten-1 change-state"><i data-state="1" class="material-icons">check_circle</i></button>
+                            <!--button class="btn btn-small z-depth-1 green lighten-1 change-state"><i data-state="1" class="material-icons">check_circle</i></button>
+                            <button class="btn btn-small z-depth-1 red lighten-1 change-state"><i data-state="2"class="material-icons">cancel</i></button-->
 
-                            <button class="btn btn-small z-depth-1 red lighten-1 change-state"><i data-state="2"class="material-icons">cancel</i></button>
+                            <a href="#modal-motivo-aprobacion" class="btn btn-small z-depth-1 green lighten-1 modal-trigger"><i class="material-icons">check_circle</i></a>
+                            <a href="#modal-motivo-rechazo" class="btn btn-small z-depth-1 red lighten-1 modal-trigger"><i class="material-icons">cancel</i></a>
                               
                           </center>
                         </div>
@@ -117,7 +119,7 @@
                 </td>
               </tr>
               <tr>
-                <td><b>Client State</b></td>
+                <td><b>Client Status</b></td>
                 @if($transaccion->cliente->usuario->persona->usuario->estado == 1)
                   <td>Don't verified</td>
                 @elseif($transaccion->cliente->usuario->persona->usuario->estado == 2)
@@ -189,12 +191,12 @@
                 
                 <tr>
                   <td><b>Amount without commisions</b></td>
-                  <td>{{$transaction->compraCriptomoneda->monto_sin_comision}} {{$transaction->compraCriptomoneda->moneda->siglas}}</td>
+                  <td>{{$transaction->compraCriptomoneda->total_sin_comision}} {{$transaction->compraCriptomoneda->moneda->siglas}}</td>
                 </tr> 
 
                 <tr>
                   <td><b>To Pay</b></td>
-                  <td>{{$transaction->compraCriptomoneda->monto_total}} {{$transaction->compraCriptomoneda->moneda->siglas}}
+                  <td>{{$transaction->compraCriptomoneda->total_con_comision}} {{$transaction->compraCriptomoneda->moneda->siglas}}
                   </td>
                 </tr> 
               @endif
@@ -211,7 +213,38 @@
       </form>
     @endif
 	</div>
+  <div id="modal-motivo-aprobacion" class="modal">
+    <div id="modal-content" class="modal-content margin-0">
+      <center><h5 id="modal-title">Are you sure you want to approve this transaction?</h5></center>
+      <div class="row">
+        <div class="col s12">
+          <center>
 
+              <button class="btn btn-small z-depth-1 green lighten-1 change-state" data-state="1">Do it</button>
+
+              <button class="btn btn-small z-depth-1 red lighten-1 modal-close">Cancel</button>
+
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="modal-motivo-rechazo" class="modal">
+    <div id="modal-content" class="modal-content margin-0">
+      <center><h5 id="modal-title">Are you sure you want to deny this transaction?</h5></center>
+      <div class="row">
+        <div class="col s12">
+          <center>
+
+
+              <button class="btn btn-small z-depth-1 green lighten-1 change-state" data-state="2">Do it</button>
+              <button class="btn btn-small z-depth-1 red lighten-1 modal-close">Cancel</button>
+
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
 
 @endsection
 <script>

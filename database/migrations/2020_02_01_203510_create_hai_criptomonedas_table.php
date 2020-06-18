@@ -17,6 +17,10 @@ class CreateHaiCriptomonedasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_moneda');
             $table->foreign('id_moneda')->references('id')->on('monedas');
+
+            $table->unsignedBigInteger('id_origen');
+            $table->foreign('id_origen')->references('id')->on('origenes');
+            
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Cartera;
 use App\ImagenVerificacion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,8 +21,10 @@ class PersonasController extends Controller
 
         //dd($data->telefono == null);
         if(($data->persona->cedula == null )|| ($data->telefono == null)){
+
             $incompleted_profile = true;
         }else{
+
             $incompleted_profile = false;
         }
 
@@ -37,12 +40,16 @@ class PersonasController extends Controller
                 }
             }
         }
+        $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
+            $query->with('moneda');
+        }])->where('id_cliente',$data->cliente->id)->paginate(10);
         //Validar si es admin o moderador no aplican los mensajes de cuenta verificada o no
 
     	return view('auth.edit_profile',[
     		'current_user_data' => $data,
             'incompleted_profile' => $incompleted_profile,
             'account_verified' => $account_verified,
+            'carteras' => $carteras,
     	]);
     }
     public function saveProfile(Request $req){

@@ -8,8 +8,10 @@
 	@foreach ($errors->all() as $error)
         <li>{{ $error }}</li>
     @endforeach
+    <div class="container-fluid" style="padding:2%;">
+    	
         <div class="row">
-            <div id="login" class="col s10 offset-s1 l10 offset-l1 card-panel">
+            <div id="login" class="col s12 card-panel">
                 <div class="row">
 
 				    <div class="col s12">
@@ -20,13 +22,6 @@
 				        			<a class="active" href="#comprar-criptomoneda"><span class="color-indigo hide-on-small-only">Buy Cripto</span> <i class="color-indigo material-icons">shopping_cart</i></a>
 				        		@else
 				        			<a href="#comprar-criptomoneda"><span class="color-indigo hide-on-small-only">Buy Cripto</span> <i class="color-indigo material-icons">shopping_cart</i></a>
-				        		@endif
-				        	</li>
-				        	<li class="tab ">
-				        		@if(isset($_GET['tab']) && $_GET['tab']==2)
-				        			<a class="active" href="#comprobar-pagos"><span class="color-indigo hide-on-small-only">Verify Payments</span> <i class="color-indigo material-icons">image</i></a>
-				        		@else
-				        			<a href="#comprobar-pagos"><span class="color-indigo hide-on-small-only">Verify Payments</span> <i class="color-indigo material-icons">image</i></a>
 				        		@endif
 				        	</li>
 				        	<li class="tab">
@@ -56,16 +51,34 @@
 				    </div>
 				    <div id="comprar-criptomoneda" class="col s12">
 						<div class="row"><br>
-							<div id="buy-criptos" class="scroll-y col s12 l9">
+							<div id="buy-criptos" class="scroll-y col s12">
 								<center>
 									<h5>Buy Cripto</h5>	
 									<div class="row">
 										@foreach($criptomonedas as $criptomoneda)
 										<div class="card-cripto col s6 l3">
-											<div class="card-panel">
-												<b>1 {{$criptomoneda->moneda->siglas}}</b><br><span class="precio-{{$criptomoneda->moneda->siglas}}-USD">cargando</span> $<br>
-												<a href="#modal-acquire-cripto" data-nombre_cripto="{{$criptomoneda->moneda->nombre}}" data-id_cripto="{{$criptomoneda->id}}" data-siglas_cripto="{{$criptomoneda->moneda->siglas}}" class="btn indigo modal-trigger buy-cripto">Acquire</a>
+											<div class="card">
+												<div class="card-content">
+													<b>{{$criptomoneda->moneda->siglas}}</b><br>
+													<span class="precio-{{$criptomoneda->moneda->siglas}}-USD">cargando</span> $
+												</div>
+												<div class="card-action">
+													<div class="row" style="margin:0">
+														<div class="col s6">
+															<center>
+																<a href="{{route('buy_crypto',$criptomoneda->moneda->siglas)}}">
+																	<i class="material-icons" style="color:green">add_shopping_cart</i>
+																</a>
+															</center>
+														</div>
+														<div class="col s6">
+															<center>
+																<a href="{{route('trade',$criptomoneda->moneda->siglas)}}"><i class="material-icons">autorenew</i></a>
+															</center>
+														</div>
 
+													</div>
+												</div>
 											</div>
 										</div>
 
@@ -75,184 +88,8 @@
 								</center>
 							</div>
 
-							<div id="my-criptos" class="scroll-y col s12 l3">
-								<center>
-									<hr>
-									<b>My Criptos</b>
-									<hr>
-									<table class="centered">
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>Sum</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-											<tr>
-												<td>Bitcoin</td>
-												<td>0.000000001</td>
-											</tr>
-										</tbody>
-									</table>
-								</center>
-							</div>
+							
 						</div>
-				    </div>
-				    <div id="comprobar-pagos" class="col s12 padding-0">
-				    	<br>
-				    	<div class="row margin-0 grey lighten-3">
-
-				    		<div class="col l3 s12">
-				    			
-					    		<center>
-					    			<h5>To be verified</h5>
-					    		</center>
-					    		<ul class="collapsible">
-					    			@forelse($without_verify as $transaction)
-								    <li>
-									    <div class="collapsible-header">
-											{{$transaction->obtenerMontoAPagar()}} {{$transaction->compraCriptomoneda->moneda->siglas}} for {{$transaction->obtenerMontoAComprar()}} {{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
-										</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			<center>
-									    			Please verify this transaction
-									    			<br>
-							    					<a href="#modal_send_images" class="send_image btn btn-small indigo modal-trigger" data-id_transaction="{{$transaction->id}}">Send Pictures</a>
-									    				
-									    			</center>
-									    		</div>
-									    	</div>
-									    </div>
-								    </li>
-					    			@empty
-					    			No results found
-					    			@endforelse
-								</ul>
-				    		</div>
-				    		<div class="col l3 s12">
-				    			
-					    		<center>
-					    			<h5>Waiting for approval</h5>
-					    		</center>
-					    		<ul class="collapsible">
-					    			@forelse($waiting_for_approval as $transaction)
-									    <li>
-										    <div class="collapsible-header">
-												{{$transaction->obtenerMontoAPagar()}} {{$transaction->compraCriptomoneda->moneda->siglas}} for {{$transaction->obtenerMontoAComprar()}} {{$transaction->compraCriptomoneda->haiCriptomoneda->moneda->siglas}}
-										
-										    </div>
-										    <div class="collapsible-body">
-										    	<div class="row margin-0">
-										    		<div class="col s12">
-										    			<center>
-										    				<div class="card">
-														        <div class="card-image">
-														        	<img src="{{Storage::url('public/'.$transaction->imagen->nombre)}}">
-														        </div>
-														        <div class="card-content">
-														        	<p>If you want, you can resend your verification image</p>
-														        </div>
-														        <div class="card-action">
-											    					<a href="#modal_send_images" data-id_transaction="{{$transaction->id}}" class="modal-trigger resend_image btn btn-small indigo">Resend</a>
-														        </div>
-														    </div>
-										    				<br>
-										    				
-										    			</center>
-										    	</div>
-										    </div>
-									    </li>
-					    			@empty
-					    				Not results found
-					    			@endforelse
-								</ul>
-				    		</div>
-				    		<div class="col l3 s12">
-				    			
-					    		<center>
-					    			<h5>Approved</h5>
-					    		</center>
-					    		<ul class="collapsible">
-					    			@forelse($approved_transactions as $transaction)
-									    <li>
-										    <div class="collapsible-header">
-										    	<i class="material-icons">indeterminate_check_box</i>100$ for 0.00000100 BTC
-										    </div>
-										    <div class="collapsible-body">
-										    	<div class="row margin-0">
-										    		<div class="col s12">
-										    			<center>
-										    				
-										    				You must send a picture with the deposit to verify your payment
-										    			</center>
-										    		</div>
-											    	<form action="">
-											    		<div class="input-field col s12">
-											    			<center>
-											    				
-											    				<button class="btn btn-small indigo">Send Pictures</button>
-											    			</center>
-											    		</div>
-											    	</form>
-										    	</div>
-										    </div>
-									    </li>
-					    			@empty
-					    				Not results found
-					    			@endforelse
-								</ul>
-				    		</div>
-				    		
-				    		<div class="col l3 s12">
-				    			
-					    		<center>
-					    			<h5>Canceled</h5>
-					    		</center>
-					    		<ul class="collapsible">
-					    			@forelse($canceled as $transaction)
-								    <li>
-									    <div class="collapsible-header"><i class="material-icons">check_box</i>100$ for 0.00000100 BTC</div>
-									    <div class="collapsible-body">
-									    	<div class="row margin-0">
-									    		<div class="col s12">
-									    			
-									    			Wait while an Administrator verify the images
-									    		</div>
-									    		<form action="">
-									    			<div class="input-field col s12">
-									    				<center>
-									    					
-									    					<button class="btn btn-small indigo">Resend Pictures</button>
-									    				</center>
-									    			</div>
-									    		</form>
-									    	</div>
-									    </div>
-								    </li>
-					    			@empty
-					    			No results found
-					    			@endforelse
-								</ul>
-				    		</div>
-				    		
-				    		<div class="col s12">
-				    			<center>Watch all completed <a href="#">payments</a></center>
-				    		</div>
-				    	</div>
 				    </div>
 				    <div id="enviar-remesa" class="col s12 padding-0"><br>
 				    	<div id="row-comprobar-pagos" class="row margin-0 grey lighten-3">
@@ -595,6 +432,7 @@
             </div>
         </div>
     </div>
+    </div>
 
 <div id="modal-retire" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
@@ -778,11 +616,25 @@
 		import {Ev,Me} from "{{asset('js/methods.js')}}";
 
 	document.addEventListener('DOMContentLoaded', function() {
+
+		@if(session('messages'))
+			@foreach(session('messages') as $messages)
+			  M.toast({html: '{{$messages}}'})
+			@endforeach
+
+		@endif
+		
+		@if ($errors->any())
+            @foreach ($errors->all() as $error)
+	  			M.toast({html: '{{ $error }}'})
+            @endforeach
+		@endif
+		
+ 		let elem_modal = document.querySelectorAll('.modal');
+    	let instances_modal = M.Modal.init(elem_modal);
 		let el = document.querySelector('.tabs');
 		let instance_tabs = M.Tabs.init(el);
 	
- 		let elem_modal = document.querySelectorAll('.modal');
-    	let instances_modal = M.Modal.init(elem_modal);
     	instances_modal[1].options.onCloseEnd = Me.resetModal;
     	instances_modal[1].options.onOpenStart = Me.resetModal;
 
@@ -811,16 +663,21 @@
 			let cripto_arr_ws = [];
 
 			@foreach($criptomonedas as $criptomoneda)
+				//LLena el array con el que se hara el request
 				cripto_arr_ws.push("{{$criptomoneda->moneda->siglas}}-USD");
+
+				//LLena el array con el que se harán calculos mas adelante
 				cripto_arr_calculate["{{$criptomoneda->moneda->siglas}}-USD"] = null;
 			@endforeach
 			
+			//Objeto convertido a Json para solicitar el precio a la api
 			let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr_ws}]});
 			this.send(json_to_send);
 		}
 		
     	//Cada vez que se abra el modal se configura con la moneda en cuestion
 	    let cript_to_buy = [];
+	    
    		F.addEvent.onClick('.buy-cripto',function(e){
 	    	cript_to_buy['name'] = e.target.dataset.nombre_cripto;
 	    	cript_to_buy['usd'] = cripto_arr_calculate[e.target.dataset.siglas_cripto+'-USD'];

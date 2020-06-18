@@ -8,6 +8,7 @@ use App\ImagenVerificacion;
 class ImagenesVerificacionController extends Controller
 {
     public function verifyImage(Request $request){   	
+        
     	//verificar si el id de la imagen (id_imagen) existe en la tabla imagenes_verificacion, en el campo id
     	//verificar si el estado (estado) es 1 o 2
 
@@ -16,6 +17,7 @@ class ImagenesVerificacionController extends Controller
     			$query->where('id','!=',$request->id_imagen);
     		}]);
     	}])->first();
+
         if($imagen->cliente->estado!=1){
             
         	$imagen->estado = $request->estado;

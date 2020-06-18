@@ -14,13 +14,13 @@ class CriptomonedasController extends Controller
 
 	/*
 		Método que consulta a las API el precio de la moneda en cuestion
-		Recibe un arreglo con el ID y las SIGLAS de la criptomoneda
+		Recibe un arreglo con el ID y las SIGLAS de la moneda
 		Ejemplo:
 			'id' => 6,
 			'siglas' => DOGE,
 		Retorna el precio de la cripto en cuestion expresado en Dólares americanos
 	*/
-	private function consultarPrecioMoneda($coin){
+	public static function consultarPrecioMoneda($coin){
 		if($coin['id'] === 1){
 			return 1;
 		}else if($coin['id'] == 6){

@@ -1,4 +1,16 @@
-  <ul id="slide-out" class="sidenav">
+<style>
+    
+    body {
+      padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+      body {
+        padding-left: 0;
+      }
+    }
+</style>
+  <ul id="slide-out" class="sidenav sidenav-fixed">
     <li>
       <div class="user-view">
         <div class="background blue lighten-4"></div>
@@ -19,7 +31,7 @@
             <div class="collapsible-body">
               <ul>
                 <li><a href="/dashboard_clients?tab=1">Buy cripto</a></li>
-                <li><a href="/dashboard_clients?tab=2">Verify payments</a></li>
+                <li><a href="{{route('verify_payments')}}">Verify payments</a></li>
                 <li><a href="/dashboard_clients?tab=3">Send remittance</a></li>
                 <li><a href="/dashboard_clients?tab=4">My sends</a></li>
                 <li><a href="/dashboard_clients?tab=5">Retire money</a></li>
@@ -30,12 +42,6 @@
     </li>
     <li><a class="waves-effect" href="{{route('logout')}}">Log out</a></li>
   </ul>
-
-  <div class="fixed-action-btn sidenav-trigger" data-target="slide-out">
-    <a class="btn-floating btn-large indigo">
-      <i class="material-icons">menu</i>
-    </a>
-  </div>
 
 <script>
   

@@ -91,7 +91,8 @@
 	id_cliente: (fk)
 
 24 hai_criptomoneda-> Guardará el id de las criptomonedas que se podrán comprar en la página
-	id_moneda (fk)
+	id_moneda: (fk)
+	id_origen: (fk)
 
 25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
 	id_hai_criptomoneda: (fk)
@@ -111,3 +112,7 @@
 	cambio: tinyint
 	remesa: tinyint
 	retiro: tinyint
+
+Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
+	nombre: varchar(255)
+	tipo: char(1)

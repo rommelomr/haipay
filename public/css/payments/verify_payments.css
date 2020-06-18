@@ -1,0 +1,6 @@
+.collection-item{
+	cursor:pointer;
+}
+.collection-item:hover{
+	background: #eeeeee;
+}

@@ -1,0 +1,32 @@
+Si una persona compra una criptomoneda
+	
+	Se consulta la cartera por el ID del cliente y el id de la HaiCriptomoneda
+
+	Si se encuentra un resultado
+
+		La cantidad comprada se suma a la que ya está
+		se guarda
+
+	Si no
+
+		La cantidad se setea
+		se guarda
+
+Si una persona cambia una cripto por otra
+
+	Se consulta la cartera por el ID del cliente y la Criptomoneda que voy a comprar
+
+	Se consulta la cartera por el ID del cliente y la Criptomoneda que voy a cambiar
+
+	A la cartera de la cripto que voy a comprar, le sumo el monto a comprar
+	se guarda
+
+	A la cartera de la cripto que voy a cambiar, le resto el monto que voy a cambiar
+	se guarda
+
+Si una persona retira dinero
+
+	Se consulta la cartera por el ID del cliente y la criptomoneda que se va a retirar
+
+	Se resta el monto a retirar del monto de la cartera
+	se guarda

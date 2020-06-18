@@ -23,7 +23,8 @@
 	nombre: nombre de las transacciones
 
 5 Transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
-	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada por el moderador 3: Eliminada
+	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada por el moderador 3: Eliminada por el usuario
+	
 	id_moderador: (fk) identifica al moderador que verifica o rechaza la transaccion
 	id_cliente: (fk) identifica el cliente que hizo la transaccion
 	id_tipo_transaccion: (fk) // 1 Internal Remittance 2 External Remittance 3 Buy 4 Trade 5 Retirement
@@ -109,27 +110,29 @@
 	id_cliente: (fk)
 
 24 hai_criptomoneda-> Guardará el id de las criptomonedas que se podrán comprar en la página
-	id_moneda (fk)
+	id_moneda: (fk)
+	id_origen: (fk)
 
 25 compras_criptomoneda-> Guardará las compras de criptomoneda que harán los clientes
 	id_hai_criptomoneda: (fk) moneda de haipay que se va a comprar
 	id_moneda: (fk) moneda con la que se va a pagar
 	id_metodo_pago: (fk)
 	id_transaccion: (fk)
+	
 
 	monto: decimal Cantidad de la moneda que se va a comprar
 
 	precio_moneda_a_comprar: decimal precio de la moneda que se va a comprar en el momento de la compra
 
-	precio_moneda_a_pagar: decimal precio de la moneda que se va a pagar en el momento de la compra
+	precio_moneda_a_pagar: decimal precio de la moneda con que se va a pagar en el momento de la compra
 	
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
 
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
 
-	monto_total: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
+	total_con_comision: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
 
-	monto_sin_comision: monto de la compra expresado en la moneda que se va a pagar sin comision
+	total_sin_comision: monto de la compra expresado en la moneda que se va a pagar sin comision
 	
 	ganancia: ganancia de la transaccion 
 
@@ -139,3 +142,7 @@
 	cambio: Comision que se le aplicará al cambio de criptomonedas
 	remesa: Comision que se le aplicará al envio de remesas
 	retiro: Comision que se le aplicará al retiro de dinero
+
+Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
+	nombre: varchar(255)
+	tipo: Letra que indicará el tipo de consulta a la url: W: websocket H:Http

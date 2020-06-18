@@ -91,6 +91,10 @@ export let Me = {
 		});
 	},
 	calculateByBuy:function (criptos,cript_to_buy,comision) {
+		console.log('criptos');
+		console.log(criptos);
+		console.log('cript_to_buy');
+		console.log(cript_to_buy);
 		let cuant_buy = document.getElementById('cuant_buy');
 		let pay_with = document.getElementById('payWith');
 		if(cuant_buy.value == ''){

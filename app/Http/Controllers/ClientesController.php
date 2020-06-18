@@ -12,11 +12,155 @@ use App\MetodoRetiro;
 use App\Remesa;
 use Illuminate\Support\Facades\Hash;
 use App\Transaccion;
+use App\Comision;
 use App\HaiCriptomoneda;
+use App\CompraCriptomoneda;
+use App\Cartera;
 use App\Moneda;
 
 class ClientesController extends Controller
 {
+
+    public function verifyPyments(){
+        $compras = CompraCriptomoneda::getCompras(null);
+        
+        return view('payments.verify_pyments',[
+            'compras' => $compras,
+            'selected_button' => 0,
+            'title' => 'Verify Transactions'
+        ]);
+    }
+
+    public function waitingPyments(){
+        $compras = CompraCriptomoneda::getCompras(0);
+
+        return view('payments.verify_pyments',[
+            'compras' => $compras,
+            'selected_button' => 1,
+            'title' => 'Transactions waiting for approval'
+        ]);
+    }
+
+    public function approvedPyments(){
+        $compras = CompraCriptomoneda::getCompras(1);
+
+        return view('payments.verify_pyments',[
+            'compras' => $compras,
+            'selected_button' => 2,
+            'title' => 'Approved Transactions'
+        ]);
+    }
+
+    public function canceledPyments(){
+        $compras = CompraCriptomoneda::getCompras(2);
+
+        return view('payments.verify_pyments',[
+            'compras' => $compras,
+            'selected_button' => 3,
+            'title' => 'Canceled Transactions'
+        ]);
+    }
+
+
+    public function trade($crypto){
+
+        $current_crypto = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
+            $query->where('siglas',$crypto);
+        })->firstOrFail();
+
+
+        $cartera = Cartera::whereHas('haiCriptomoneda',function($query)use($crypto){
+            $query->whereHas('moneda',function($query) use ($crypto){
+                $query->where('siglas',$crypto);
+
+            });
+        })->first();
+
+        if($cartera == null){
+            return redirect()->back()->with([
+                'messages' =>[
+                    "You don't have this crypto in your wallet. You can't trade it"
+                ]
+            ]);
+        }else{
+
+            $comision = Comision::getComisiones();
+
+            $coinbase_crypto = HaiCriptomoneda::where('id_origen',1)
+
+            ->whereHas('moneda',function($query)use($crypto){
+
+                $query->where('siglas','<>',$crypto);
+
+            })->with(['moneda','origen'])->get();
+
+            $coinlore_crypto = HaiCriptomoneda::where('id_origen',2)
+            
+            ->whereHas('moneda',function($query)use($crypto){
+                $query->where('siglas','<>',$crypto);
+            })->with(['moneda','origen'])->get();
+
+            $cryptos = [
+                'coinbase'  => [
+                    'url'   => $coinbase_crypto[0]->origen->url,
+                    'cryptos'  => [],
+                ],
+                'coinlore'  => [
+                    'url'   => $coinlore_crypto[0]->origen->url,
+                    'cryptos'   => [],
+                ]
+            ];
+            $all_cryptos = [];
+            foreach($coinbase_crypto as $value){
+                $cryptos['coinbase']['cryptos'][] = $value->moneda->siglas;
+                $all_cryptos[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+
+            }
+
+            foreach($coinlore_crypto as $value){
+                $cryptos['coinlore']['cryptos'][] = $value->moneda->siglas;
+                $all_cryptos[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+            }
+            $all_cryptos[$current_crypto->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+
+            return view('trade',[
+                'all_cryptos'       => json_encode($all_cryptos),
+                'current_crypto'    => $current_crypto,
+                'cryptos_arr'       => $cryptos,
+                'cryptos_json'      => json_encode($cryptos),
+                'comision_trade'    => $comision['cambio'],
+                'comision_general'    => $comision['general'],
+            ]);
+        }
+
+
+    }
+    public function buyCripto($crypto){
+
+        $criptomoneda = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
+            $query->where('siglas',$crypto);
+        })->firstOrFail();
+
+        $metodos_pago =MetodoPago::where('id','<>',1)->get();
+
+        $precio_criptomoneda = CriptomonedasController::consultarPrecioMoneda([
+            'id' => $criptomoneda->id_moneda,
+            'siglas' => $crypto,
+        ]);
+  
+        
+        $precio_criptomoneda = Comision::calcularComision([
+            'monto'     => $precio_criptomoneda,
+            'comision'  => ['general','compra'],
+        ]);
+
+        return view('buy_crypto',[
+            'criptomoneda' => $criptomoneda,
+            'precio' => $precio_criptomoneda,
+            'metodos_pago' => $metodos_pago,
+        ]);
+
+    }
     public function showDashboard(){
         //Buy cripto
 		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->get();
@@ -120,7 +264,7 @@ class ClientesController extends Controller
 
 		return $this->showViewClients('',$cliente);
 	}
-	public function modify_client(Request $req){
+    public function modify_client(Request $req){
 		$this->validate($req,[
 			'id' =>	'required|numeric',
     		'nombre' =>	'regex:/^[A-Za-z\s]+$/',
@@ -149,12 +293,54 @@ class ClientesController extends Controller
     	$persona = Persona::where('id',$persona->id)->with('usuario')->first();
     	return redirect()->back()->with('data',$persona);
     }
-	/*
-	Request:
-		"_token"
-		"cantBuy"
-		"payWith"
-		"type_operation"
-	 */
+    public function setTrade($pair){
+
+        $crypto_pair = explode('-',$pair);
+        
+        if(count($crypto_pair) == 2){
+
+            $cryptos_info = Moneda::whereIn('siglas',$crypto_pair)
+            ->with(['haiCriptomoneda'=>function($query){
+                $query->with('origen');
+            }])
+            ->get();
+
+            $arr_crypto = HaiCriptomoneda::setCurrentCryptos($cryptos_info,$crypto_pair);
+
+            $comissions = Comision::getComisiones();
+
+            $general_comision =$comissions['general'];
+            $change_comision =$comissions['cambio'];
+
+
+            $cartera = Cartera::where('id_cliente',\Auth::user()->cliente->id)
+
+            ->whereHas('haiCriptomoneda',function($query)use($crypto_pair){
+
+                $query->whereHas('moneda',function($query)use($crypto_pair){
+
+                    $query->where('siglas',$crypto_pair[1]);
+                });
+            })
+            ->first();
+            return view('set_trade',[
+                'json_cryp_to_buy' =>json_encode($arr_crypto[0]),
+                'json_cryp_to_pay' =>json_encode($arr_crypto[1]),
+                'cryp_to_buy' => $arr_crypto[0]['siglas'],
+                'cryp_to_pay' => $arr_crypto[1]['siglas'],
+                'general_comission' => $general_comision,
+                'change_comission' => $change_comision,
+                'cartera' => $cartera,
+                'buy'    => $crypto_pair[0],
+                'pay'    => $crypto_pair[1],
+            ]);
+
+
+        }else{
+
+            return abort(404);
+        }
+    }
+
 		
 }

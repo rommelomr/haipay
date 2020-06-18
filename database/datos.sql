@@ -94,12 +94,16 @@ INSERT INTO `monedas` (id, `nombre`, `siglas`, `created_at`, `updated_at`) VALUE
 (6,'Dogecoin', 'DOGE', NULL, NULL),
 (7,'Gourde', 'HTG', NULL, NULL);
 
-INSERT INTO `hai_criptomonedas` (id_moneda) VALUES
-(2),
-(3),
-(4),
-(5),
-(6);
+INSERT INTO `origenes` (url,tipo) VALUES
+('wss://ws-feed.pro.coinbase.com','w'),
+('https://api.coinlore.com/api/ticker/?id=2','h');
+
+INSERT INTO `hai_criptomonedas` (id_moneda,id_origen) VALUES
+(2,1),
+(3,1),
+(4,1),
+(5,1),
+(6,2);
 
 INSERT INTO `prefijos_telefono` (pais,codigo) VALUES
 ('Afghanistan', '+93'),

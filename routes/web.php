@@ -32,13 +32,28 @@ Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVer
 
 //Dashboard
 Route::group(['middleware' => ['tipo:1']], function() {
-	Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
+
+    Route::get('payments/verify','ClientesController@verifyPyments')->name('verify_payments');
+    Route::get('payments/canceled','ClientesController@canceledPyments')->name('canceled_payments');
+    Route::get('payments/waiting','ClientesController@waitingPyments')->name('waiting_payments');
+    Route::get('payments/approved','ClientesController@approvedPyments')->name('approved_payments');
+
+    Route::post('make_trade', 'ComprasCriptomonedaController@makeTrade')->name('make_trade');//Listo
+    Route::get('setTrade/{pair}', 'ClientesController@setTrade')->name('setTrade');//Listo
+    Route::get('trade/{crypto}', 'ClientesController@trade')->name('trade');//Listo
+	Route::get('buy_crypto/{crypto}', 'ClientesController@buyCripto')->name('buy_crypto');//Listo
+    Route::post('buy_crypto', 'ComprasCriptomonedaController@buyCripto')->name('buy_crypto_post');//Listo
+    Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
+    
     //Client verify a payment
     Route::post('verify_transaction', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_transaction');//Listo
 
     //Client resend an image
     Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
-    Route::post('delete_transaction', 'RemesasController@eliminarTransaccion')->middleware('auth')->name('delete_transaction');//Listo
+    Route::post('delete_transaction', 'TransaccionesController@deleteTransaction')->middleware('auth')->name('delete_transaction');//Listo
+
+    //Client delete a transaction
+    //Route::post('delete_transaction','TransaccionesController@deleteTransaction')->name('delete_transaction');
 });
 
 //Dashboard

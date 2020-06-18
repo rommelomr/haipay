@@ -23,10 +23,36 @@ class Comision extends Model
     	$this->comisiones = $arr;
     }
 
-    public static function getComisiones(){
+    public static function getComisiones($com = null){
     	$comision = new Comision;
     	$comision->setComisiones();
-    	return $comision->comisiones;
+
+        if($com == null){
+
+    	   return $comision->comisiones;
+        }else{
+            return $comision->comisiones[$com];
+        }
+    }
+
+    //Add the comission to an amount given
+    //receive an array
+    /*
+        [
+            
+        ]
+    */
+    public static function calcularComision($arr){
+
+        $comision = new Comision;
+        $comision->setComisiones();
+
+        foreach ($arr['comision'] as $key => $value){
+            $arr['monto'] += $arr['monto']*($comision->comisiones[$value]/100);
+        }
+
+        return $arr['monto'];
+
     }
 
 }
