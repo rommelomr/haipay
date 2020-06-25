@@ -19,11 +19,23 @@
     </li>
 
     <li><div class="divider"></div></li>
-    <li><a class="waves-effect" href="{{route('edit_profile')}}">My profile</a></li>
-    <li><a class="waves-effect" href="{{route('users')}}">Users</a></li>
+
+    <li><a class="waves-effect" href="{{route('edit_profile')}}">Profile</a></li>
+    <li><a href="/dashboard_clients?tab=1">Buy/Sell/Exchange</a></li>
+    <li><a href="/dashboard_clients?tab=3">Send money</a></li>
+    <li><a href="{{route('verify_payments')}}">Verify payments</a></li>
+    <li><a href="#">Transactions History</a></li>
+    <li><a class="waves-effect" href="{{route('watch_video')}}">Earn money</a></li>
+    <li><a class="waves-effect" href="#">Referrals</a></li>
+    <li><a class="waves-effect" href="#">Payment Settings</a></li>
+
+    <!--li><a class="waves-effect" href="{{route('users')}}">Users</a></li>
+
     <li><a class="waves-effect" href="{{route('clients')}}">Clients</a></li>
-    <li><a class="waves-effect" href="{{route('watch_video')}}">Watch Video</a></li>
+
+
     <li><a class="waves-effect" href="{{route('transactions')}}">Transactions</a></li>
+
     <li>
       <ul class="collapsible collapsible-accordion">
           <li>
@@ -31,7 +43,6 @@
             <div class="collapsible-body">
               <ul>
                 <li><a href="/dashboard_clients?tab=1">Buy cripto</a></li>
-                <li><a href="{{route('verify_payments')}}">Verify payments</a></li>
                 <li><a href="/dashboard_clients?tab=3">Send remittance</a></li>
                 <li><a href="/dashboard_clients?tab=4">My sends</a></li>
                 <li><a href="/dashboard_clients?tab=5">Retire money</a></li>
@@ -39,7 +50,7 @@
             </div>
           </li>
         </ul>
-    </li>
+    </li-->
     <li><a class="waves-effect" href="{{route('logout')}}">Log out</a></li>
   </ul>
 

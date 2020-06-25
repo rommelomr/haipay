@@ -18,8 +18,6 @@ class CreateTableClientes extends Migration
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->tinyInteger('estado')->default(0);
-
-
             $table->timestamps();
         });
     }

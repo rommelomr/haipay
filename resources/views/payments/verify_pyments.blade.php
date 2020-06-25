@@ -31,23 +31,23 @@
 									@if($selected_button == 0)
 										disabled 
 									@endif 
-								class="btn btn-small indigo"><i class="material-icons">camera_alt</i></a>
+								class="btn btn-small indigo tooltipped" data-position="top" data-tooltip="Verify payments"><i class="material-icons">camera_alt</i></a>
 
 								<a href="{{route('waiting_payments')}}"
 									@if($selected_button == 1)
 										disabled
 									@endif
-								class="btn btn-small orange"><i class="material-icons">access_time</i></a>
+								class="btn btn-small orange tooltipped" data-position="top" data-tooltip="Payments waiting for approval"><i class="material-icons">access_time</i></a>
 								<a href="{{route('approved_payments')}}"
 									@if($selected_button == 2)
 										disabled
 									@endif
-								class="btn btn-small green"><i class="material-icons">check</i></a>
+								class="btn btn-small green tooltipped" data-position="top" data-tooltip="Approved payments"><i class="material-icons">check</i></a>
 								<a href="{{route('canceled_payments')}}"
 									@if($selected_button == 3)
 										disabled
 									@endif
-								class="btn btn-small red"><i class="material-icons">cancel</i></a>
+								class="btn btn-small red tooltipped" data-position="top" data-tooltip="Not approved payments"><i class="material-icons">cancel</i></a>
 							</center>
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 													>
 													@endif
 												</div>
-												@if($selected_button != 2)
+												@if(($selected_button == 0 || $selected_button == 3))
 													<a href="#modal_send_images" class="modal-trigger btn-floating halfway-fab orange"><i class="material-icons">add</i></a>
 												@endif
 												
@@ -105,13 +105,6 @@
 
 										</div>
 									</div>
-									@if($selected_button != 2)
-										<div class="card-action">
-											<center>
-												<a href="#modal_delete_transactions" class="modal-trigger red-text">Cancel Transaction</a>
-											</center>
-										</div>
-									@endif
 								</div>
 							</div>
 							<div class="col s12 l6">
@@ -171,14 +164,15 @@
 			</div>
 		</div>
 	</div>
-	@if($selected_button != 2 && $compras[0]!=null)	
+	
+	@if(($selected_button == 0 || $selected_button == 3) && $compras[0]!=null)	
 	<div id="modal_send_images" class="modal">
 		<div id="modal-content" class="modal-content margin-0">
 			<center><h5 id="modal-title">Send the verification image</h5></center>
 		<form id="verificaction_form" method="POST" enctype="multipart/form-data"
 		@if($selected_button == 0)
 			action="{{route('verify_transaction')}}"
-		@elseif($selected_button == 1)
+		@elseif($selected_button == 3)
 			action="{{route('resend_image')}}"
 		@endif
 
@@ -197,25 +191,6 @@
 		</form>
 		</div>
 	</div>
-	<div id="modal_delete_transactions" class="modal">
-		<div id="modal-content" class="modal-content margin-0">
-			<center><h5 id="modal-title">Are you sure you want to delete this transaction?</h5></center>
-		<form id="verificaction_form" method="POST" enctype="multipart/form-data" action="{{route('delete_transaction')}}">
-			@csrf
-			<input class="transaction" name="id_transaction" value="{{$compras[0]->transaccion->id}}">
-			<br>
-			<div class="row">
-				<div class="col s12">
-					<center>
-						<button class="btn green">Yes</button>
-						<div class="btn red lighten-2 modal-close">No</div>
-					</center>
-				</div>
-			</div>
-		</form>
-		</div>
-	</div>
-	
 	@endif
 @endsection
 <script>
@@ -225,6 +200,9 @@
 
  		var elems_materialboxed = document.querySelectorAll('.materialboxed');
     	var instances = M.Materialbox.init(elems_materialboxed);
+
+		var elems_tooltip = document.querySelectorAll('.tooltipped');
+    	var instances = M.Tooltip.init(elems_tooltip);
 
 		@if(session('messages'))
 			@foreach(session('messages') as $messages)

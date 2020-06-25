@@ -18,6 +18,53 @@ class HaiCriptomoneda extends Model
 	public function origen(){
 	    return $this->belongsTo('App\Origen','id_origen');
 	}	
+    private static function obtenerUrlCriptos($coinbase_cryptos,$coinlore_cryptos){
+        $info_cryptos = [
+            'coinbase'  => [
+                'url'   => $coinbase_cryptos[0]->origen->url,
+                'cryptos'  => [],
+            ],
+            'coinlore'  => [
+                'url'   => $coinlore_cryptos[0]->origen->url,
+                'cryptos'   => [],
+            ]
+        ];
+        return $info_cryptos;
+    }   
+    public static function inicializarPares($coinbase_cryptos,$coinlore_cryptos,$current_crypto){
+
+        $all_pairs = [];
+
+        foreach($coinbase_cryptos as $value){
+            $all_pairs[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+
+        }
+
+        foreach($coinlore_cryptos as $value){
+            $all_pairs[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+        }
+        $all_pairs[$current_crypto->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+        return $all_pairs;
+
+    }   
+    private static function obtenerSiglasCriptos($info_cryptos,$coinbase_cryptos,$coinlore_cryptos){
+        foreach($coinbase_cryptos as $value){
+            $info_cryptos['coinbase']['cryptos'][] = $value->moneda->siglas;
+
+        }
+
+        foreach($coinlore_cryptos as $value){
+            $info_cryptos['coinlore']['cryptos'][] = $value->moneda->siglas;
+        }
+        return $info_cryptos;
+    }   
+    public static function obtenerInfoCriptos($coinbase_cryptos,$coinlore_cryptos){
+
+        $info_cryptos = HaiCriptomoneda::obtenerUrlCriptos($coinbase_cryptos,$coinlore_cryptos);
+        $info_cryptos = HaiCriptomoneda::obtenerSiglasCriptos($info_cryptos,$coinbase_cryptos,$coinlore_cryptos);
+        return $info_cryptos;
+        
+    }   
 
 	public static function calcularMonto($arr){
 		$comision = Comision::getComisiones();

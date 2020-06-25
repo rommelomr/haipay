@@ -30,20 +30,33 @@
                         @csrf
                         <div class="col s10 offset-s1">
                             <div class="input-field">
-                                <label for="">Name</label>
-                                <input type="text" name="name" value="{{old('name')}}">
+                                <label for="name">Name</label>
+                                <input id="name" type="text" name="name" value="{{old('name')}}">
+                                <span style="color:salmon">*</span>
                             </div>
                             <div class="input-field">
-                                <label for="">Email</label>
-                                <input type="text" name="email" value="{{old('email')}}">
-                            </div>                        
+                                <label for="email">Email</label>
+                                <input id="email" type="text" name="email" value="{{old('email')}}">
+                                <span style="color:salmon">*</span>
+                            </div>              
                             <div class="input-field">
-                                <label for="">Password</label>
-                                <input type="password" name="password">
+                                <label for="id">ID</label>
+                                <input id="id" type="text" name="id" value="{{old('id')}}">
+                            </div>              
+                            <div class="input-field">
+                                <label for="phone">Phone</label>
+                                <input id="phone" type="text" name="phone" value="{{old('phone')}}">
+                            </div>              
+                                      
+                            <div class="input-field">
+                                <label for="contrasena">Password</label>
+                                <input id="contrasena" type="password" name="password">
+                                <span style="color:salmon">*</span>
                             </div>
                             <div class="input-field">
-                                <label for="">Repeat Password</label>
-                                <input type="password" name="password_confirmation">
+                                <label for="reptir">Repeat Password</label>
+                                <input id="reptir" type="password" name="password_confirmation">
+                                <span style="color:salmon">*</span>
                             </div>
                             <center>
                                 <button class="btn indigo">Create Account</button>
@@ -62,3 +75,21 @@
     </div>
 @endsection
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        @if(session('messages'))
+            @foreach(session('messages') as $messages)
+              M.toast({html: '{{$messages}}'})
+            @endforeach
+
+        @endif
+        
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                M.toast({html: '{{ $error }}'})
+            @endforeach
+        @endif
+        
+    });
+</script>

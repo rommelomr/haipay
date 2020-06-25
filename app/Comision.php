@@ -24,14 +24,25 @@ class Comision extends Model
     }
 
     public static function getComisiones($com = null){
-    	$comision = new Comision;
-    	$comision->setComisiones();
+        $comisiones = Comision::all();
 
+        $arr = [];
+
+        foreach($comisiones as $comision){
+
+            $arr[strtolower($comision->nombre)] = [
+                'minimo' => $comision->minimo,
+                'maximo' => $comision->maximo,
+                'porcentaje' => $comision->porcentaje,
+            ];
+
+        }
+    	
         if($com == null){
 
-    	   return $comision->comisiones;
+    	   return $arr;
         }else{
-            return $comision->comisiones[$com];
+            return $arr[$com];
         }
     }
 

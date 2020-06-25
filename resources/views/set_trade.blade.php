@@ -15,7 +15,7 @@
 					<div class="row">
 						<div class="col s10 offset-s1">
 							<center>
-								<h5>{{$cryp_to_buy}}/{{$cryp_to_pay}} <span id="real_time_price"></span></h5>
+								<h5>{{$cryp_to_buy}}/{{$cryp_to_pay}}</h5>
 							</center>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 									</div>
 								</form>
 								<a class="btn green modal-trigger" href="#confirm">Buy</a>
-								<label class="btn red darken-1" href="#">Sell {{$buy}}</label>
+								<a class="btn red darken-1" href="{{route('setTrade',$pay.'-'.$buy)}}">Sell {{$buy}}</a>
 							</center>
 								
 						</div>
@@ -57,6 +57,15 @@
 									</tr>
 								</table>
 							</center>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="row">
+							<div class="col s12">
+								<center>
+									{{$cryp_to_buy}}: <span class="real_time_price">loading</span> $
+								</center>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -104,19 +113,23 @@
 
 	import {D} from "{{asset('js/trade/Domm/Domm.js')}}";
 	import {Me} from "{{asset('js/trade/Methods.js')}}";
+	D.dom.load(function(){
+		
+		let cryp_to_buy = JSON.parse(Me.htmlDecode('{{$json_cryp_to_buy}}'));
+		let cryp_to_pay = JSON.parse(Me.htmlDecode('{{$json_cryp_to_pay}}'));
 
-	let cryp_to_buy = JSON.parse(Me.htmlDecode('{{$json_cryp_to_buy}}'));
-	let cryp_to_pay = JSON.parse(Me.htmlDecode('{{$json_cryp_to_pay}}'));
+		let comissions = [];
+		comissions['general'] = {{$general_comission}};
+		comissions['cambio'] = {{$change_comission}};
 
-	let comissions = [];
-	comissions['general'] = {{$general_comission}};
-	comissions['cambio'] = {{$change_comission}};
+		Me.launchWsConsult(cryp_to_buy,cryp_to_pay,comissions);
 
-	Me.launchWsConsult(cryp_to_buy,cryp_to_pay,comissions);
+		D.addEvent.onKeyUp('#user-amount',function(e){
 
-	D.addEvent.onKeyUp('#user-amount',function(e){
-
-		Me.changeAmount(e,comissions);
+			Me.changeAmount(e,comissions);
+			
+		});
+		
 	});
 
    		

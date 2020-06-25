@@ -8,8 +8,19 @@ export let Me = {
 			'origen' -> 'url a la que se consultará el precio'
 		]		
 	*/
+	redondearDecimales:function(num,dec){
 
+		let original = parseFloat(num);
+
+		let decimales = Math.pow(10,dec)
+
+		let result=Math.round(original*decimales)/decimales;
+
+
+		return result;
+	},
 	launchWsConsult:function(cryp_to_buy,cryp_to_pay,comission){
+
 		let prices = [];
 		cryp_to_buy['i'] = 0;
 		cryp_to_pay['i'] = 1;
@@ -85,7 +96,18 @@ export let Me = {
 							Me.setTradeWsMessage(user_amount.value, data,prices,comission);
 
 						}
+
 						let hidden_price_value = document.getElementById('hidden-price-value');
+
+						let places = document.querySelectorAll('.real_time_price');
+
+						let real_time_price = parseFloat(prices[0]) + Me.getComissions(prices[0],comission['general']);
+
+						real_time_price += Me.getComissions(prices[0],comission['cambio']);
+						real_time_price = Me.redondearDecimales(real_time_price,4);
+						for(let i = 0; i < places.length; i++){
+							places[i].innerText = real_time_price;
+						}
 
 						hidden_price_value.value = Me.calculatePair(prices[0],prices[1]);
 
@@ -112,6 +134,7 @@ export let Me = {
 				let price = hidden_price_value.value * e.value;
 
 				let price_with_general_comission = price + Me.getComissions(price,comissions['general']);
+				
 				let total_price = price_with_general_comission + Me.getComissions(price,comissions['cambio']);
 				
 				elem_price_calculated.innerText = total_price;
@@ -161,18 +184,18 @@ export let Me = {
 		}
 
 		let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":local_cryptos}]});
-		wsObject.send(json_to_send);		
+		wsObject.send(json_to_send);
 
 	},
-	setPrice:function(data,price_cryptos,current_crypto,price_spans,comission,comision_general){
+	setPrice:function(data,pairs,current_crypto,price_spans,comission,comision_general){
 
 		let id_trade = data.product_id.substr(0,3)+'-'+current_crypto;
 
-		price_cryptos[id_trade] = data.price;
+		pairs[id_trade] = data.price;
 
-		if(price_cryptos[current_crypto+'-'+current_crypto] != 0){
+		if(pairs[current_crypto+'-'+current_crypto] != 0){
 
-			let price = Me.calculatePair(data.price,price_cryptos[current_crypto+'-'+current_crypto]);
+			let price = Me.calculatePair(data.price,pairs[current_crypto+'-'+current_crypto]);
 			let comision_one = price + Me.getComissions(price,comission);
 			let test = comision_one + Me.getComissions(price,comision_general);
 			price_spans[id_trade].innerText = test;
@@ -193,15 +216,15 @@ export let Me = {
 
 	},
 	
-	setPrices:function(data,price_cryptos,current_crypto,price_spans,comission_trade,comision_general){
+	setPrices:function(data,pairs,current_crypto,price_spans,comission_trade,comision_general){
 
 		let id_trade = data.product_id.substr(0,3)+'-'+current_crypto;
 
-		price_cryptos[id_trade] = data.price;
+		pairs[id_trade] = data.price;
 
 		for(let i in price_spans){
 
-			let price = Me.calculatePair(price_cryptos[i],price_cryptos[id_trade]);
+			let price = Me.calculatePair(pairs[i],pairs[id_trade]);
 			let comission_one = price + Me.getComissions(price,comission_trade);
 			price_spans[i].innerText = comission_one + Me.getComissions(price,comision_general);
 

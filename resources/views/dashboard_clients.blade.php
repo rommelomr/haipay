@@ -476,95 +476,7 @@
 		</div>
 	</div>
 </div>
-<div id="modal-acquire-cripto" class="modal">
-	<div id="modal-content" class="modal-content margin-0">
-	<form action="{{route('acquireCripto')}}" method="POST">@csrf
-		<input id="acquire-base" name="base" type="text" class="inputs-id-cripto" hidden>
-		<div class="row margin-0">
-			<div id="cabecera-modal" class="indigo margin-0">
-				<center>
-					<h4>Acquire <span id="modal-name-cripto" class="space-name-cripto"></span></h4>
-				</center>
-			</div>
-		</div>
-		<div class="row margin-0" style=";padding: 0;">
-			<div class="col s12 l6" style="">
-				<div class="row" style="">
-					
-					<form action="">
-						<div class="input-field col s10">
-							<input id="cuant_buy" class="input_buy reset-message" type="text" value="" name="cuant_buy">
-							<span class="helper-text">How much <b class="space-name-cripto">cripto</b> want to buy?</span>
-						</div>
-						<div class="input-field col s2">
-							<center>
-								<div id="calculate-by-buy" class="calculate btn indigo"><i class="material-icons">cached</i></div>
-							</center>
-						</div>
-						
-						<div class="col s12">
-							
-							<div class="row valign-wrapper margin-0 padding-0">
-								
-								<div class="input-field col s6">
-									<select id="payWith" name="payWith" class="browser-default reset-message-change">
-										<option disabled selected value="none">Pay with</option>
-										@foreach($monedas as $moneda)
-											<option value="{{$moneda->siglas}}">{{$moneda->siglas}}</option>
-										@endforeach
-										
-									</select>
-								</div>
-								<div class="input-field col s6">
-									<select id="payment_method" name="type_operation" class="browser-default">
-										<option disabled selected value="none">Payment Method</option>
-										@foreach($metodos_pago as $metodo_pago)
-											<option value="{{$metodo_pago->id}}">{{$metodo_pago->nombre}}</option>
-										@endforeach
-										
-									</select>				
-									
-								</div>
-							</div>
-						</div>
-       
-						<div class="input-field col s10">
-							<input id="to_pay" type="text" value="50" class="input_buy reset-message" name="to_pay">
-							<span class="helper-text">You have to pay:</span>
-						</div>
-						<div class="input-field col s2">
-							<center>
-								<div id="calculate-by-payment" class="btn indigo"><i class="material-icons">cached</i></div>
-							</center>
-						</div>
-						<div class="input-field col s12">
-							<center>
-								<div id="buy" class="btn indigo">Buy</div>
-							</center>
-						</div>
-						
-					</form>
-				</div>
-			</div>
-			<div class="col s12 l6" style="padding: 3%;	">
-				<center>
-					<div id="modal-message" class="card-panel" hidden>
-						<div class="card-content">							
-							<span class="card-title">Order</span>
-							<p>You have to pay <b><span id="modal-have-to-pay"></span> <span id="space-pay-with"></span></b> to receive <b><span id="modal-recieve"></span> <span id="modal-cripto-buy" class="space-name-cripto"></span></b></p>
-						</div>
-						<div class="card-action">
-							
-							<input id="submit-buy" class="btn indigo" type="submit" value="Acquire">
-							<a href="#!" class="btn modal-close red">Cancel</a>
-						</div>
-					</div>
-				</center>
-			</div>
-		</div>
-	</form>
-	</div>
-</div>
+
 <div id="modal_send_images" class="modal">
 	<div id="modal-content" class="modal-content margin-0">
 		<center><h4 id="modal-title"></h4></center>
@@ -610,10 +522,7 @@
 
 
 @endsection
-
-<script type="module">
-		import {F} from "{{asset('js/global_functions.js')}}";
-		import {Ev,Me} from "{{asset('js/methods.js')}}";
+<script>
 
 	document.addEventListener('DOMContentLoaded', function() {
 
@@ -632,11 +541,9 @@
 		
  		let elem_modal = document.querySelectorAll('.modal');
     	let instances_modal = M.Modal.init(elem_modal);
+
 		let el = document.querySelector('.tabs');
 		let instance_tabs = M.Tabs.init(el);
-	
-    	instances_modal[1].options.onCloseEnd = Me.resetModal;
-    	instances_modal[1].options.onOpenStart = Me.resetModal;
 
     	let elem_collapsible = document.querySelectorAll('.collapsible');
     	let instances_collapsible = M.Collapsible.init(elem_collapsible);
@@ -644,101 +551,20 @@
     	let elems_select = document.querySelectorAll('select');
     	let instances_select = M.FormSelect.init(elems_select);
 
-    	let elems_receiver = document.querySelectorAll('.autocomplete');
-    	let instances_receiver = M.Autocomplete.init(elems_receiver, {
-    		data: {
-    			'Persona 1':null,
-    			'Persona 2':null,
-    			'Persona 3':null,
-    		}
-    	});
-
-
-    	//Array en el que se guardarán los valores en $ de las monedas para calcular al momento de comprar
-		let cripto_arr_calculate = [];
-		let comision = 0.02;
-
-		function coinbaseOnOpen(event){
-			//Creará el array con el que se hara el request a la api
-			let cripto_arr_ws = [];
-
-			@foreach($criptomonedas as $criptomoneda)
-				//LLena el array con el que se hara el request
-				cripto_arr_ws.push("{{$criptomoneda->moneda->siglas}}-USD");
-
-				//LLena el array con el que se harán calculos mas adelante
-				cripto_arr_calculate["{{$criptomoneda->moneda->siglas}}-USD"] = null;
-			@endforeach
-			
-			//Objeto convertido a Json para solicitar el precio a la api
-			let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":cripto_arr_ws}]});
-			this.send(json_to_send);
-		}
-		
-    	//Cada vez que se abra el modal se configura con la moneda en cuestion
-	    let cript_to_buy = [];
-	    
-   		F.addEvent.onClick('.buy-cripto',function(e){
-	    	cript_to_buy['name'] = e.target.dataset.nombre_cripto;
-	    	cript_to_buy['usd'] = cripto_arr_calculate[e.target.dataset.siglas_cripto+'-USD'];
-	   		Ev.setNameEvent(e);
-
-	   	});
-
-   		let htg_consulted = false;
-
-    	//Consultará a la API
-
-   		F.ws({
-   			url:'wss://ws-feed.pro.coinbase.com',
-   			onOpen:coinbaseOnOpen, //No se crea la funcion en Me porque necesita del PHP al iniciar la pagina
-   			//onMessage:Me.coinbaseOnMessage,
-   			onMessage:function(e){
-   				Me.coinbaseOnMessage(e,cripto_arr_calculate);
-   				if(cripto_arr_calculate['BTC-USD']!==null && !htg_consulted){
-					Me.setHtgPrice(cripto_arr_calculate);
-					htg_consulted = true;
-   				}
-				//Me.setHtgPrice(cripto_arr_calculate);
-   			},
-   		});
-		setInterval(function(){
-			
-			//cripto_arr_calculate = Me.consultDogecoin(cripto_arr_calculate);
-			Me.consultDogecoin(cripto_arr_calculate);
-
-		},5000);
-
-		//current cripto será la moneda con que se hará el calculo de la compra en el modal
-		//cambiará cuando se cambie la moneda en dicho modal
-		//Me.calculeBuyCost();
-
-
-		F.addEvent.onClick('#calculate-by-buy',function(){
-			let calculated = Me.calculateByBuy(cripto_arr_calculate,cript_to_buy,comision);
-			if(calculated){
-				Me.disabledBuyButton(false);
-			}
-		});
-		F.addEvent.onClick('#calculate-by-payment',function(){
-			let calculated = Me.calculateByPayment(cripto_arr_calculate,cript_to_buy,comision);
-			if(calculated){
-				Me.disabledBuyButton(false);
-			}
-		});
-		let modal_message_is_disabled = true;
-		function setModalMessage(){
-			Me.disabledBuyButton(true);
-			if(!modal_message_is_disabled){
-
-				Me.disableModalMessage('','','');
-				modal_message_is_disabled = true;
-			}
-		}
-		F.addEvent.onClick('#buy',Me.changePayWithModal);
-		F.addEvent.onKeyUp('.reset-message',setModalMessage);
-		F.addEvent.onChange('.reset-message-change',setModalMessage);
-		
 	});
-</script>	
+
+</script>
+<script type="module">
+	import {D} from "{{asset('js/Domm/Domm.js')}}";
+	import {Me} from "{{asset('js/dashboard/Methods.js')}}";
+	D.dom.load(function(){
+
+		let comision_general 	= JSON.parse(Me.htmlDecode("{{$comision_general}}"));
+
+		let info_criptos 		= JSON.parse(Me.htmlDecode("{{$info_cryptos}}"));
+
+		Me.launchWsConsult(info_criptos,comision_general);
+	});
+	
+</script>
 <script src="{{asset('js/verify_payment/main.js')}}" type="module"></script>

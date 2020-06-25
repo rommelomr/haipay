@@ -50,7 +50,7 @@ Route::group(['middleware' => ['tipo:1']], function() {
 
     //Client resend an image
     Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
-    Route::post('delete_transaction', 'TransaccionesController@deleteTransaction')->middleware('auth')->name('delete_transaction');//Listo
+    //Route::post('delete_transaction', 'TransaccionesController@deleteTransaction')->middleware('auth')->name('delete_transaction');//Listo
 
     //Client delete a transaction
     //Route::post('delete_transaction','TransaccionesController@deleteTransaction')->name('delete_transaction');
@@ -71,8 +71,11 @@ Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acq
 
 //Users
 Route::group(['middleware' => ['tipo:3']], function() {
+
 	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
+
     Route::post('change_state_transaction', 'TransaccionesController@changeStateTransaction')->name('change_state_transaction');//Listo
+
 });
 
 Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo

@@ -137,11 +137,11 @@
 	ganancia: ganancia de la transaccion 
 
 26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
-	general: Comision que se le aplicará a todas las monedas que se vayan a comprar en el sistema
-	compra: Comision que se le aplicará a la compra de haicriptomonedas
-	cambio: Comision que se le aplicará al cambio de criptomonedas
-	remesa: Comision que se le aplicará al envio de remesas
-	retiro: Comision que se le aplicará al retiro de dinero
+    nombre: nombre de la comision
+    minimo: monto mínimo en dolares al que se le aplica la comision
+    maximo: monto máximo en dolares al que se le aplica la comision
+    porcentaje: porcentaje de la comision
+    //Por ejemplo: La comision de "COMPRAS 1" es de 4% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 0 y 99.99$. La comision de "COMPRAS 2" es de 3% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 100 y 399.99$. La comision de "COMPRAS 3" es de 2.5% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 400 y 1000$.
 
 Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
 	nombre: varchar(255)

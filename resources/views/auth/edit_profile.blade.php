@@ -6,13 +6,6 @@
 @section('main')
 	<div class="row">
 		<div class="col s10 offset-s1">
-			@if ($errors->any())
-					<ul>
-						@foreach ($errors->all() as $error)
-							<li class="error">{{ $error }}</li>
-						@endforeach
-					</ul>
-			@endif
 			<div class="card-panel">
 				<div class="row">
 					<div class="col s12">
@@ -56,7 +49,7 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" id="nombre" type="text" value="{{$current_user_data->persona->nombre}}" name="nombre" id="nombre" class="input-editable">
+													<input class="browser-default" type="text" value="{{$current_user_data->persona->nombre}}" disabled>
 												</center>
 												
 											</div>
@@ -68,7 +61,7 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" id="cedula" type="text" value="{{$current_user_data->persona->cedula}}" name="cedula" id="cedula" class="input-editable">
+													<input class="browser-default" type="text" value="{{$current_user_data->persona->cedula}}" disabled>
 												</center>
 											</div>
 										</div>
@@ -79,21 +72,33 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" id="email" type="text" value="{{$current_user_data->email}}" name="email" id="email" class="input-editable">
+													<input class="browser-default" type="text" value="{{$current_user_data->email}}" disabled>
 												</center>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col s3">
 												
-												<span class="left">Password</span>
+												<span class="left">Old password</span>
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" id="password" type="text" name="password" id="password" class="input-editable">
+													<input class="browser-default" id="password" type="password" name="old_password" id="password" class="input-editable">
 												</center>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col s3">
+												
+												<span class="left">New Password</span>
+											</div>
+											<div class="col s9">
+												<center>
+													<input class="browser-default" id="password" type="password" name="password" id="password" class="input-editable">
+												</center>
+											</div>
+										</div>
+										
 										<div class="row">
 											<div class="col s3">
 												
@@ -101,7 +106,7 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" id="telephone" type="text" value="{{$current_user_data->telefono}}" name="telefono">
+													<input class="browser-default" type="text" value="{{$current_user_data->telefono}}" disabled>
 												</center>
 											</div>
 										</div>
@@ -253,6 +258,20 @@
 @endsection
 <script>
 	window.onload = function(){
+
+		@if(session('messages'))
+			@foreach(session('messages') as $messages)
+			  M.toast({html: '{{$messages}}'})
+			@endforeach
+
+		@endif
+		
+		@if ($errors->any())
+            @foreach ($errors->all() as $error)
+	  			M.toast({html: '{{ $error }}'})
+            @endforeach
+		@endif
+
 		let el = document.querySelector('.tabs');
 		  var instance = M.Tabs.init(el);
 		

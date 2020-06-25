@@ -15,12 +15,10 @@ class CreateComisionesTable extends Migration
     {
         Schema::create('comisiones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->tinyInteger('general');
-            $table->tinyInteger('compra');
-            $table->tinyInteger('remesa');
-            $table->tinyInteger('cambio');
-            $table->tinyInteger('retiro');
-            $table->tinyInteger('deposito');
+            $table->char('nombre',25);
+            $table->double('minimo',6,2);
+            $table->double('maximo',6,2);
+            $table->double('porcentaje',5,2);
             $table->timestamps();
         });
     }

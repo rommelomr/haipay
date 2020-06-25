@@ -350,8 +350,14 @@ INSERT INTO `prefijos_telefono` (pais,codigo) VALUES
 ('Zambia', '+260'),
 ('Zimbabwe', '+263');
 
-insert into comisiones (general,compra,remesa,cambio,retiro,deposito,created_at,updated_at) VALUES
-(2,5,10,20,50,100,'2020-03-01','2020-03-01');
+insert into comisiones (nombre,minimo,maximo,porcentaje,created_at,updated_at) VALUES
+('General'		,0.0	,1000	,2,'2020-06-23','2020-06-23'),
+('Buy 1'		,0.0	,99.99	,4,'2020-06-23','2020-06-23'),
+('Buy 2'		,100.0	,399.99	,3,'2020-06-23','2020-06-23'),
+('Buy 3'		,400.0	,1000.0	,2.5,'2020-06-23','2020-06-23'),
+('Remittance'	,0.0	,1000.0	,12,'2020-06-23','2020-06-23'),
+('Trade'		,0.0	,1000.0	,0.2,'2020-06-23','2020-06-23'),
+('Deposit'		,0.0	,1000.0	,12,'2020-06-23','2020-06-23');
 
 insert into tipos_remesa (nombre) VALUES
 ('Internal'),

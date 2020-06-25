@@ -97,6 +97,7 @@ class TransaccionesController extends Controller
         ]);
 
     }
+    /*
     public function deleteTransaction(Request $request){
 
         $user = \Auth::user();
@@ -117,4 +118,5 @@ class TransaccionesController extends Controller
         ]);
 
     }
+    */
 }

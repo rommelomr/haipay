@@ -60,8 +60,6 @@ class ClientesController extends Controller
             'title' => 'Canceled Transactions'
         ]);
     }
-
-
     public function trade($crypto){
 
         $current_crypto = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
@@ -86,7 +84,7 @@ class ClientesController extends Controller
 
             $comision = Comision::getComisiones();
 
-            $coinbase_crypto = HaiCriptomoneda::where('id_origen',1)
+            $coinbase_cryptos = HaiCriptomoneda::where('id_origen',1)
 
             ->whereHas('moneda',function($query)use($crypto){
 
@@ -94,52 +92,36 @@ class ClientesController extends Controller
 
             })->with(['moneda','origen'])->get();
 
-            $coinlore_crypto = HaiCriptomoneda::where('id_origen',2)
+            $coinlore_cryptos = HaiCriptomoneda::where('id_origen',2)
             
             ->whereHas('moneda',function($query)use($crypto){
                 $query->where('siglas','<>',$crypto);
             })->with(['moneda','origen'])->get();
 
-            $cryptos = [
-                'coinbase'  => [
-                    'url'   => $coinbase_crypto[0]->origen->url,
-                    'cryptos'  => [],
-                ],
-                'coinlore'  => [
-                    'url'   => $coinlore_crypto[0]->origen->url,
-                    'cryptos'   => [],
-                ]
-            ];
-            $all_cryptos = [];
-            foreach($coinbase_crypto as $value){
-                $cryptos['coinbase']['cryptos'][] = $value->moneda->siglas;
-                $all_cryptos[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+            $info_cryptos = HaiCriptomoneda::obtenerInfoCriptos($coinbase_cryptos,$coinlore_cryptos);
 
-            }
-
-            foreach($coinlore_crypto as $value){
-                $cryptos['coinlore']['cryptos'][] = $value->moneda->siglas;
-                $all_cryptos[$value->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
-            }
-            $all_cryptos[$current_crypto->moneda->siglas.'-'.$current_crypto->moneda->siglas] = 0;
+            $all_pairs = HaiCriptomoneda::inicializarPares($coinbase_cryptos,$coinlore_cryptos,$current_crypto);
 
             return view('trade',[
-                'all_cryptos'       => json_encode($all_cryptos),
+                'all_pairs'       => json_encode($all_pairs),
+
                 'current_crypto'    => $current_crypto,
-                'cryptos_arr'       => $cryptos,
-                'cryptos_json'      => json_encode($cryptos),
+                'info_cryptos_arr'       => $info_cryptos,
+                'info_cryptos_json'      => json_encode($info_cryptos),
                 'comision_trade'    => $comision['cambio'],
                 'comision_general'    => $comision['general'],
             ]);
         }
-
-
     }
     public function buyCripto($crypto){
 
         $criptomoneda = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
+
             $query->where('siglas',$crypto);
-        })->firstOrFail();
+
+        })
+        ->with(['origen','moneda'])
+        ->firstOrFail();
 
         $metodos_pago =MetodoPago::where('id','<>',1)->get();
 
@@ -154,29 +136,27 @@ class ClientesController extends Controller
             'comision'  => ['general','compra'],
         ]);
 
+        $comisiones = Comision::getComisiones();
+        
+
         return view('buy_crypto',[
             'criptomoneda' => $criptomoneda,
             'precio' => $precio_criptomoneda,
             'metodos_pago' => $metodos_pago,
+            'comisiones' => $comisiones,
         ]);
 
     }
     public function showDashboard(){
         //Buy cripto
-		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->get();
+		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->paginate(25);
+
 		$monedas =Moneda::all();
+
 		$metodos_pago =MetodoPago::all();
 
         //Verify_pyments
         $cliente = \Auth::user()->cliente;
-
-        $without_verify = Transaccion::obtenerTransaccionPago($cliente,null)->paginate(5,['*'],'without_verify');
-        
-        $waiting_for_approval = Transaccion::obtenerTransaccionPago($cliente,0)->paginate(5,['*'],'waiting_for_approval');
-
-        $approved_transactions = Transaccion::obtenerTransaccionPago($cliente,1)->paginate(5,['*'],'approved_transactions');
-
-        $canceled = Transaccion::obtenerTransaccionPago($cliente,2)->paginate(5,['*'],'canceled');
 
         //Remesa sin imagen
         $pending_remittances = Remesa::obtenerRemesa($cliente,null)->paginate(5,['*'],'pending_remittances');
@@ -192,19 +172,37 @@ class ClientesController extends Controller
 
         $retirement_methods = MetodoRetiro::all();
 
+
+            $comision = Comision::getComisiones();
+
+            $coinbase_cryptos = HaiCriptomoneda::where('id_origen',1)
+            ->with(['moneda','origen'])->get();
+
+            $coinlore_cryptos = HaiCriptomoneda::where('id_origen',2)
+            ->with(['moneda','origen'])->get();
+
+            $info_cryptos = HaiCriptomoneda::obtenerInfoCriptos($coinbase_cryptos,$coinlore_cryptos);
+
+
     	return view('dashboard_clients', [
     		'criptomonedas' => $hai_criptomonedas,
     		'monedas' => $monedas,
     		'metodos_pago' => $metodos_pago,
-            'without_verify' => $without_verify,
-            'waiting_for_approval' => $waiting_for_approval,
-            'approved_transactions' => $approved_transactions,
-            'canceled' => $canceled,
             'retirement_methods' => $retirement_methods,
             'pending_remittances' => $pending_remittances,
             'approved_remittances' => $approved_remittances,
             'for_approval_remmitances' => $for_approval_remmitances,
             'refused_remittances' => $refused_remittances,
+
+            'comision_general' => json_encode($comision['general']),
+            'comision_compra' => json_encode(
+                [
+                    'buy 1' => $comision['buy 1'],
+                    'buy 2' => $comision['buy 2'],
+                    'buy 3' => $comision['buy 3'],
+                ]
+            ),
+            'info_cryptos' => json_encode($info_cryptos),
     	]);
     }
     private function smartClientsSearcher($string){
@@ -323,6 +321,14 @@ class ClientesController extends Controller
                 });
             })
             ->first();
+            if($cartera == null){
+                return redirect()->route('dashboard_clients')->with([
+                    'messages' => [
+                        "You don't have this crypto in your wallet. You can't trade it"
+                    ]
+                ]);
+            }
+
             return view('set_trade',[
                 'json_cryp_to_buy' =>json_encode($arr_crypto[0]),
                 'json_cryp_to_pay' =>json_encode($arr_crypto[1]),

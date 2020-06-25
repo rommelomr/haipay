@@ -3,25 +3,34 @@ import {Me} from './Methods.js';
 
 D.dom.load(function(){
 
-	D.addEvent.onClick('#button_calculate',function(){
-
-		let input = document.getElementById('amount');
-		let to_pay = Me.calculateToPay(input,price_crypto);
-		Me.setToPayPlaces(to_pay);
-		Me.setAmountPlaces(input);
-		let type_operation = document.getElementById('type_operation');
-		Me.setTypeOperationPlaces(type_operation);
-		Me.enableBuyButton();
-	});
 	
 	D.addEvent.onKeyUp('#amount',function(e){
-		Me.cleanAmountInputs();
-		Me.disableBuyButton();
+
+		let save_price = document.getElementById('save-price');
+		let to_pay_input = document.getElementById('to-pay');
+
+		if(save_price.value != ""){
+
+			to_pay_input.value = e.value * save_price.value;
+
+		}else{
+
+			to_pay_input.value = "loading";
+
+		}
+
+		Me.setBuyButton(e);
+
+
+		Me.setAmountForm(e);
+
 	});
 	
 	D.addEvent.onChange('#type_operation',function(e){
+		
+		Me.setBuyButton(e);
 
-		Me.disableBuyButton();
-
+		Me.setTypeOperationForm(e);
 	});
+
 });

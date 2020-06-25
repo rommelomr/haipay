@@ -21,7 +21,7 @@
 						<div class="col s10 offset-s1">
 							
 							<ul class="collection">
-								@foreach($cryptos_arr['coinbase']['cryptos'] as $crypto_arr)
+								@foreach($info_cryptos_arr['coinbase']['cryptos'] as $crypto_arr)
 									<li class="collection-item">
 										<b>{{$crypto_arr}}/{{$current_crypto->moneda->siglas}}:</b>
 										<span data-crypto="{{$current_crypto->moneda->siglas}}" id="{{$crypto_arr}}-{{$current_crypto->moneda->siglas}}">Loading price</span>
@@ -32,7 +32,7 @@
 										<!--span data-badge-caption="sell" class="new badge green"></span-->
 									</li>
 								@endforeach
-								@foreach($cryptos_arr['coinlore']['cryptos'] as $crypto_arr)
+								@foreach($info_cryptos_arr['coinlore']['cryptos'] as $crypto_arr)
 									<!--li class="collection-item">
 										<b>{{$crypto_arr}}/{{$current_crypto->moneda->siglas}}</b>
 										<span id="{{$crypto_arr}}-{{$current_crypto->moneda->siglas}}">Loading price</span>
@@ -79,19 +79,23 @@
 		import {Me} from "{{asset('js/trade/Methods.js')}}";
 		
 		let current_crypto 	= [];
+
 		current_crypto['id_origen'] = "{{$current_crypto->id_origen}}";
+
 		current_crypto['url'] = "{{$current_crypto->origen->url}}";
+
 		current_crypto['siglas'] = "{{$current_crypto->moneda->siglas}}";
 
-		let obj_cryptos 	= JSON.parse(Me.htmlDecode('{{$cryptos_json}}'));
+		let obj_cryptos 	= JSON.parse(Me.htmlDecode('{{$info_cryptos_json}}'));
 
+		console.log(obj_cryptos);
 		let comission_trade = {{$comision_trade}};
 
 		let comision_general = {{$comision_general}};
 
 		let price_spans 	= Me.setPriceSpans(obj_cryptos,current_crypto['siglas']);		
 		
-		let price_cryptos 	= JSON.parse(Me.htmlDecode('{{$all_cryptos}}'));
+		let pairs 	= JSON.parse(Me.htmlDecode('{{$all_pairs}}'));
 		
 
 
@@ -111,7 +115,7 @@
    				let data = JSON.parse(e.data);
    				if(data.type == 'ticker'){
 
-   					Me.setPrice(data,price_cryptos,current_crypto['siglas'],price_spans,comission_trade,comision_general);
+   					Me.setPrice(data,pairs,current_crypto['siglas'],price_spans,comission_trade,comision_general);
    					
    				}
 
@@ -138,8 +142,8 @@
    					
    					let data = JSON.parse(e.data);
    					if(data.type == 'ticker'){
-	   					Me.setPrices(data,price_cryptos,current_crypto['siglas'],price_spans,comission_trade,comision_general);
-   						//Me.displayPrices(price_cryptos);
+	   					Me.setPrices(data,pairs,current_crypto['siglas'],price_spans,comission_trade,comision_general);
+   						//Me.displayPrices(pairs);
 
    						
 	   				}

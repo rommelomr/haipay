@@ -45,13 +45,16 @@ class RegisterController extends Controller
     protected function registerClient(Request $data){
 
         $this->validate($data,[
+            'id' => ['nullable', 'unique:personas,cedula', 'max:20','min:0'],
+            'phone' => ['nullable', 'unique:users,telefono', 'max:20','min:0'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $persona = Persona::create([
-            'nombre'=>$data['name']
+            'nombre'=>$data['name'],
+            'cedula'=>$data['cedula'],
         ]);
         $user = User::create([
 

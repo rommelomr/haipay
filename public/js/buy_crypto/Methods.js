@@ -1,7 +1,130 @@
+import {D} from "../Domm/Domm.js";
 export let Me = {
+
+	setAmountForm:function(e){
+		console.log(e);
+		let amount = document.getElementById('send_amount');
+		amount.value = e.value;
+	},
+	setTypeOperationForm:function(e){
+		console.log(e);
+		let type_operation = document.getElementById('send_type_operation');
+		type_operation.value = e.value;
+	},
+	guardarPrecioEnDom:function(precio){
+		
+		let input_precio = document.getElementById('save-price');
+		input_precio.value = precio;
+
+	},
+	mostrarToPay:function(precio){
+		let amount = document.getElementById('amount');
+		let to_pay = document.getElementById('to-pay');
+		if(amount.value == ''){
+			if(to_pay.value != ''){
+				to_pay.value = "";
+			}
+		}else{
+
+			to_pay.value = Me.calculateToPay(amount,precio);
+		}
+	},
+	mostrarPrecio:function(precio){
+		let spaces = document.querySelectorAll('.real-time-price');
+		for (var i = 0; i < spaces.length; i++){
+			spaces[i].innerText = precio;
+		}
+	},
+	calcularPrecio:function(data,comisiones){
+
+		let precio_neto = parseFloat(data.price);
+		let precio_add_general = precio_neto + Me.getComissions(precio_neto,comisiones['general']);
+		let precio_add_compra = precio_add_general + Me.getComissions(precio_neto,comisiones['compra']);
+		let precio_total = Me.redondearDecimales(precio_add_compra,4);
+
+		return precio_total;
+	},
+	redondearDecimales:function(num,dec){
+
+		let original = parseFloat(num);
+		let decimales = Math.pow(10,dec)
+		let result=Math.round(original*decimales)/decimales;
+
+		return result;
+	},
+	getComissions:function(price,comission){
+
+		price = parseFloat(price);
+		comission = parseFloat(comission);
+
+		return price * (comission/100);
+
+	},
+	launchWsConsult:function(current_crypto,comisiones){
+		D.ws({
+			url:current_crypto['url'],
+			onOpen:function(e){
+				let pair = [current_crypto.siglas+'-USD'];
+				let json_to_send = JSON.stringify({"type": "subscribe","channels": [{"name": "ticker","product_ids":pair}]});
+				this.send(json_to_send);
+			},
+			onError:function(e){
+				console.log(e);
+			},
+			onMessage:function(e){
+
+				let data = JSON.parse(e.data);
+				if(data.type == 'ticker'){
+
+					let precio = Me.calcularPrecio(data,comisiones);
+
+					Me.mostrarPrecio(precio);
+					Me.mostrarToPay(precio);
+					Me.guardarPrecioEnDom(precio);
+					
+				}
+
+
+			},
+		});
+
+	},
 	calculateToPay:function(e,price){
 
 		return e.value * price;
+
+	},
+	getOtherInput:function(e){
+		if(e.id == 'amount'){
+
+			return document.getElementById('type_operation');
+
+		}else if(e.id == 'type_operation'){
+
+			return document.getElementById('amount');
+
+		}
+	},
+	setBuyButton:function(e){
+		
+		let other = Me.getOtherInput(e);
+
+		console.log(other.value);
+
+		let addToCarButton = document.getElementById('buy_button');
+
+		if(other.value != '' && e.value != ''){
+
+			if(addToCarButton.hasAttribute('disabled')){
+
+				addToCarButton.removeAttribute('disabled');
+			}
+
+		}else{
+			
+				addToCarButton.setAttribute('disabled',true);
+
+		}
 
 	},
 	enableBuyButton:function(){

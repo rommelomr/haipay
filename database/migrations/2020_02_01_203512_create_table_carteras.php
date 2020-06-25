@@ -21,7 +21,7 @@ class CreateTableCarteras extends Migration
             $table->unsignedBigInteger('id_hai_criptomoneda');
             $table->foreign('id_hai_criptomoneda')->references('id')->on('hai_criptomonedas');
             
-            $table->decimal('cantidad',13,9);
+            $table->decimal('cantidad',20,9);
 
             $table->timestamps();
         });

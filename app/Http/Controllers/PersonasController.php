@@ -54,38 +54,33 @@ class PersonasController extends Controller
     }
     public function saveProfile(Request $req){
         $this->validate($req,[
-    		'nombre' => 'required|regex:/^[A-Za-z\s]+$/',
-    		'cedula' => 'required|digits_between:1,20',
-    		'email' => 'required|email', 
-    		'telefono' => 'required|digits_between:1,20',
+    		'password' => 'required',
+            'old_password' => 'required',
     	]);
+
     	$user = Auth::user();
+
         $persona = $user->persona;
 
-        if($req->nombre != $user->nombre){
-    	    $persona->nombre = $req->nombre;
-        }
+        if(Hash::check('plain-text',$req->old_password)){
 
-    	if($req->cedula != $user->cedula){
-    		$persona->cedula = $req->cedula;
-    	}
+        	$user->password = Hash::make($req->password);
 
-    	if($req->email != $user->email){
-    		$user->email = $req->email;
-        }
+        	$user->push();
 
-        if($req->telefono != $user->telefono){
-    		$user->telefono = $req->telefono;
+            $message = "Password changed succesfuly";
+
+        }else{
+
+            $message = "The old password is not valid";
+
         }
-        
-    	if($req->password!=null){
-    		$user->password = Hash::make($req->password);
-        }
-        
-    	$persona->save();
-    	$user->save();
     	
-    	return redirect()->back();
+    	return redirect()->back()->with([
+            'messages'=>[
+                $message
+            ]
+        ]);
     }
     private function verifyUser(){
         
