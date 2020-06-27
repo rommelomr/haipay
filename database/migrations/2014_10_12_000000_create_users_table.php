@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->date('fecha_nacimiento')->nullable();
             $table->char('telefono',20)->nullable()->unique();
+            $table->tinyInteger('verificado')->default(0);
             $table->tinyInteger('estado')->default(1);
             $table->tinyInteger('tipo');
             $table->rememberToken();

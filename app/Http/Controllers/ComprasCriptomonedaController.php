@@ -120,7 +120,7 @@ class ComprasCriptomonedaController extends Controller
 			
 		]);
 				
-		$comision = Comision::getComisiones();
+		//$comision = Comision::getComisiones();
 		$buy=HaiCriptomoneda::with('moneda')->find($req->base);
 		$pay=Moneda::where('siglas','USD')->first();
 
@@ -128,55 +128,68 @@ class ComprasCriptomonedaController extends Controller
 
 
 		//obtengo el precio de la cripto que voy a comprar
-
 		$price_crip_to_buy=CriptomonedasController::consultarPrecioMoneda([
 			'id' => $buy->moneda->id,
 			'siglas' => $buy->moneda->siglas,
 		]);
-
-		//obtengo el precio de la cripto con que voy a pagar
-
+		/*
+		$price_crip_to_buy = 0.18;
+		*/
 		$total_sin_comision = $req->amount * $price_crip_to_buy;
-		$total_con_comision = Comision::calcularComision([
-			'monto' => $total_sin_comision,
-			'comision'=> ['general','compra'],
-		]);
+		//dd($price_crip_to_buy);
+		
 
-		$transaccion = Transaccion::create([
-    		'id_cliente' => \Auth::user()->cliente->id,
-    		'id_tipo_transaccion'=>3
-    	]);
+		$comisiones = Comision::getComisiones(['general','buy 1','buy 2','buy 3']);
+		
+		$comision_general = $comisiones['general'];
+		unset($comisiones['general']);
 
-    	$compra = CompraCriptomoneda::create([
-			'id_hai_criptomoneda' => $req->base,
+		$total_add_general = $total_sin_comision + ($total_sin_comision * ($comision_general['porcentaje']/100));
+		$total_add_compra = Comision::calcularComisionCompra($total_sin_comision,$total_add_general,$comisiones);
+		if($total_add_compra == -1){
+			return redirect()->back()->with([
+				'messages'=>[
+					"The amount to pay must be over 0.0001$ and under 1000$"
+				]
+			]);
+		}else{
 
-			'id_moneda' => $pay->id,
+			$transaccion = Transaccion::create([
+	    		'id_cliente' => \Auth::user()->cliente->id,
+	    		'id_tipo_transaccion'=>3
+	    	]);
 
-			'monto' => $req->amount,
+	    	$compra = CompraCriptomoneda::create([
+				'id_hai_criptomoneda' => $req->base,
 
-			'precio_moneda_a_comprar' => $price_crip_to_buy,
+				'id_moneda' => $pay->id,
 
-			'precio_moneda_a_pagar' => 1,
+				'monto' => $req->amount,
 
-			'id_metodo_pago' => $req->type_operation,
+				'precio_moneda_a_comprar' => $price_crip_to_buy,
 
-			'id_transaccion' => $transaccion->id,
+				'precio_moneda_a_pagar' => 1,
 
-			'comision_general' => $comision['general'],
+				'id_metodo_pago' => $req->type_operation,
 
-			'comision_compra' => $comision['compra'],
+				'id_transaccion' => $transaccion->id,
 
-			'total_sin_comision' => $total_sin_comision,
+				'comision_general' => $comision_general['porcentaje'],
 
-			'ganancia' => $total_con_comision-$total_sin_comision,
+				'comision_compra' => $total_add_compra['comision'],
 
-			'total_con_comision' => $total_con_comision,
+				'total_sin_comision' => $total_sin_comision,
 
-    	]);
+				'ganancia' => $total_add_compra['total_con_comision_compra']-$total_sin_comision,
+
+				'total_con_comision' => $total_add_compra['total_con_comision_compra'],
+
+	    	]);
 
 
-		return redirect()->back()->with(['messages'=>[
-			'Purchase made successfully'
-		]]);
+			return redirect()->back()->with(['messages'=>[
+				'Purchase made successfully'
+			]]);
+		}
 	}	
 }

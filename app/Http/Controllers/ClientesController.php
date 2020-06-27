@@ -125,25 +125,19 @@ class ClientesController extends Controller
 
         $metodos_pago =MetodoPago::where('id','<>',1)->get();
 
-        $precio_criptomoneda = CriptomonedasController::consultarPrecioMoneda([
-            'id' => $criptomoneda->id_moneda,
-            'siglas' => $crypto,
-        ]);
-  
-        
-        $precio_criptomoneda = Comision::calcularComision([
-            'monto'     => $precio_criptomoneda,
-            'comision'  => ['general','compra'],
-        ]);
-
         $comisiones = Comision::getComisiones();
         
-
+        
         return view('buy_crypto',[
             'criptomoneda' => $criptomoneda,
-            'precio' => $precio_criptomoneda,
             'metodos_pago' => $metodos_pago,
-            'comisiones' => $comisiones,
+            'comision_general' => $comisiones['general']['porcentaje'],
+
+            'comisiones_compra' => json_encode([
+                'buy_1' => $comisiones['buy 1'],
+                'buy_2' => $comisiones['buy 2'],
+                'buy_3' => $comisiones['buy 3'],
+            ]),
         ]);
 
     }

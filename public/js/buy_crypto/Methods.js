@@ -1,6 +1,43 @@
 import {D} from "../Domm/Domm.js";
 export let Me = {
+	setToPay:function(comisiones){
+			console.log(amount);
 
+		let save_price = document.getElementById('save-price');
+		let to_pay_input = document.getElementById('to-pay');
+
+		let to_pay;
+		if(save_price.value != ""){
+			to_pay = Me.calculateToPay(amount,save_price.value,comisiones['compra']);
+
+			let amount_error = document.getElementById('amount-error');
+
+			if(to_pay < 0.001){
+
+				to_pay_input.value = 'Error';
+				
+
+				amount_error.removeAttribute('hidden');
+
+			}else{
+				if(!amount_error.hasAttribute('hidden')){
+					amount_error.setAttribute('hidden',true);
+				}
+				to_pay_input.value = Me.redondearDecimales(to_pay,2);
+					
+			}
+
+		}else{
+			to_pay = -1;
+			to_pay_input.value = "loading";
+
+		}
+		return to_pay;
+	},	
+	htmlDecode:function(input) {
+	  var doc = new DOMParser().parseFromString(input, "text/html");
+	  return doc.documentElement.textContent;
+	},	
 	setAmountForm:function(e){
 		console.log(e);
 		let amount = document.getElementById('send_amount');
@@ -17,16 +54,29 @@ export let Me = {
 		input_precio.value = precio;
 
 	},
-	mostrarToPay:function(precio){
+	mostrarToPay:function(precio,comisiones_compra){
 		let amount = document.getElementById('amount');
 		let to_pay = document.getElementById('to-pay');
+
 		if(amount.value == ''){
 			if(to_pay.value != ''){
 				to_pay.value = "";
 			}
 		}else{
+			let total_to_show = Me.calculateToPay(amount,precio,comisiones_compra);
+			let amount_error = document.getElementById('amount-error');
 
-			to_pay.value = Me.calculateToPay(amount,precio);
+			if(total_to_show < 0.0001){
+
+				to_pay.value = 'Error';
+				amount_error.removeAttribute('hidden');
+
+			}else{
+				if(!amount_error.hasAttribute('hidden')){
+					amount_error.setAttribute('hidden',true);
+				}
+				to_pay.value = Me.redondearDecimales(total_to_show,2);
+			}
 		}
 	},
 	mostrarPrecio:function(precio){
@@ -36,11 +86,9 @@ export let Me = {
 		}
 	},
 	calcularPrecio:function(data,comisiones){
-
 		let precio_neto = parseFloat(data.price);
-		let precio_add_general = precio_neto + Me.getComissions(precio_neto,comisiones['general']);
-		let precio_add_compra = precio_add_general + Me.getComissions(precio_neto,comisiones['compra']);
-		let precio_total = Me.redondearDecimales(precio_add_compra,4);
+		let precio_total = precio_neto + Me.getComissions(precio_neto,comisiones['general']);
+		precio_total = Me.redondearDecimales(precio_total,4);
 
 		return precio_total;
 	},
@@ -77,9 +125,9 @@ export let Me = {
 				if(data.type == 'ticker'){
 
 					let precio = Me.calcularPrecio(data,comisiones);
-
+					
 					Me.mostrarPrecio(precio);
-					Me.mostrarToPay(precio);
+					Me.mostrarToPay(precio,comisiones['compra']);
 					Me.guardarPrecioEnDom(precio);
 					
 				}
@@ -89,9 +137,19 @@ export let Me = {
 		});
 
 	},
-	calculateToPay:function(e,price){
+	calculateToPay:function(e,price,comisiones_compra){
 
-		return e.value * price;
+		let total_sin_comision = e.value * price;
+
+		for(let i in comisiones_compra){
+
+			if((total_sin_comision >= comisiones_compra[i]['minimo']) && (total_sin_comision <= comisiones_compra[i]['maximo'])){
+				
+				return total_sin_comision + Me.getComissions(total_sin_comision,comisiones_compra[i]['porcentaje']);
+			}
+		}
+		return -1;
+		
 
 	},
 	getOtherInput:function(e){
@@ -105,15 +163,16 @@ export let Me = {
 
 		}
 	},
-	setBuyButton:function(e){
+	
+	setBuyButton:function(e,to_pay){
 		
 		let other = Me.getOtherInput(e);
 
-		console.log(other.value);
-
 		let addToCarButton = document.getElementById('buy_button');
 
-		if(other.value != '' && e.value != ''){
+		let amount_error = document.getElementById('amount-error');
+
+		if(other.value != '' && e.value != '' && to_pay >= 0.001){
 
 			if(addToCarButton.hasAttribute('disabled')){
 

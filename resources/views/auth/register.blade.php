@@ -18,14 +18,6 @@
                             </span>
                         </div>
                     </nav>
-                    @if ($errors->any())
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li class="error">{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                    @endif
-
                     <form action="register" method="post">
                         @csrf
                         <div class="col s10 offset-s1">
@@ -67,7 +59,7 @@
 
                     <center>
                         
-                        Do you have an account? <a href="#">Log in</a>
+                        Do you have an account? <a href="{{route('login')}}">Log in</a>
                     </center>
 
             </div>

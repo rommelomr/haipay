@@ -1,8 +1,14 @@
 import {D} from '../Domm/Domm.js';
 export let Me = {
-	redondeo2decimales:function(numero){
-		var original=parseFloat(numero);
-		var result=Math.round(original*10000)/10000 ;
+	
+	redondearDecimales:function(num,dec){
+		if(dec == null){
+			dec = 2;
+		}
+		let original = parseFloat(num);
+		let decimales = Math.pow(10,dec)
+		let result=Math.round(original*decimales)/decimales;
+
 		return result;
 	},
 	getComissions:function(price,comission){
@@ -44,7 +50,7 @@ export let Me = {
 						
 						let precio_add_general = precio + Me.getComissions(precio,comision_general['porcentaje']);
 
-						let precio_total = Me.redondeo2decimales(precio_add_general);
+						let precio_total = Me.redondearDecimales(precio_add_general);
 						
 						spaces[i].innerText = precio_total;
 

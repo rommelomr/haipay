@@ -82,10 +82,10 @@ Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware
 Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');//Listo
 Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');//Listo
 
-Route::post('create_user','UsersController@create_user');
-Route::get('search_user','UsersController@search_user');
-
-Route::get('search_user/{cedula}','UsersController@search_user');//??????????
+Route::post('create_user','UsersController@create_user')->name('create_user');
+Route::get('search_user','UsersController@searchUser')->name('search_user');
+Route::get('search_user/{id}','UsersController@seeUser')->name('see_user');
+Route::post('edit_user','UsersController@editUser')->name('edit_user');
 
 Route::post('change_state','UsersController@changeState')->name('change_state');
 Route::post('modifyUser','UsersController@modifyUser');

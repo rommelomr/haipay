@@ -19,7 +19,7 @@
 
 					<div class="row">
 						<div class="col s6">
-							<input type="number" id="amount" value="{{old('amount')}}">
+							<input autocomplete="off" type="number" id="amount" value="{{old('amount')}}">
 							<span class="helper-text">Amount</span>
 						</div>
 						<div class="col s6">
@@ -39,7 +39,8 @@
 					<div class="row">
 						<div class="col s6">
 							<input id="to-pay" type="text" value="{{old('to_pay')}}" disabled class="dependent-amount">
-							<span class="helper-text">To Pay</span>
+							<span class="helper-text">To pay in USD</span><br>
+							<span id="amount-error" hidden class="helper-text red-text">The amount can't be over 1000$ or under 0.0001$</span>
 						</div>
 						<div class="col s6">
 							<center>
@@ -124,13 +125,33 @@
 			current_crypto['siglas'] = "{{$criptomoneda->moneda->siglas}}";
 
 		let comisiones = [];
-			comisiones['general'] = {{$comisiones['general']}};
-			comisiones['compra'] = {{$comisiones['compra']}};
+			comisiones['general'] = {{$comision_general}};
+			comisiones['compra'] = JSON.parse(Me.htmlDecode("{{$comisiones_compra}}"));
 
 		Me.launchWsConsult(current_crypto,comisiones);
+	
+		D.addEvent.onKeyUp('#amount',function(e){
+
+			let to_pay = Me.setToPay(comisiones);
+
+			Me.setBuyButton(e,to_pay);
+
+			Me.setAmountForm(e);
+
+		});
+
+		D.addEvent.onChange('#type_operation',function(e){
+
+			let to_pay = Me.setToPay(comisiones);
+
+			Me.setBuyButton(e,to_pay);
+
+			Me.setTypeOperationForm(e);
+
+		});
+
 	});
 
-	let price_crypto = {{$precio}};
 
 </script>
 <script type="module" src="{{asset('js/buy_crypto/main.js')}}"></script>

@@ -23,17 +23,66 @@ class UsersController extends Controller
     public function search_user($cedula){
     }
 */
+    public function editUser(Request $request){
+        
+
+        $request->validate([
+            'id_user' => [],
+
+            'nombre' =>  'required|regex:/^[A-Za-z\s]+$/',
+            'cedula' =>  'required|digits_between:1,20|unique:personas,cedula',
+            'esta_activo' => 'required|in:0,1',
+            'esta_verificado' => 'required|in:0,1',
+        ]);
+
+        $user = User::with('persona')->find($request->id_user);
+        if($request->email != $user->email){
+
+            $request->validate([
+                'email' =>  'required|email|unique:users,email',
+            ]);
+            $user->email = $request->email;
+        }
+        if($request->telefono != $user->telefono){
+
+            $request->validate([
+                'telefono' =>  'nullable|numeric|unique:users,telefono',
+            ]);
+
+            $user->telefono = $request->telefono;
+        }
+        $user->persona->nombre = $request->nombre;
+        $user->persona->cedula = $request->cedula;
+
+        $user->estado = $request->esta_activo;
+
+        $user->verificado = $request->esta_verificado;
+
+        $user->push();
+
+        return redirect()->back()->with([
+            'Messages' => [
+                'Changes saved successfuly'
+            ]
+        ]);
+
+    }
+    public function seeUser($id){
+        $user = User::with('persona')->find($id);
+        return view('auth.see_user',['user' => $user]);
+
+    }
     public function create_user(Request $req){
 
     	$this->validate($req,[
     		'name' => 'required|regex:/^[A-Za-z\s]+$/',
-    		'email' => 'required|email|unique:users', 
+    		'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|numeric|unique:users,telefono',
     		'id' => 'required|digits_between:1,20|unique:personas,cedula',
     		'password' => 'required',
     		'rol' => ['required',Rule::in(['2','3'])],
     		'date' => 'required|date',
     	]);
-
 
     	$persona = Persona::create([
     		'nombre' => $req->name,
@@ -43,6 +92,7 @@ class UsersController extends Controller
     	$user = User::create([
     		'id_persona' => $persona->id,
     		'email' => $req->email,
+            'telefono' => $req->phone,
     		'password' => Hash::make($req->password),
     		'tipo' => $req->rol,
     		'fecha_nacimiento' => $req->date
@@ -60,32 +110,14 @@ class UsersController extends Controller
     	]);
     }
 
-    public function search_user($cedula = null){
-    	if($cedula != null){
-
-    		$ced = $cedula;
-    	}else{
-    		if(isset($_GET['buscar'])){
-    			$ced = $_GET['buscar'];
-    		}else{
-    			//error inesperado #1
-    		}
-    	}
-    		if(1){
-		    	$persona = Persona::where('cedula',$ced)->with('usuario')->first();
-		    	if($persona != null && $persona->usuario->tipo !== 1){
-
-		    		return redirect()->back()->with('data',$persona);
-		    	}else{
-		    		return redirect()->back()->with('messages',[
-		    			'user' => 'User not found']);
-		    	}
-		    	
-    		}else{
-    			//error inesperado #1
-    		}
+    public function searchUser(Request $request){
+        $users = User::smartSearcher($request->string)->paginate(10);
+        return view('auth.users',[
+            'users' => $users
+        ]);
 
     }
+    
     public function changeState(Request $req){
 
     	$this->validate($req,[

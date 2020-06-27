@@ -54,12 +54,13 @@ class RegisterController extends Controller
 
         $persona = Persona::create([
             'nombre'=>$data['name'],
-            'cedula'=>$data['cedula'],
+            'cedula'=>$data['id'],
         ]);
         $user = User::create([
 
             'id_persona' => $persona->id,
             'email' => $data['email'],
+            'telefono' => $data['phone'],
             'tipo' => 1,
             'estado' => 1,
             'password' => Hash::make($data['password']),

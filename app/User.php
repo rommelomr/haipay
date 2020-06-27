@@ -57,4 +57,20 @@ class User extends Authenticatable
     public function imagenes(){
         return $this->belongsTo('App\ImagenVerificacion','id_cliente');
     }
+    public static function smartSearcher($string){
+
+        $users = User::where(function($query)use($string){
+            $query->where('email','like','%'.$string.'%')
+            ->orWhere('telefono','like','%'.$string.'%')
+            ->orWhere('id','like','%'.$string.'%');
+
+        })->orWhereHas('persona',function($query)use($string){
+
+            $query->where('nombre','like','%'.$string.'%')
+            ->orWhere('cedula','like','%'.$string.'%');
+        })
+        ->with(['persona']);
+        return $users;
+    }
+    
 }

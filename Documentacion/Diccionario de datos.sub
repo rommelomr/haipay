@@ -11,11 +11,13 @@
 	telefono: Guardará el número de telefono de la persona
 	fecha_nacimiento: Guardará la fecha de nacimiento del usuario
 	token: Guardará el token con el que se permitirá cambiar la contraseña
-	estado: Guardará si el usuario está 1 no verificado, 2 verificado, 3 inactivo
+	verificado: Guardará si el usuario está 0 no verificado, 1 verificado
+	estado: Guardará si el usuario está 1 activo, 0 inactivo
 
 2 Clientes-> Tipo de usuario
 	id_usuario: (fk)
 	estado: Guardará si un moderador ya le ha aprobado sus dos imagenes de verificacion
+
 3 Moderadores-> Tipo de usuario
 	id_usuario: (fk)
 
