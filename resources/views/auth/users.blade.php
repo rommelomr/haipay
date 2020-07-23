@@ -102,7 +102,6 @@
 						<div class=" row">
 							<div class="col s8 offset-s2">
 								<form action="{{route('search_user')}}" method="get">
-									@csrf
 									<div class="input-field">
 									
 										<label for="buscar">search user</label>
@@ -115,25 +114,29 @@
 								</form>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col s10 offset-s1">
-								<ul class="collection">
-									
-									@forelse($users as $user)
-										<li class="collection-item">
-											@if($user->tipo == 2)
-												<span class="blue-text secondary-content left"><i class="material-icons">assignment_ind</i></span>
-											@elseif($user->tipo == 3)
-												<span class="grey-text secondary-content left"><i class="material-icons">person</i></span>
-											@endif
-												<span class="badge"><a href="{{route('see_user',$user->id)}}">see</a></span>
-											{{$user->persona->nombre}} {{$user->persona->cedula}} 
-										</li>
-									@empty
-									@endforelse
-								</ul>
+						@if(isset($users))
+							<div class="row">
+								<div class="col s10 offset-s1">
+									<ul class="collection">
+										
+										@forelse($users as $user)
+											<li class="collection-item">
+												@if($user->tipo == 1)
+													<b>(Client)</b>
+												@elseif($user->tipo == 2)
+													<b>(Moderator)</b>
+												@elseif($user->tipo == 3)
+													<b>(Admin)</b>
+												@endif
+													<span class="badge"><a href="{{route('see_user',$user->id)}}"><i class="material-icons">edit</i></a></span>
+												{{$user->persona->nombre}} {{$user->persona->cedula}} 
+											</li>
+										@empty
+										@endforelse
+									</ul>
+								</div>
 							</div>
-						</div>
+						@endif
 					</div>
 				</div>
 			</div>

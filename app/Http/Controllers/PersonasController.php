@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Persona;
 use App\User;
 use App\Cartera;
 use App\ImagenVerificacion;
@@ -13,6 +14,41 @@ use Illuminate\Validation\Rule;
 
 class PersonasController extends Controller
 {
+    public function consultarPorCedula(Request $request){
+
+        $persona = Persona::where('cedula',$request->cedula)->first();
+
+        if($persona == null){
+
+            return json_encode([
+                'status'    =>  0,
+                'message'   =>  'There are no person registered with this ID',
+            ]);
+
+        }else{
+            
+            return json_encode([
+                'status'    =>  1,
+                'message'   =>  'Person found',
+                'name'      =>  $persona->nombre
+            ]);
+        }
+
+
+    }
+    /*
+    public function registerNoUser(Request $request){
+
+        $array = Persona::makeArrayToValidate(Persona::class,[
+            'id' => 'id_persona',
+            'nombre' => 'full_name'
+        ]);
+        dd($array);
+        $request->validate($array);
+
+
+    }
+    */
     public function showViewEditProfile(){
 
     	$data = User::with(['persona','cliente'=>function($query){
@@ -40,9 +76,11 @@ class PersonasController extends Controller
                 }
             }
         }
+
         $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
             $query->with('moneda');
         }])->where('id_cliente',$data->cliente->id)->paginate(10);
+        
         //Validar si es admin o moderador no aplican los mensajes de cuenta verificada o no
 
     	return view('auth.edit_profile',[

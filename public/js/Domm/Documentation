@@ -1,0 +1,63 @@
+Domm.js es una pequeña librería en desarrollo para realizar acciones básicas en el DOM.
+
+Puntualmente, la libreria exporta un objeto "D", cuyos métodos se pueden categorizar en Dom, eventos, websocket, y ajax.
+
+Para poder utilizarla, debe configurarse la etiqueta script como tipo módulo, ya sea para utilizarse en el mismo archivo html, o para usar un archivo .js externo. Luego, en el código debe importarse la libreria mediante la sentencia "import":
+
+	<script type="module">
+
+		import {D} from 'ruta/Domm/Domm.js';
+		D.dom.load(function(){
+
+			alert('Hello World');
+
+		});
+
+	</script>
+
+	o
+
+	<script type="module" src="ruta"></script>
+
+	donde en el archivo .js se tiene:
+
+
+	import {D} from 'ruta/Domm/Domm.js';
+	D.dom.load(function(){
+
+		alert('Hello World');
+
+	});
+
+
+
+1 DOM:
+
+	todos los métodos están guardados en el atributo "dom", por lo que para usarlos se debe utilizar la siguiente sintaxis:
+
+			D.dom.metodo_a_implementar();
+
+1.1 D.dom.load():
+	
+	Modo de uso:
+
+	D.dom.load(function(){
+
+		alert('Hello World');
+
+	});
+
+	Este método ejecutará la función que recibe como parámetro una vez que la ventana haya cargado completamente
+
+1.2 D.dom.getElementsByClass():
+	
+	modo de uso:
+		<h1 data-index="titulo" class="ejemplo">Título</h1>
+		<p data-index="parrafo" class="ejemplo">Párrafo</p>
+		<input data-index="input" class="ejemplo">
+
+		let arr = D.dom.getElementsByClass('ejemplo');
+
+	
+	El retorno es un arreglo cuyos valores serán cada uno de los elementos identificados con la clase; y el index es lo que se ha indicado en el atributo data-index de cada elemento. Es importante destacar que estos índices no se deben repetir, ya que hacerlo provocará que el segundo elemento reemplaze al primero.
+

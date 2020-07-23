@@ -20,11 +20,11 @@
 						<input value="{{$user->id}}" name="id_user" hidden>
 						<div class="row">
 							<div class="col s6">Name</div>
-							<div class="col s6"><input type="text" style="width:100%" class="browser-default" value="{{$user->persona->nombre}}" name="nombre"></div>
+							<div class="col s6"><input type="text" style="width:100%" class="browser-default" value="{{$user->persona->nombre}}" name="name"></div>
 						</div>
 						<div class="row">
 							<div class="col s6">ID</div>
-							<div class="col s6"><input type="text" style="width:100%" value="{{$user->persona->cedula}}" name="cedula" class="browser-default"></div>
+							<div class="col s6"><input type="text" style="width:100%" value="{{$user->persona->cedula}}" name="id" class="browser-default"></div>
 						</div>
 						<div class="row">
 							<div class="col s6">email</div>
@@ -32,13 +32,13 @@
 						</div>
 						<div class="row">
 							<div class="col s6">phone</div>
-							<div class="col s6"><input type="text" style="width:100%" value="{{$user->telefono}}" name="telefono" class="browser-default"></div>
+							<div class="col s6"><input type="text" style="width:100%" value="{{$user->telefono}}" name="phone" class="browser-default"></div>
 						</div>
 						<div class="row">
 							<div class="col s6">Status</div>
 							<div class="col s6">
 
-								<select name="esta_activo" class="browser-default">
+								<select name="status" class="browser-default">
 									<option @if($user->estado == 1) selected @endif value="1">Enabled</option>
 									<option @if($user->estado == 0) selected @endif value="0">Disabled</option>
 								</select>
@@ -49,7 +49,7 @@
 							<div class="col s6">Verified</div>
 							<div class="col s6">
 
-								<select name="esta_verificado" class="browser-default">
+								<select name="verified" class="browser-default">
 									<option value="1" @if($user->verificado == 1) selected @endif>Yes</option>
 									<option value="0" @if($user->verificado == 0) selected @endif>No</option>
 								</select>

@@ -19,7 +19,7 @@ export let Me = {
 		if(cripto_request.type == "ticker"){
 			cripto_array[cripto_request.product_id] = cripto_request.price;
 			F.putContent('.precio-'+cripto_request.product_id,cripto_request.price);
-		}
+		}	
 		//console.log(cripto_array);
 	},
 	//Configurará la visualización del mensaje del modal, y el botón para enviar la solicitud

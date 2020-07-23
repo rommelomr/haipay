@@ -30,19 +30,20 @@ class UsersController extends Controller
             'id_user' => [],
 
             'nombre' =>  'required|regex:/^[A-Za-z\s]+$/',
-            'cedula' =>  'required|digits_between:1,20|unique:personas,cedula',
             'esta_activo' => 'required|in:0,1',
             'esta_verificado' => 'required|in:0,1',
         ]);
 
         $user = User::with('persona')->find($request->id_user);
-        if($request->email != $user->email){
 
+
+        if($request->email != $user->email){
             $request->validate([
                 'email' =>  'required|email|unique:users,email',
             ]);
             $user->email = $request->email;
         }
+        
         if($request->telefono != $user->telefono){
 
             $request->validate([
@@ -51,8 +52,16 @@ class UsersController extends Controller
 
             $user->telefono = $request->telefono;
         }
+        if($request->cedula != $user->persona->cedula){
+
+            $request->validate([
+                'cedula' =>  'required|digits_between:1,20|unique:personas,cedula',
+            ]);
+
+            $user->persona->cedula = $request->cedula;
+            
+        }
         $user->persona->nombre = $request->nombre;
-        $user->persona->cedula = $request->cedula;
 
         $user->estado = $request->esta_activo;
 
@@ -112,6 +121,14 @@ class UsersController extends Controller
 
     public function searchUser(Request $request){
         $users = User::smartSearcher($request->string)->paginate(10);
+        if(count($users)==0){
+            $message = 'Users not found';
+        }else{
+            $message = 'Users found';
+        }
+        session()->flash('messages',[
+            $message
+        ]);
         return view('auth.users',[
             'users' => $users
         ]);

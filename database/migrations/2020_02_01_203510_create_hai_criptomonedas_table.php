@@ -20,7 +20,8 @@ class CreateHaiCriptomonedasTable extends Migration
 
             $table->unsignedBigInteger('id_origen');
             $table->foreign('id_origen')->references('id')->on('origenes');
-            
+
+            $table->double('comision_red',10,6); 
             $table->timestamps();
         });
     }

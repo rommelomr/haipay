@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Persona;
 use App\User;
+use App\NoUsuario;
 use App\Cliente;
 use App\MetodoPago;
 use App\MetodoRetiro;
@@ -16,11 +17,64 @@ use App\Comision;
 use App\HaiCriptomoneda;
 use App\CompraCriptomoneda;
 use App\Cartera;
+use App\CryptoTag;
 use App\Moneda;
 
 class ClientesController extends Controller
 {
+    public function updateTag(Request $request){
 
+        session()->flash('wallet',true);
+
+        $request->validate([
+            'string'  => ['required','min:20','max:50','regex:/^[a-zA-Z0-9]+$/'],
+        ]);
+
+        $auth = \Auth::user();
+
+        $tag = CryptoTag::firstOrCreate([
+            'id_cartera'=>$request->father
+        ],[
+            'tag'=>$request->string
+        ]);
+        
+        $tag->tag = $request->string;
+        $tag->save();
+        
+        return redirect()->back()->with([
+          'messages'=>[
+            'Tag changed successfully'
+          ]
+        ]);
+    }
+    public function updateAdress(Request $request){
+
+
+        $auth = \Auth::user();
+
+        $cartera = Cartera::where('id_cliente',$auth->cliente->id)->whereHas('haiCriptomoneda',function($query)use($request){
+
+          $query->where('id',$request->father);
+
+        })->firstOrFail();
+
+        session()->flash('wallet',true);
+        session()->flash('cartera',$cartera->id);
+
+        $request->validate([
+            'string'  => ['required','min:20','max:50','regex:/^[a-zA-Z0-9]+$/'],
+        ]);
+        
+        $cartera->direccion = $request->string;
+        $cartera->save();
+        
+        return redirect()->back()->with([
+          'messages'=>[
+            'Addres changed successfully'
+          ]
+        ]);
+
+    }
     public function verifyPyments(){
         $compras = CompraCriptomoneda::getCompras(null);
         
@@ -127,8 +181,16 @@ class ClientesController extends Controller
 
         $comisiones = Comision::getComisiones();
         
+        $user = \Auth::user();
+
+        $cliente = Cliente::where('id_usuario',$user->id)->first();
         
+        $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
+            $query->with('moneda');
+        }])->where('id_cliente',$cliente->id)->paginate(10);
+
         return view('buy_crypto',[
+            'carteras' => $carteras,
             'criptomoneda' => $criptomoneda,
             'metodos_pago' => $metodos_pago,
             'comision_general' => $comisiones['general']['porcentaje'],
@@ -177,6 +239,9 @@ class ClientesController extends Controller
 
             $info_cryptos = HaiCriptomoneda::obtenerInfoCriptos($coinbase_cryptos,$coinlore_cryptos);
 
+            $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
+                $query->with('moneda');
+            }])->where('id_cliente',$cliente->id)->paginate(10);
 
     	return view('dashboard_clients', [
     		'criptomonedas' => $hai_criptomonedas,
@@ -187,6 +252,7 @@ class ClientesController extends Controller
             'approved_remittances' => $approved_remittances,
             'for_approval_remmitances' => $for_approval_remmitances,
             'refused_remittances' => $refused_remittances,
+            'carteras' => $carteras,
 
             'comision_general' => json_encode($comision['general']),
             'comision_compra' => json_encode(

@@ -18,6 +18,9 @@ class CreateNoUsuariosTable extends Migration
             $table->unsignedBigInteger('id_persona');
             $table->foreign('id_persona')->references('id')->on('personas');
 
+            $table->unsignedBigInteger('id_anfitrion');
+            $table->foreign('id_anfitrion')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

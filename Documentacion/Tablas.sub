@@ -81,6 +81,7 @@
 
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
 	id_persona: (fk)
+	id_anfitrion: (fk: users)
 
 21 remesas_no_usuario-> Guardará el destinatario no usuario de la remesa
 	id_remesa: (fk)

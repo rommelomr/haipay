@@ -12,5 +12,8 @@ class RemesaNoUsuario extends Model
     public function noUsuario(){
     	return $this->belongsTo(NoUsuario::class,'id_no_usuario');
     }
+    public function remesa(){
+    	return $this->belongsTo(Remesa::class,'id_remesa');
+    }
 
 }

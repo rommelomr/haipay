@@ -27,10 +27,21 @@ class CreateRemesasTable extends Migration
             $table->unsignedBigInteger('id_tipo_remesa')->nullable();
             $table->foreign('id_tipo_remesa')->references('id')->on('tipos_remesa');
 
-            $table->unsignedBigInteger('monto');
-            $table->bigInteger('monto_total');
-            $table->tinyInteger('comision_remesa');
+            $table->unsignedBigInteger('id_metodo_pago');
+            $table->foreign('id_metodo_pago')->references('id')->on('metodos_pago');
+
+            $table->decimal('monto',6,2);
+
+            $table->decimal('comision_general',6,2);
+
+            $table->decimal('comision_compra',6,2);
+
+            $table->decimal('precio_bitcoin_htg',15,2);
+
+            $table->decimal('monto_total',15,2);
+
             $table->tinyInteger('estado')->default(0);
+
             $table->timestamps();
         });
     }

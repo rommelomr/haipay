@@ -55,7 +55,7 @@ class ImagenesTransaccionController extends Controller
         Storage::delete('public/'.$imagen->nombre);
         $imagen->nombre = $name;
         $imagen->transaccion->estado = 0;
-        $imagen->save();
+        $imagen->push();
         return redirect()->back();
 
 

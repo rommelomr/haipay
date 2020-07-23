@@ -16,14 +16,13 @@ class CriptomonedasController extends Controller
 		Método que consulta a las API el precio de la moneda en cuestion
 		Recibe un arreglo con el ID y las SIGLAS de la moneda
 		Ejemplo:
-			'id' => 6,
 			'siglas' => DOGE,
 		Retorna el precio de la cripto en cuestion expresado en Dólares americanos
 	*/
 	public static function consultarPrecioMoneda($coin){
-		if($coin['id'] === 1){
+		if($coin['siglas'] == 'USD'){
 			return 1;
-		}else if($coin['id'] == 6){
+		}else if($coin['siglas'] === 'DOGE'){
 
 			return json_decode( file_get_contents('https://api.coinlore.com/api/ticker/?id=2'), true )[0]['price_usd'];
 		}else{

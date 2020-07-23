@@ -22,7 +22,7 @@
 						<ul class="tabs">
 
 					        <li class="tab col s6"><a href="#test1">Info</a></li>
-					        <li class="tab col s6"><a href="#test2">Wallet</a></li>
+					        <li class="tab col s6"><a @if(session('wallet')) class="active" @endif href="#test2">Wallet</a></li>
 
 					    </ul>
 
@@ -207,14 +207,72 @@
 					    </div>
 					    <div id="test2" class="col s12">
 					    	<div class="row">
-					    		<div class="col s8 offset-s2">
+					    		<div class="col s12">
 
-							    	<ul class="collection">
+							    	<ul class="collapsible">
 								    	@forelse($carteras as $cartera)
-								    		<li class="collection-item">
-								    			{{$cartera->haiCriptomoneda->moneda->nombre}}
-								    			<a href="{{route('dashboard_clients')}}"><span class="badge new green" data-badge-caption="Buy more"></span></a>
-								    			<span class="badge">{{$cartera->cantidad}}</span>
+								    		@if($cartera->id == session('cartera'))
+								    			<li class="active">
+								    		@else
+								    			<li>
+								    		@endif
+								    			<div class="collapsible-header">	    						
+							    					<b style="margin-right:2%">{{$cartera->haiCriptomoneda->moneda->nombre}}:</b> 
+
+							    					{{$cartera->cantidad}} {{$cartera->haiCriptomoneda->moneda->siglas}}
+
+								    			</div>
+								    			<div class="collapsible-body">
+								    				<div class="row">
+								    					<div class="col s6 center">
+								    						<div class="row">
+								    							<div class="col s12">
+								    								
+												    				<b>Adress:</b><br>
+												    				<a href="#modify-modal" class="adress-link tooltipped modal-trigger" data-position="top" data-tooltip="Click to insert a new adress" data-route="{{route('update_adress')}}" data-string_type="adress" data-crypto_id="{{$cartera->haiCriptomoneda->id}}">
+												    				@if($cartera->direccion == null)
+												    					Enter adress
+												    				@else
+												    					{{$cartera->direccion}}
+												    				@endif
+												    				</a>
+								    							</div>
+								    						</div>
+								    						@if($cartera->id_hai_criptomoneda == 1 && $cartera->direccion != null)
+									    						<div class="row">
+									    							<div class="col s12 center">
+									    								<b>Tag</b><br>
+
+													    				<a href="#modify-modal" class="tag-link tooltipped modal-trigger" data-position="top" data-tooltip="Click to insert a new tag" data-route="{{route('update_tag')}}" data-string_type="tag" data-cartera_id="{{$cartera->id}}">
+														    				@if($cartera->cryptoTag == null)
+														    					Enter Tag
+														    				@else
+														    					{{$cartera->cryptoTag->tag}}
+														    				@endif
+													    				</a>
+									    							</div>
+									    						</div>
+									    						
+								    						@endif
+								    					</div>
+								    					<div class="col s3 center">
+										    				@if($cartera->direccion == null)
+										    					You can't withdraw. Please entered the addres.<br>
+										    				@else
+												    			<a class="btn btn-small blue" href="{{route('withdraw',$cartera->haiCriptomoneda->moneda->siglas)}}">
+												    				Withdraw
+												    			</a>
+										    				@endif
+								    					</div>
+								    					<div class="col s3 center">
+
+											    			<a class="btn btn-small green" href="{{route('dashboard_clients')}}">
+											    				Buy more
+											    			</a>
+
+								    					</div>
+								    				</div>
+								    			</div>
 								    		</li>
 								    	@empty
 								    		You haven't bought cryptos yet
@@ -230,7 +288,7 @@
 				<div class="card">
 				</div>
 			</div>
-			    
+
 			<div class="row  valign-wrapper">
 
 				<div class="card-content col s6" hidden>
@@ -251,12 +309,42 @@
 
 					</div>
 				</div>
-
 			</div>
+
 		</div>
 	</div>
+
+<div id="modify-modal" class="modal">
+	<div class="modal-content">
+		<h5>Set <span class="string-type"></span></h5>
+
+		<form id="form" method="post">
+
+			@csrf
+
+			<div class="input-field">
+
+				<label for="string">Insert <span class="string-type"></span></label>
+				<input id="string" type="text" name="string">
+
+			</div>
+			<div hidden>
+				<input id="father" name="father">
+				<input id="update-submit" type="submit">
+				
+			</div>
+		</form>
+
+
+	</div>
+	<div class="modal-footer">
+		<label for="update-submit" class="btn green">Set</label>
+		<button class="btn modal-close red">Cancel</button>
+	</div>
+</div>
 @endsection
 <script>
+
 	window.onload = function(){
 
 		@if(session('messages'))
@@ -273,9 +361,21 @@
 		@endif
 
 		let el = document.querySelector('.tabs');
-		  var instance = M.Tabs.init(el);
-		
+		var tab_instances = M.Tabs.init(el);
+
+		var elems_tooltip = document.querySelectorAll('.tooltipped');
+    	var tooltip_instances = M.Tooltip.init(elems_tooltip);
+
+		var elems_modal = document.querySelectorAll('.modal');
+    	var modal_instances = M.Modal.init(elems_modal);
+
 		var elems_boxed = document.querySelectorAll('.materialboxed');
-    	var instances = M.Materialbox.init(elems_boxed);
+    	var material_box_instances = M.Materialbox.init(elems_boxed);
+		
+		var elems_collapsible = document.querySelectorAll('.collapsible');
+		var collapsible_instances = M.Collapsible.init(elems_collapsible);
+
 	}
+
 </script>
+<script type="module" src="{{asset('js/profile/main.js')}}"></script>

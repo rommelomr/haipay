@@ -1,15 +1,21 @@
 import {Ajax} from './Ajax.js';
 export let D = {
-	//Return an element dataset array 
-	inspect:function(arr){
-		if(!Array.isArray(arr)){
-			arr = [arr];
-		}
-		for (var key in arr) {
-			console.log(arr[key]);
-		}
-	},
 	dom:{
+		htmlDecode:function(input) {
+		  var doc = new DOMParser().parseFromString(input, "text/html");
+		  return doc.documentElement.textContent;
+		},	
+		getElementsByClass:function(c){
+
+			let items = document.querySelectorAll('.'+c);
+			let arr = [];
+			for (var i = 0; i < items.length; i++){
+
+				arr[items[i].dataset.index] = items[i];
+				
+			}
+			return arr;
+		},
 		load:function(f){
 			window.addEventListener('load',f);
 		},
@@ -59,7 +65,7 @@ export let D = {
 				dom_elems[i].innerText = data;
 			}
 		},
-		//Set the value and/or texto of an input and/or element founded by a querySelectorAll
+		//Set the value and/or text of an input and/or element founded by a querySelectorAll
 		putContent:function(elems,data){
 			this.setValue(elems,data);
 			this.setText(elems,data);
@@ -137,32 +143,52 @@ export let D = {
 			}
 		},
 	},
+	on:function(ev,el,f){
+		let dom_elems = document.querySelectorAll(el);
+		for(let i=0; i<dom_elems.length;i++){
+			dom_elems[i].addEventListener(ev,function(ev_object){
+				return f({target:this,event:ev_object});
+			});
+		}
+
+	},
 	addEvent:{
+
 		//set the onclick event in several elements by a querySelectorAll
 		onClick:function(el,f){
 			let dom_elems = document.querySelectorAll(el);
 			for(let i=0; i<dom_elems.length;i++){
-				dom_elems[i].onclick = function(){
-					f(this);
+				dom_elems[i].onclick = function(ev){
+					return f(this,ev);
 				};
 			}
 		},
 		onChange:function(el,f){
 			let dom_elems = document.querySelectorAll(el);
 			for(let i=0; i<dom_elems.length;i++){
-				dom_elems[i].onchange = function(){
-					f(this);
+				dom_elems[i].onchange = function(ev){
+					return f(this,ev);
 				};
 			}
 		},
 		onKeyUp:function(el,f){
 			let dom_elems = document.querySelectorAll(el);
 			for(let i=0; i<dom_elems.length;i++){
-				dom_elems[i].onkeyup = function(){
-					f(this);
+				dom_elems[i].onkeyup = function(ev){
+					return f(this,ev);
 				};
 			}
-		},		
+		},
+		onKeyPress:function(el,f){
+			let dom_elems = document.querySelectorAll(el);
+			for(let i=0; i<dom_elems.length;i++){
+				dom_elems[i].onkeypress = function(ev){
+					return f(this,ev);
+				};
+			}
+		},
+
+
 	},
 	ws(object){
 		/*
@@ -238,6 +264,18 @@ export let D = {
 			}
 		})
 
+	},
+	math:{
+		redondearDecimales:function(num,dec){
+
+			let original = parseFloat(num);
+
+			let decimales = Math.pow(10,dec)
+
+			let result=Math.round(original*decimales)/decimales;
+
+
+			return result;
+		}
 	}
-	
 }

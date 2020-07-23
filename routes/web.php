@@ -12,75 +12,137 @@
 */
 
 Route::get('/', 'UsersController@main')->middleware('auth')->name('/');
+
 //Login
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');//Listo (5)
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 
 if ($options['register'] ?? true) {
 
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');//Listo (1)
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register'); 
     Route::post('register', 'Auth\RegisterController@registerClient');
 
 }
 if ($options['reset'] ?? true) {
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');//Listo (4)
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 }
-Route::get('password/recover/{token}', 'Auth\ForgotPasswordController@showViewResetPassword')->name('verification.notice');//Listo
+Route::get('password/recover/{token}', 'Auth\ForgotPasswordController@showViewResetPassword')->name('verification.notice');
 
-Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVerified');//Listo
+Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVerified');
 
 
-//Dashboard
+
+//Clients
 Route::group(['middleware' => ['tipo:1']], function() {
 
+    //verify Payments views
     Route::get('payments/verify','ClientesController@verifyPyments')->name('verify_payments');
     Route::get('payments/canceled','ClientesController@canceledPyments')->name('canceled_payments');
     Route::get('payments/waiting','ClientesController@waitingPyments')->name('waiting_payments');
     Route::get('payments/approved','ClientesController@approvedPyments')->name('approved_payments');
-
-    Route::post('make_trade', 'ComprasCriptomonedaController@makeTrade')->name('make_trade');//Listo
-    Route::get('setTrade/{pair}', 'ClientesController@setTrade')->name('setTrade');//Listo
-    Route::get('trade/{crypto}', 'ClientesController@trade')->name('trade');//Listo
-	Route::get('buy_crypto/{crypto}', 'ClientesController@buyCripto')->name('buy_crypto');//Listo
-    Route::post('buy_crypto', 'ComprasCriptomonedaController@buyCripto')->name('buy_crypto_post');//Listo
-    Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');//Listo
     
-    //Client verify a payment
-    Route::post('verify_transaction', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_transaction');//Listo
+    //view in which user can see the crypto's price
+    Route::get('dashboard_clients', 'ClientesController@showDashboard')->name('dashboard_clients');
+    
+	//view in which user select how much of a crypto is going to buy
+    Route::get('buy_crypto/{crypto}', 'ClientesController@buyCripto')->name('buy_crypto');
+    
+    //Script to make the buy
+    Route::post('buy_crypto', 'ComprasCriptomonedaController@buyCripto')->name('buy_crypto_post');
 
-    //Client resend an image
-    Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');//Listo
-    //Route::post('delete_transaction', 'TransaccionesController@deleteTransaction')->middleware('auth')->name('delete_transaction');//Listo
+    //View in which system display a message indicating to the user has to verify the payments
+    Route::get('pursache_notice', 'ComprasCriptomonedaController@pursacheNotice')->name('pursache_notice');
 
-    //Client delete a transaction
-    //Route::post('delete_transaction','TransaccionesController@deleteTransaction')->name('delete_transaction');
+    //view in which user see the remittances waiting for an admin approve
+    Route::get('withdraw/{siglas}', 'RetirosController@showWithdrawalsView')->name('withdraw');    
+
+    //view in which user see the remittances waiting for an admin approve
+    Route::post('withdraw', 'RetirosController@withdwraw')->name('withdraw_post');    
+
+    //view in which user choose the second crypto of the pair to change
+    Route::get('trade/{crypto}', 'ClientesController@trade')->name('trade');
+
+    //view in which user set how much crypto is going to change
+    Route::get('setTrade/{pair}', 'ClientesController@setTrade')->name('setTrade');
+
+    //Script to make the trade
+    Route::post('make_trade', 'ComprasCriptomonedaController@makeTrade')->name('make_trade');
+
+    //Script to save the picture that user upload to verify his transactions (pursaches and trading)
+    Route::post('verify_transaction', 'ImagenesTransaccionController@verifyPyment')->middleware('auth')->name('verify_transaction');
+    
+    //view in which user see the form to send money, history of remittances made and consult it's remittances
+    Route::get('remittances', 'RemesasController@showRemittancesView')->name('remittances');
+
+    //View in which the user confirm the remittance just made
+    Route::post('confirm_remittance','RemesasController@confirmarRemesa')->name('confirmar_remesa');
+
+    //Script to register the remittances that users made
+    Route::post('enviar_remesa','RemesasController@enviarRemesa')->name('enviar_remesa');
+
+    //Script to change the transactions image
+    Route::post('resend_image', 'ImagenesTransaccionController@resendImage')->middleware('auth')->name('resend_image');
+    
+    //view in which user see the remittances that has to verify
+    Route::get('remittances/verify', 'RemesasController@verifyRemittances')->name('verify_remittances');
+    
+    //view in which user see the remittances waiting for an admin approve
+    Route::get('remittances/waiting', 'RemesasController@waitingRemittances')->name('waiting_remittances');
+
+    //view in which user see the remittances canceled for an admin
+    Route::get('remittances/canceled', 'RemesasController@canceledRemittances')->name('canceled_remittances');
+    
+    //Script
+    Route::post('update_adress', 'ClientesController@updateAdress')->name('update_adress');
+
+    //view in which user see the remittances waiting for an admin approve
+    Route::post('update_tag', 'ClientesController@updateTag')->name('update_tag');
+    
+
 });
 
-//Dashboard
+//Moderator
 Route::group(['middleware' => ['tipo:2']], function() {
     //Client verify it's own account
     Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');
 
     //Moderator verify client's account
     Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');
-
 });
 
-Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acquireCripto');//Listo
+Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acquireCripto');
 
+//Moderator and Admin
+Route::group(['middleware' => ['tipo:2,3']], function() {
 
-//Users
+    Route::get('change_state_remittance', 'RemesasController@chageState')->name('change_state_remittance');
+    Route::get('see_remittance/{id}', 'RemesasController@seeRemittance')->name('see_remittance');
+    Route::get('all_remittances', 'RemesasController@showAllRemittancesView')->name('all_remittances');
+    Route::get('search_remittances', 'RemesasController@searchRemittances')->name('search_remittances');
+
+    //Script to an admin or moderator verify or cancel the transaction's image of a client
+    Route::post('change_state_transaction', 'TransaccionesController@changeStateTransaction')->name('change_state_transaction');
+});
+
+//Admin
 Route::group(['middleware' => ['tipo:3']], function() {
 
-	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');//Listo
+    //View in which admin consult users, moderators and other admins
+	Route::get('users', 'UsersController@showViewUsers')->middleware('auth')->name('users');
 
-    Route::post('change_state_transaction', 'TransaccionesController@changeStateTransaction')->name('change_state_transaction');//Listo
+    //View in which admin can modify all the comissions
+    Route::get('comissions', 'ComisionesController@showComissionsView')->middleware('auth')->name('comissions');
+    
+    Route::post('update_comission', 'ComisionesController@updateComission')->middleware('auth')->name('update_comission');
+
+    Route::post('update_network_comission', 'ComisionesController@updateNetworkComission')->middleware('auth')->name('update_network_comission');
 
 });
 
-Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');//Listo
-Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');//Listo
-Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');//Listo
+
+Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');
+Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');
+Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');
 
 Route::post('create_user','UsersController@create_user')->name('create_user');
 Route::get('search_user','UsersController@searchUser')->name('search_user');
@@ -95,40 +157,13 @@ Route::get('clients/{cedula}','ClientesController@searchClient');
 Route::post('modify_client','ClientesController@modify_client');
 
 Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
-Route::get('clients', 'ClientesController@showViewClients')->name('clients');;//Listo
-Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');//Listo
+Route::get('clients', 'ClientesController@showViewClients')->name('clients');;
+Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');
 
 //Transactions
-Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');//Listo
-Route::get('transactions/{id}', 'TransaccionesController@seeTransaction');//Listo
+Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');
+Route::get('transactions/{id}', 'TransaccionesController@seeTransaction');
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-//Remesas
-Route::post('enviarRemesas','RemesasController@enviarRemesas');
-
-//Users
-//Route::get('users', 'UsersController@showViewUsers');//Listo
-
-/*
-
-
-// Registration Routes...
-
-// Password Reset Routes...
-if ($options['reset'] ?? true) {
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    //Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-}
-
-// Email Verification Routes...
-
-if ($options['verify'] ?? false) {
-    Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-    Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
-}
-
-Route::get('/home', 'HomeController@index')->name('home');
-*/
-
+Route::get('consultar_persona_por_cedula','PersonasController@consultarPorCedula')->name('consultar_persona_por_cedula');

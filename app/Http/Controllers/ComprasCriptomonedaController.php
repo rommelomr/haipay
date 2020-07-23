@@ -9,10 +9,28 @@ use App\Moneda;
 use App\Cliente;
 use App\Cartera;
 use App\Transaccion;
+use App\MetodoRetiro;
 use App\CompraCriptomoneda;
 
 class ComprasCriptomonedaController extends Controller
 {
+
+    
+    public function pursacheNotice(){
+    	
+    	if(session('pursache')){
+    		session()->forget('pursache');
+    		return view('pursache_notice');
+    	}else{
+    		session()->forget('pursache');
+    		return redirect()->route('edit_profile')->with([
+    			'messages'=>[
+    				'The route you want to access is not valid'
+    			]
+    		]);
+
+    	}
+    }
     public function makeTrade(Request $request){
     	$request->validate([
 			'buy' 		=>	'required|exists:monedas,siglas',
@@ -121,11 +139,12 @@ class ComprasCriptomonedaController extends Controller
 		]);
 				
 		//$comision = Comision::getComisiones();
+
 		$buy=HaiCriptomoneda::with('moneda')->find($req->base);
+		
 		$pay=Moneda::where('siglas','USD')->first();
 
 		$user = \Auth::user();
-
 
 		//obtengo el precio de la cripto que voy a comprar
 		$price_crip_to_buy=CriptomonedasController::consultarPrecioMoneda([
@@ -145,7 +164,9 @@ class ComprasCriptomonedaController extends Controller
 		unset($comisiones['general']);
 
 		$total_add_general = $total_sin_comision + ($total_sin_comision * ($comision_general['porcentaje']/100));
+
 		$total_add_compra = Comision::calcularComisionCompra($total_sin_comision,$total_add_general,$comisiones);
+		
 		if($total_add_compra == -1){
 			return redirect()->back()->with([
 				'messages'=>[
@@ -153,12 +174,12 @@ class ComprasCriptomonedaController extends Controller
 				]
 			]);
 		}else{
-
+	
 			$transaccion = Transaccion::create([
 	    		'id_cliente' => \Auth::user()->cliente->id,
 	    		'id_tipo_transaccion'=>3
 	    	]);
-
+	    	
 	    	$compra = CompraCriptomoneda::create([
 				'id_hai_criptomoneda' => $req->base,
 
@@ -185,11 +206,8 @@ class ComprasCriptomonedaController extends Controller
 				'total_con_comision' => $total_add_compra['total_con_comision_compra'],
 
 	    	]);
-
-
-			return redirect()->back()->with(['messages'=>[
-				'Purchase made successfully'
-			]]);
+	    	session()->flash('pursache');
+			return redirect()->route('pursache_notice');
 		}
 	}	
 }

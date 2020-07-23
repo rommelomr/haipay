@@ -8,9 +8,9 @@
 @endsection
 @section('main')
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
-			<div class="col s12">
+			<div class="col s6">
 				<div class="card-panel">
 					<center>
 						<h5>Buy Crypto</h5>
@@ -40,7 +40,7 @@
 						<div class="col s6">
 							<input id="to-pay" type="text" value="{{old('to_pay')}}" disabled class="dependent-amount">
 							<span class="helper-text">To pay in USD</span><br>
-							<span id="amount-error" hidden class="helper-text red-text">The amount can't be over 1000$ or under 0.0001$</span>
+							<span id="amount-error" hidden class="helper-text red-text">The amount to pay can't be over 1000$ or under 0.0001$</span>
 						</div>
 						<div class="col s6">
 							<center>
@@ -65,6 +65,25 @@
 					</div>
 				</div>
 			</div>
+			<div class="col s6">
+				<div class="card-panel">
+					<h5 class="center">My criptos</h5>
+					<hr>
+					<ul class="collection">
+				    	@forelse($carteras as $cartera)
+							<li class="collection-item">
+								{{$cartera->haiCriptomoneda->moneda->nombre}}
+								@if($cartera->haiCriptomoneda->moneda->siglas != $criptomoneda->moneda->siglas)
+									<a href="{{route('dashboard_clients')}}"><span class="badge new green" data-badge-caption="Buy more"></span></a>
+								@endif
+								<span class="badge">{{$cartera->cantidad}}</span>
+							</li>
+						@empty
+							You haven't bought cryptos yet
+						@endforelse
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 <div id="modal_confirm" class="modal">
@@ -79,7 +98,7 @@
     </div>
     <div class="modal-footer">
     	<label for="send_submit" class="btn green">Buy</label>
-    	<button class="btn red">Cancel</button>
+    	<button class="btn red modal-close">Cancel</button>
     </div>
 </div>        
 <input id="save-price" hidden>

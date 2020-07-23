@@ -11,11 +11,10 @@ class Comision extends Model
     private $comisiones = [];
 
     public static function calcularComisionCompra($total_sin_comision,$total_add_general,$comisiones){
-        foreach($comisiones as $comision){
-            if($total_sin_comision < 0.0001){
-                return -1;
-
-            }else{
+        if($total_sin_comision < 0.0001){
+            return -1;
+        }else{
+            foreach($comisiones as $comision){
 
                 if($total_sin_comision >= $comision['minimo'] && $total_sin_comision <= $comision['maximo']){
                     $info = [
@@ -23,10 +22,10 @@ class Comision extends Model
                         'total_con_comision_compra' => $total_add_compra = $total_add_general + ($total_sin_comision * ($comision['porcentaje']/100))
                     ];
                     return $info;
-                    
                 }
-                return -1;
+                
             }
+            return -1;
         }
     }
     
@@ -50,6 +49,7 @@ class Comision extends Model
             ];
 
         }
+        
         
     	
         if($com == null){

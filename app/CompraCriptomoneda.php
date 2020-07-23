@@ -22,7 +22,7 @@ class CompraCriptomoneda extends Model
             $auth = \Auth::user();
             $query->where('id_cliente',$auth->cliente->id)
             ->where('estado',$type);
-        })->paginate(8);
+        })->orderBy('created_at','DESC')->paginate(8);
         
     }
     public function haiCriptomoneda(){

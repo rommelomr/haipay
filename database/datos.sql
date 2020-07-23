@@ -98,12 +98,12 @@ INSERT INTO `origenes` (url,tipo) VALUES
 ('wss://ws-feed.pro.coinbase.com','w'),
 ('https://api.coinlore.com/api/ticker/?id=2','h');
 
-INSERT INTO `hai_criptomonedas` (id_moneda,id_origen) VALUES
-(2,1),
-(3,1),
-(4,1),
-(5,1),
-(6,2);
+INSERT INTO `hai_criptomonedas` (id_moneda,id_origen,comision_red) VALUES
+(2,1,0.25),
+(3,1,0.0004),
+(4,1,0.001),
+(5,1,100),
+(6,2,100);
 
 INSERT INTO `prefijos_telefono` (pais,codigo) VALUES
 ('Afghanistan', '+93'),
@@ -355,7 +355,7 @@ insert into comisiones (nombre,minimo,maximo,porcentaje,created_at,updated_at) V
 ('Buy 1'		,0.0	,99.99	,4,'2020-06-23','2020-06-23'),
 ('Buy 2'		,100.0	,399.99	,3,'2020-06-23','2020-06-23'),
 ('Buy 3'		,400.0	,1000.0	,2.5,'2020-06-23','2020-06-23'),
-('Remittance'	,0.0	,1000.0	,12,'2020-06-23','2020-06-23'),
+('Withdraw'		,0.0	,1000.0	,12,'2020-06-23','2020-06-23'),
 ('Trade'		,0.0	,1000.0	,0.2,'2020-06-23','2020-06-23'),
 ('Deposit'		,0.0	,1000.0	,12,'2020-06-23','2020-06-23');
 
@@ -366,4 +366,5 @@ insert into tipos_remesa (nombre) VALUES
 insert into metodos_retiro (nombre) VALUES
 
 ('Cash'),
-('MonCash');
+('MonCash'),
+('Same crypto');

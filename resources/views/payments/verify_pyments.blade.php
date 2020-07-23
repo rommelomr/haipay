@@ -152,10 +152,12 @@
 						<div class="col s10 offset-s1">
 							<div class="card">
 								<div class="card-image">
-									<img src="{{asset('images/vacio.jpg')}}" class="responsive-img">										
+
+									<img src="{{asset('images/vacio.jpg')}}" class="responsive-img">
+
 									<span class="card-title white-text">There's no transactions to show</span>
+									
 								</div>
-								
 							</div>
 						</div>
 						@endif
