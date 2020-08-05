@@ -59,35 +59,37 @@ class TransaccionesController extends Controller
     }
     public function seeTransaction($id){
 
-        $transaccion = Transaccion::with(['cliente'=>function($query){
-            $query->with(['usuario'=>function($query){
-                $query->with('persona');
-            },'imagenesVerificacion'=>function($query){
-                $query->where('tipo',0);
-            }]);
-        }
-        ,'imagen'
-        ,'compraCriptomoneda'=>function($query){
-            $query->with(['haiCriptomoneda','moneda']);
-        }
-        ,'remesa'=>function($query){
-            $query->with([
-                'metodoRetiro'
-                ,'internal'=>function($query){
-                    $query->with(['cliente'=>function($query){
-                        $query->with(['usuario'=>function($query){
+        $transaccion = Transaccion::with([
+            'cliente'=>function($query){
+                $query->with(['usuario'=>function($query){
+                    $query->with('persona');
+                },'imagenesVerificacion'=>function($query){
+                    $query->where('tipo',0);
+                }]);
+            }
+            ,'imagen'
+            ,'compraCriptomoneda'=>function($query){
+                $query->with(['haiCriptomoneda','moneda']);
+            }
+            ,'remesa'=>function($query){
+                $query->with([
+                    'metodoRetiro',
+                    'remesaInterna'=>function($query){
+                        $query->with(['cliente'=>function($query){
+                            $query->with(['usuario'=>function($query){
+                                $query->with('persona');
+                            }]);
+                        }]);
+                    },
+                    'remesaExterna'=>function($query){
+                        $query->with(['noUsuario'=>function($query){
                             $query->with('persona');
                         }]);
                     }]);
-                },'external'=>function($query){
-                    $query->with(['noUsuario'=>function($query){
-                        $query->with('persona');
-                    }]);
-                }]);
-        }
-        ,'trade'
-        ,'retiro'])->find($id);
-        
+                }
+            ,'trade'
+            ,'retiro'
+        ])->find($id);
         
         $transacciones = $this->getTransactions();
         return view('transactions',[

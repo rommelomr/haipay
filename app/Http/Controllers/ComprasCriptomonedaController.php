@@ -32,6 +32,8 @@ class ComprasCriptomonedaController extends Controller
     	}
     }
     public function makeTrade(Request $request){
+
+
     	$request->validate([
 			'buy' 		=>	'required|exists:monedas,siglas',
 			'pay' 		=>	'required|exists:monedas,siglas',
@@ -127,7 +129,6 @@ class ComprasCriptomonedaController extends Controller
 		}
     }
 	public function buyCripto(Request $req){
-
 		$error= $this->validate($req,[
 
 			'base' =>	'required|exists:hai_criptomonedas,id',
@@ -177,7 +178,7 @@ class ComprasCriptomonedaController extends Controller
 	
 			$transaccion = Transaccion::create([
 	    		'id_cliente' => \Auth::user()->cliente->id,
-	    		'id_tipo_transaccion'=>3
+	    		'id_tipo_transaccion'=>3,
 	    	]);
 	    	
 	    	$compra = CompraCriptomoneda::create([

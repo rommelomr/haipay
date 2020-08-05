@@ -37,8 +37,8 @@
 
 									<div class="input-field col s6">
 										<i class="material-icons prefix">credit_card</i>
-										<label for="new-pass">ID</label>
-										<input id="new-pass" type="text" name="id" value="{{old('id')}}">
+										<label for="new-id">ID</label>
+										<input id="new-id" type="text" name="id" value="{{old('id')}}">
 									</div>
 									<div class="input-field col s6">
 										<i class="material-icons prefix">locked</i>
@@ -47,13 +47,13 @@
 									</div>
 									<div class="input-field col s6">
 										<i class="material-icons prefix">phone</i>
-										<input id="new-pass" type="text" name="phone" value="{{old('phone')}}">
-										<label for="new-pass">Phone</label>
+										<input id="new-phone" type="text" name="phone" value="{{old('phone')}}">
+										<label for="new-phone">Phone</label>
 									</div>
 									<div class="input-field col s6">
 										<i class="material-icons prefix">event</i>
-										<input id="new-pass" type="date" name="date" value="{{old('date')}}">
-										<label for="new-pass">Birthday</label>
+										<input id="new-date" type="date" name="date" value="{{old('date')}}">
+										<label for="new-date">Birthday</label>
 									</div>
 									
 									<center>

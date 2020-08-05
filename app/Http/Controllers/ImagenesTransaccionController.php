@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ImagenTransaccion;
 use App\Transaccion;
 use App\Cliente;
+use App\Moderador;
 use Illuminate\Support\Facades\Storage;
 
 class ImagenesTransaccionController extends Controller
@@ -27,11 +28,16 @@ class ImagenesTransaccionController extends Controller
         ->firstOrFail();
 
         $name = $this->saveImage($request);
-        //Validar que la transacción se del usuario en cuestion
+        
+        $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_transaccion');
+        $transaccion->id_moderador = $moderador_turno->id;
+        $transaccion->save();
+
         ImagenTransaccion::create([
             'id_transaccion'=>$request->id_transaction,
             'nombre'=>$name
         ]);
+
         $transaccion->estado = 0;
         $transaccion->save();
         
@@ -40,6 +46,10 @@ class ImagenesTransaccionController extends Controller
     public function resendImage(Request $request){
         $name = $this->saveImage($request);
 
+        $transaccion = Transaccion::find($request->id_transaction);
+
+        $moderador_turno = Moderador::obtenerModeradorDeTurno();
+        $transaccion->id_moderador = $moderador_turno->id;
         $imagen = ImagenTransaccion::where('id_transaccion',$request->id_transaction)
 
         ->whereHas('transaccion',function($query){

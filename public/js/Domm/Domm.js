@@ -266,7 +266,7 @@ export let D = {
 
 	},
 	math:{
-		redondearDecimales:function(num,dec){
+		decimals:function(num,dec){
 
 			let original = parseFloat(num);
 

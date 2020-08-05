@@ -1,11 +1,23 @@
 import {D} from '../Domm/Domm.js';
 export let Me = {
 
-	updateUSDAmount:function(amount_to_retire,comissions,usd_amount_input,real_time_crypto_price){
+	updateComission:function(amount_to_retire,comissions){
+
+		let comission_input = document.getElementById('comission');
+		comission_input.value = D.math.decimals(parseFloat(comissions['network']) + (amount_to_retire.value*(comissions['retiro']/100)),2);
+
+		
+
+	},
+	updateUSDAmount:function(amount_to_retire,general_comission){
+
+		let real_time_crypto_price = document.getElementById('real-time-crypto-price');
+
+		let usd_amount_input = document.getElementById('amount_in_usd');	
 
 		let usd_amount = amount_to_retire.value * real_time_crypto_price.value;
 
-		usd_amount_input.value = (usd_amount - comissions['network']) - (usd_amount * (comissions['retiro']/100));
+		usd_amount_input.value = usd_amount - (usd_amount * (general_comission/100));
 
 
 	},

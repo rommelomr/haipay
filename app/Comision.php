@@ -92,5 +92,7 @@ class Comision extends Model
         return $arr['monto'];
 
     }
+    public static function addComission($monto,$comision){
+    }
 
 }

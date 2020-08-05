@@ -18,7 +18,7 @@
 
 3 moderadores-> Tipo de usuario
 	id_usuario: (fk)
-
+	turno_transaccion: tinyInt
 4 tipo_transaccion-> Guardará el nombre de los tipo de transacción  
 	nombre: varchar(50)
 
@@ -117,3 +117,14 @@
 Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
 	nombre: varchar(255)
 	tipo: char(1)
+
+Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los clientes
+    id_cliente: (fk)
+    id_hai_criptomoneda: (fk)
+    comision_red: decimal
+    comision_retiro: decimal
+    tipo: varchar(1)
+    monto_a_retirar: decimal 16,9
+    monto_total: decimal 16,9
+	estado: tinyInt
+	metodo_retiro: (fk)

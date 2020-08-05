@@ -16,7 +16,7 @@ class Cartera extends Model
  		return $this->hasOne('App\CryptoTag','id_cartera');   
  	}
  	
- 	public function clientes(){
+ 	public function cliente(){
 
  		return $this->belongsTo('App\Cliente','id_cliente');   
  	}

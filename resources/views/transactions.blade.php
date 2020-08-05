@@ -148,7 +148,7 @@
                 @if($transaction->id_tipo_transaccion == 1)
                   <tr>
                     <td><b>Transaction without commission</b></td>
-                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->internal->cliente->usuario->persona->nombre}} - {{$transaction->remesa->internal->cliente->usuario->persona->cedula}}</td>
+                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->remesaInterna->cliente->usuario->persona->nombre}} - {{$transaction->remesa->remesaInterna->cliente->usuario->persona->cedula}}</td>
                   </tr>
                   <tr>
                     <td><b>To pay</b></td>
@@ -159,7 +159,7 @@
                 @elseif($transaction->id_tipo_transaccion == 2)
                   <tr>
                     <td><b>Transaction</b></td>
-                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->external->noUsuario->persona->nombre}} - {{$transaction->remesa->external->noUsuario->persona->cedula}}</td>
+                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->remesaExterna->noUsuario->persona->nombre}} - {{$transaction->remesa->remesaExterna->noUsuario->persona->cedula}}</td>
                   </tr>
                   <tr>
                     <td><b>To pay</b></td>

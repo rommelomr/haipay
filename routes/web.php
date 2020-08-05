@@ -37,8 +37,11 @@ Route::group(['middleware' => ['tipo:1']], function() {
 
     //verify Payments views
     Route::get('payments/verify','ClientesController@verifyPyments')->name('verify_payments');
+
     Route::get('payments/canceled','ClientesController@canceledPyments')->name('canceled_payments');
+
     Route::get('payments/waiting','ClientesController@waitingPyments')->name('waiting_payments');
+    
     Route::get('payments/approved','ClientesController@approvedPyments')->name('approved_payments');
     
     //view in which user can see the crypto's price
@@ -57,7 +60,7 @@ Route::group(['middleware' => ['tipo:1']], function() {
     Route::get('withdraw/{siglas}', 'RetirosController@showWithdrawalsView')->name('withdraw');    
 
     //view in which user see the remittances waiting for an admin approve
-    Route::post('withdraw', 'RetirosController@withdwraw')->name('withdraw_post');    
+    Route::post('withdraw', 'RetirosController@withdraw')->name('withdraw_post');    
 
     //view in which user choose the second crypto of the pair to change
     Route::get('trade/{crypto}', 'ClientesController@trade')->name('trade');
@@ -86,6 +89,9 @@ Route::group(['middleware' => ['tipo:1']], function() {
     //view in which user see the remittances that has to verify
     Route::get('remittances/verify', 'RemesasController@verifyRemittances')->name('verify_remittances');
     
+    //view in which user see the approved remittances
+    Route::get('remittances/approved', 'RemesasController@approvedRemittances')->name('approved_remittances');
+    
     //view in which user see the remittances waiting for an admin approve
     Route::get('remittances/waiting', 'RemesasController@waitingRemittances')->name('waiting_remittances');
 
@@ -108,6 +114,22 @@ Route::group(['middleware' => ['tipo:2']], function() {
 
     //Moderator verify client's account
     Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');
+
+    //View in which moderators list their transactions for verify
+    Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');
+
+    //View in which moderators list their transactions for verify and a transaction selected
+    Route::get('transactions/{id}', 'TransaccionesController@seeTransaction');
+
+    //View in which moderators list all retirements they have to send
+    Route::get('withdrawals', 'RetirosController@withdrawals')->name('withdrawals');
+
+    //View in which moderators list all retirements they have to send
+    Route::get('withdrawals/{id_retiro}', 'RetirosController@seeWithdraw')->name('see_withdrawal');
+
+    //Script in which moderators complete the withdrawals
+    Route::post('complete_withdraw', 'RetirosController@completeWithdraw')->name('complete_withdraw');
+    
 });
 
 Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acquireCripto');
@@ -160,9 +182,6 @@ Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
 Route::get('clients', 'ClientesController@showViewClients')->name('clients');;
 Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');
 
-//Transactions
-Route::get('transactions', 'TransaccionesController@showViewTransactions')->name('transactions');
-Route::get('transactions/{id}', 'TransaccionesController@seeTransaction');
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 

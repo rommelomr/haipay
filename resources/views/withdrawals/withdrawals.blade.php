@@ -27,71 +27,93 @@
 										</center>
 									</div>
 								</div>
-								<div class="row">
-									<form action="{{route('withdraw_post')}}" method="post"></form>
-									<div class="col s6 input-field">
-										<label id="amount-message" for="amount-to-retire">Loading</label>
-										<input disabled id="amount-to-retire" type="text" class="tooltipped" data-position="left" data-tooltip="The minimum amount to witdhraw is the convertion of 5$" name="amount_to_retire">
-										<span hidden class="who-message helper-text">Who is going to pay the comission?</span>
-									</div>
-									<div class="col s6 input-field">
-										<span class="who-message helper-text">Charge comission from <a href="#help-modal" class="modal-trigger">?</a></span>
-										<select name="charge_from" class="browser-default">
-											<option disabled selected>Charge comission from</option>
-											<option value="0">Wallet</option>
-											<option value="1">Amount</option>
-										</select>
-									</div>
-								</div>
-								
-								<div class="row">
-									<div class="col s6 input-field">
-										<input id="amount_in_usd" type="text" value="0" disabled>
-										<span class="helper-text">Amount expressed in USD</span>
-									</div>
-									<div class="col s6 input-field">
-										<input id="" type="text" value="0" disabled>
-										<span class="helper-text">Comission</span>
+								<form action="{{route('withdraw_post')}}" method="post">
+									@csrf
+									<input hidden name="hai_crypto_id" value="{{$cartera->haiCriptomoneda->id}}">
+									<div class="row">
+										
+										<div class="col s6 input-field">
+											<label id="amount-message" for="amount-to-retire">Loading</label>
+											<input 
+												@if(!(old('amount_to_retire')))
+													disabled
+												@endif
+
+											id="amount-to-retire" type="text" class="tooltipped" data-position="left" data-tooltip="The minimum amount to witdhraw is the convertion of 5$" name="amount_to_retire" value="{{old('amount_to_retire')}}">
+											
+										</div>
+										<div class="col s6 input-field">
+											<span class="who-message helper-text">Charge comission from <a href="#help-modal" class="modal-trigger">?</a></span>
+											
+											<select id="charge-from" name="charge_from" class="browser-default">
+												<option disabled selected>Charge comission from</option>
+												<option
+													@if(old('charge_from') == "0")
+														selected
+													@endif
+												value="0">Wallet</option>
+												<option
+													@if(old('charge_from') == "1")
+														selected
+													@endif
+												value="1">Amount</option>
+											</select>
+										</div>
 									</div>
 									
-								</div>
+									<div class="row">
+										<div class="col s6 input-field">
+											<input id="amount_in_usd" type="text" value="0" disabled>
+											<span class="helper-text">Amount expressed in USD</span>
+										</div>
+										<div class="col s6 input-field">
+											<input id="comission" type="text" value="0" disabled>
+											<span class="helper-text">Comission</span>
+										</div>
+										
+									</div>
 								
-								<div class="row">
+									<div class="row">
 
-									<div class="col s12">
+										<div class="col s12">
 
-										<select name="withdraw_method_id" class="browser-default">
+											<select name="withdraw_method_id" class="browser-default">
 
-											<option disabled selected>Withdraw method</option>
+												<option disabled selected>Withdraw method</option>
 
-											@foreach($metodos_retiro as $metodo_retiro)
+												@foreach($metodos_retiro as $metodo_retiro)
 
-												<option value="{{$metodo_retiro->id}}">
-													{{$metodo_retiro->nombre}}
-												</option>
+													<option
+														@if(old('withdraw_method_id') == $metodo_retiro->id)
+															selected
+														@endif
+													value="{{$metodo_retiro->id}}">
+														{{$metodo_retiro->nombre}}
+													</option>
 
-											@endforeach
+												@endforeach
 
-										</select>
+											</select>
+
+										</div>
 
 									</div>
 
-								</div>
+									<div class="row">
 
-								<div class="row">
+										<div class="col s12">
 
-									<div class="col s12">
+											<center>
 
-										<center>
+												<button class="btn green">Withdraw</button>
 
-											<button class="btn green">Withdraw</button>
+											</center>
 
-										</center>
+										</div>
 
 									</div>
-
-								</div>
 								
+								</form>
 							</div>
 
 							<div class="row">
@@ -108,7 +130,7 @@
 			</div>
 		</div>
 	</div>
-<div>
+<div >
 	<input id="real-time-crypto-price">
 </div>
 <div id="help-modal" class="modal">
@@ -135,15 +157,28 @@
 
 	window.addEventListener('load',function(){
 
-		let crypto = JSON.parse(D.dom.htmlDecode('{{$api_data}}'));
+		@if(session('messages'))
 
-		let usd_amount_input = document.getElementById('amount_in_usd');
-		let amount_to_retire = document.getElementById('amount-to-retire');
-		let real_time_crypto_price = document.getElementById('real-time-crypto-price');
+			@foreach(session('messages') as $messages)
+
+			  M.toast({html: '{{$messages}}'})
+
+			@endforeach
+
+		@endif
+		
+		@if ($errors->any())
+            @foreach ($errors->all() as $error)
+	  			M.toast({html: '{{ $error }}'})
+            @endforeach
+		@endif
+		
+		let crypto = JSON.parse(D.dom.htmlDecode('{{$api_data}}'));
 
 		let comissions = [];
 		comissions['network'] = '{{$comision_red}}';
 		comissions['retiro'] = '{{$comision_retiro}}';
+		comissions['general'] = '{{$comision_general}}';
 
 		console.log(comissions);
 
@@ -151,8 +186,12 @@
 
 		D.addEvent.onKeyUp('#amount-to-retire',function(el,ev){
 
-			Me.updateUSDAmount(el,comissions,usd_amount_input,real_time_crypto_price);
+			Me.updateUSDAmount(el,comissions['general']);
+			Me.updateComission(el,comissions);
 		});
+
+
+		
 	});
 
 </script>

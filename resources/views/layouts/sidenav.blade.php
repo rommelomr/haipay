@@ -54,9 +54,11 @@
         <li><a class="waves-effect" href="{{route('users')}}">Users/Clients</a></li>
         <li><a class="waves-effect" href="{{route('comissions')}}">Set comissions</a></li>
 
+      @elseif($auth->tipo == 2)
+        <li><a class="waves-effect" href="{{route('transactions')}}">Transactions</a></li>
+        <li><a class="waves-effect" href="{{route('withdrawals')}}">Withdrawals</a></li>
       @endif
 
-      <li><a class="waves-effect" href="{{route('transactions')}}">Transactions</a></li>
       <li><a class="waves-effect" href="{{route('all_remittances')}}">Remittances</a></li>
       
     @endif

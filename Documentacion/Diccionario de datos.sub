@@ -20,6 +20,7 @@
 
 3 Moderadores-> Tipo de usuario
 	id_usuario: (fk)
+	turno_transaccion: Guardará un numero entre 1 y 0 que indicará si el moderadór está en cola para que se le asigne una transacción (de cualquier tipo. Verificación de compra, remesas, etc).
 
 4 Tipo_Transaccion-> Guardará el nombre de los tipo de transacción  
 	nombre: nombre de las transacciones
@@ -149,3 +150,15 @@
 Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
 	nombre: varchar(255)
 	tipo: Letra que indicará el tipo de consulta a la url: W: websocket H:Http
+
+Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los clientes
+    id_cliente: (fk)
+    id_hai_criptomoneda: (fk)
+    id_moderador: (fk)
+    comision_red: monto de la comision de red
+    comision_retiro: porcentaje de la comision de retiro del momento
+    tipo: w: wallet (si la comision se descuenta de la cartera) o a: amount (si la comision se descuenta del monto a retirar)
+    monto_total: monto que se le va a transferir al cliente
+    monto_a_retirar: monto que ingresa el usuario para retirar
+    estado: 0: sin enviar 1:enviada
+    id_metodo_retiro: (fk) indica si a la persona se le transferirá a la wallet 0 o por moncash (1)
