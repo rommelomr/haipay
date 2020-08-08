@@ -21,8 +21,20 @@
 
     <li><div class="divider"></div></li>
     @if($auth->tipo == 1)
-      <li><a class="waves-effect" href="{{route('edit_profile')}}">Profile</a></li>
-
+      <!--li><a class="waves-effect" href="{{route('edit_profile')}}">Profile</a></li-->
+      <li>
+        <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header">Profile<i class="material-icons">arrow_drop_down</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="{{route('edit_profile',['p'=>1])}}">Edit profile</a></li>
+                  <li><a href="{{route('edit_profile',['p'=>2])}}">Portfolio</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+      </li>
       <li><a href="{{route('dashboard_clients')}}">Buy/Sell/Exchange</a></li>
 
     <li>
@@ -89,7 +101,12 @@
     </li-->
     <li><a class="waves-effect" href="{{route('logout')}}">Log out</a></li>
   </ul>
-
+  <div class="fixed-action-btn hide-on-large-only">
+    
+    <a data-target="slide-out" class="sidenav-trigger btn-floating indigo">
+      <i class="material-icons">menu</i>
+    </a>
+  </div>
 <script>
   
   document.addEventListener('DOMContentLoaded', function() {
@@ -98,6 +115,9 @@
 
     var elems_colappsible = document.querySelectorAll('.collapsible');
     var instances_collapsible = M.Collapsible.init(elems_colappsible);
+
+    var action_elems = document.querySelectorAll('.fixed-action-btn');
+    var instances = M.FloatingActionButton.init(action_elems);
   });
 
 </script>

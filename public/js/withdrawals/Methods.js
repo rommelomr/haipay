@@ -17,6 +17,8 @@ export let Me = {
 
 		let usd_amount = amount_to_retire.value * real_time_crypto_price.value;
 
+		console.log(usd_amount);
+		
 		usd_amount_input.value = usd_amount - (usd_amount * (general_comission/100));
 
 

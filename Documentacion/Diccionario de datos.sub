@@ -162,3 +162,9 @@ Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los cliente
     monto_a_retirar: monto que ingresa el usuario para retirar
     estado: 0: sin enviar 1:enviada
     id_metodo_retiro: (fk) indica si a la persona se le transferirá a la wallet 0 o por moncash (1)
+
+Receptores-> tabla que guardará las personas que reciben remesas de los usuarios (tabla pivote entre clientes y persona)
+
+	id_cliente: (fk) cliente que hizo la remesa
+	id_persona: (fk) persona que recibe la remesa (se utilizará esta tabla porque puede ser un usuario o un no usuario el que se registe. y si el no usuario se registra, podria dar conflicto)
+	

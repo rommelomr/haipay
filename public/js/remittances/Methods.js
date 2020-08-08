@@ -18,7 +18,7 @@ export let Me = {
 
 					input_receiver_name.value = '';
 					input_receiver_name.removeAttribute('readonly');
-					input_receiver_name.focus();
+					
 
 					if(id_not_found_message.hasAttribute('hidden')){
 						id_not_found_message.classList.add('helper-text');
@@ -34,7 +34,7 @@ export let Me = {
 					input_receiver_name.value = data.data.name;
 					let input_amount = document.getElementById('monto');
 					send_button.removeAttribute('disabled');
-					input_amount.focus();
+					
 
 				}
 			},

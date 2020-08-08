@@ -50,7 +50,6 @@ class PersonasController extends Controller
     }
     */
     public function showViewEditProfile(){
-
     	$data = User::with(['persona','cliente'=>function($query){
             $query->with('imagenesVerificacion');
         }])->where('id_persona',\Auth::user()->id_persona)->first();
@@ -82,12 +81,21 @@ class PersonasController extends Controller
         }])->where('id_cliente',$data->cliente->id)->paginate(10);
         
         //Validar si es admin o moderador no aplican los mensajes de cuenta verificada o no
+        $pestana = 0;
+        if(isset($_GET['p'])){
 
+            if($_GET['p'] == 1){
+                $pestana = 1;
+            }elseif($_GET['p'] == 2){
+                $pestana = 2;
+            }
+        }
     	return view('auth.edit_profile',[
     		'current_user_data' => $data,
             'incompleted_profile' => $incompleted_profile,
             'account_verified' => $account_verified,
             'carteras' => $carteras,
+            'pestana' => $pestana,
     	]);
     }
     public function saveProfile(Request $req){

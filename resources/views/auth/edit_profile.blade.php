@@ -21,8 +21,12 @@
 
 						<ul class="tabs">
 
-					        <li class="tab col s6"><a href="#test1">Info</a></li>
-					        <li class="tab col s6"><a @if(session('wallet')) class="active" @endif href="#test2">Wallet</a></li>
+					        <li class="tab col s6"><a
+					        	@if($pestana == 1)
+					        		class="active"
+					        	@endif
+					        	href="#test1">Info</a></li>
+					        <li class="tab col s6"><a @if(session('wallet') || $pestana == 2) class="active" @endif href="#test2">Wallet</a></li>
 
 					    </ul>
 

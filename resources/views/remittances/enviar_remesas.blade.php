@@ -40,13 +40,10 @@
 						    						<input autocomplete="off" id="monto" type="text" name="amount_to_send" value="{{old('amount_to_send')}}">
 						    					</div>
 						    					<div class="col s12 input-field">
-						    						<input
-							    					@if(!$errors->any())
-							    						readonly
-							    					@endif	
-						    						placeholder="Receiver's name" id="nombre_receptor" type="text" name="receivers_name" value="{{old('receivers_name')}}"
-						    						autocomplete="off"
-						    						>
+						    						
+						    						<input placeholder="Receiver's name" id="nombre_receptor" type="text" name="receivers_name" value="{{old('receivers_name')}}"
+						    						autocomplete="off">
+
 						    						<span class="id-not-found-message red-text" hidden>You're about to send money to a person who is not in our records. Please, introduce the receiver's full name.</span>
 						    					</div>
 
@@ -234,29 +231,12 @@
 
 		D.addEvent.onKeyUp('#cedula_receptor',function(el,ev){
 
-
-			if(ev.which == 13){
-
-				input_receiver_name.value = 'loading';
-				input_receiver_name.setAttribute('readonly',true);
-				Me.consultarPersonasPorCedula(id_not_found_message,send_button,input_receiver_name,el.value,"{{route('consultar_persona_por_cedula')}}");
-
-			}else{
-
-				if(!input_receiver_name.hasAttribute('readonly')){
-
-					input_receiver_name.setAttribute('readonly',true);
-
-				}
-
-				if(input_receiver_name.value != ''){
-
-					input_receiver_name.value = '';
-					send_button.setAttribute('disabled',true);
-
-				}
+			if(el.value != ''){
 				
+				input_receiver_name.value = 'loading';
+				Me.consultarPersonasPorCedula(id_not_found_message,send_button,input_receiver_name,el.value,"{{route('consultar_persona_por_cedula')}}");
 			}
+
 		});
 		D.addEvent.onKeyUp('#nombre_receptor',function(el,ev){
 

@@ -128,3 +128,8 @@ Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los cliente
     monto_total: decimal 16,9
 	estado: tinyInt
 	metodo_retiro: (fk)
+
+Receptores-> tabla que guardará las personas que reciben remesas de los usuarios (tabla pivote entre clientes y persona)
+
+	id_cliente: (fk) 
+	id_persona: (fk)
