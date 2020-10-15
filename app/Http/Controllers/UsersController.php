@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Persona;
+use App\Cliente;
+use App\Transaccion;
+use App\Deposito;
+use App\CompraCriptomoneda;
+use App\Remesa;
+use App\Retiro;
 use App\Moderador;
 use App\User;
 use App\DeletedUser;
@@ -68,6 +74,16 @@ class UsersController extends Controller
         $user->verificado = $request->esta_verificado;
 
         $user->push();
+        
+        if($request->esta_activo == 0 && $user->tipo == 2){
+
+            $user->moderador->otorgarTareas('turno_cliente', Cliente::class);
+            $user->moderador->otorgarTareas('turno_compra', CompraCriptomoneda::class);
+            $user->moderador->otorgarTareas('turno_remesa', Remesa::class);
+            $user->moderador->otorgarTareas('turno_deposito', Deposito::class);
+            $user->moderador->otorgarTareas('turno_retiro', Retiro::class);
+
+        }
 
         return redirect()->back()->with([
             'Messages' => [

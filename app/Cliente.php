@@ -16,6 +16,10 @@ class Cliente extends Model
     public function imagenesVerificacion(){
     	return $this->hasMany('App\ImagenVerificacion','id_cliente');
     }
+    public function moderadorVerificador(){
+        return $this->belongsTo('App\Moderador','id_moderador_verificador');
+    }
+    
     public function carteras(){
     	return $this->hasMany('App\Cartera','id_cliente');
     }
@@ -31,6 +35,10 @@ class Cliente extends Model
     public function clienteReceptores(){
     	return $this->hasMany('App\ClienteReceptor','id_cliente');
     }
+    public function referido(){
+        return $this->hasOne('App\Referido','id_referido');
+    }
+    
     
     
 }

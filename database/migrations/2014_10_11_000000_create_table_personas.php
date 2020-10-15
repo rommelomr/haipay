@@ -16,7 +16,7 @@ class CreateTablePersonas extends Migration
         Schema::create('personas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre',255)->nullable();
-            $table->string('cedula',20)->nullable()->unique();
+            $table->string('cedula',20)->unique();
             $table->tinyInteger('es_usuario')->default(1);
             $table->timestamps();
         });

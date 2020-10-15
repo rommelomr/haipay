@@ -11,28 +11,51 @@ class TransaccionesController extends Controller
 {
 
     private function getTransactions(){
-    	return $transacciones = Transaccion::with(['tipoTransaccion','cliente'=>function($query){
-    		$query->with(['usuario'=>function($query){
+        $moderador = \Auth::user()->moderador;
+    	return $transacciones = Transaccion::with([
+            'tipoTransaccion',
+            'cliente'=>function($query){
+
+    		  $query->with(['usuario'=>function($query){
     			$query->with('persona');
-    		}]);
-    	}])->where('estado',0)->orderBy('created_at','DESC')->paginate(10,['*'],'transacciones');
+    		  }]);
+
+    	}])
+        ->where(function($query) use ($moderador){
+
+            $query->whereHas('remesa',function($query) use ($moderador){
+
+                $query->where('id_moderador',$moderador->id);
+
+            })->orWhereHas('compraCriptomoneda',function($query) use ($moderador){
+
+                $query->where('id_moderador',$moderador->id);
+
+            });
+
+        })
+        ->where('estado',0)
+        ->orderBy('created_at','DESC')
+        ->paginate(10,['*'],'transacciones');
     }
     public function changeStateTransaction(Request $request){
         
         $request->validate([
-            'id_transaction' => ['required','exists:transacciones,id'],
+            'transaction_id' => ['required','exists:transacciones,id'],
             'id_estado' => ['required','in:1,2']
         ]);
 
         $transaccion = Transaccion::with(['cliente','compraCriptomoneda'])
-        ->find($request->id_transaction);
+        ->find($request->transaction_id);
         
         $transaccion->estado = $request->id_estado;
+
         $transaccion->save();
+
 
         if($request->id_estado == 1){
 
-            $message = 'Transacción aprobada';
+            $message = 'Transaction approved';
             $cartera = Cartera::firstOrNew([
                 'id_cliente' => $transaccion->cliente->id,
                 'id_hai_criptomoneda' => $transaccion->compraCriptomoneda->id_hai_criptomoneda
@@ -60,26 +83,47 @@ class TransaccionesController extends Controller
     public function seeTransaction($id){
 
         $transaccion = Transaccion::with([
+
             'cliente'=>function($query){
-                $query->with(['usuario'=>function($query){
-                    $query->with('persona');
-                },'imagenesVerificacion'=>function($query){
-                    $query->where('tipo',0);
-                }]);
+
+                $query->with([
+
+                    'usuario'=>function($query){
+
+                        $query->with('persona');
+
+                    },
+                    'imagenesVerificacion'=>function($query){
+
+                        $query->where('tipo',0);
+
+                    }
+                ]);
+
             }
             ,'imagen'
+
             ,'compraCriptomoneda'=>function($query){
                 $query->with(['haiCriptomoneda','moneda']);
             }
             ,'remesa'=>function($query){
                 $query->with([
                     'metodoRetiro',
+                    'metodoPago',
+
                     'remesaInterna'=>function($query){
-                        $query->with(['cliente'=>function($query){
-                            $query->with(['usuario'=>function($query){
-                                $query->with('persona');
-                            }]);
-                        }]);
+
+                        $query->with([
+
+                            'cliente'=>function($query){
+
+                                $query->with(['usuario'=>function($query){
+
+                                    $query->with('persona');
+
+                                }]);
+                            }
+                        ]);
                     },
                     'remesaExterna'=>function($query){
                         $query->with(['noUsuario'=>function($query){
@@ -92,6 +136,7 @@ class TransaccionesController extends Controller
         ])->find($id);
         
         $transacciones = $this->getTransactions();
+
         return view('transactions',[
             'transacciones' => $transacciones,
             'watch' => true,

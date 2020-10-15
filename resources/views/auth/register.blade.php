@@ -22,14 +22,14 @@
                         @csrf
                         <div class="col s10 offset-s1">
                             <div class="input-field">
-                                <label for="name">Name</label>
+                                <label for="name">Name <span style="color:salmon">*</span></label>
                                 <input id="name" type="text" name="name" value="{{old('name')}}">
-                                <span style="color:salmon">*</span>
+                                
                             </div>
                             <div class="input-field">
-                                <label for="email">Email</label>
+                                <label for="email">Email <span style="color:salmon">*</span></label>
                                 <input id="email" type="text" name="email" value="{{old('email')}}">
-                                <span style="color:salmon">*</span>
+                                
                             </div>              
                             <div class="input-field">
                                 <label for="id">ID</label>
@@ -41,15 +41,24 @@
                             </div>              
                                       
                             <div class="input-field">
-                                <label for="contrasena">Password</label>
+                                <label for="contrasena">Password <span style="color:salmon">*</span></label>
                                 <input id="contrasena" type="password" name="password">
-                                <span style="color:salmon">*</span>
+                                
                             </div>
                             <div class="input-field">
-                                <label for="reptir">Repeat Password</label>
+                                <label for="reptir">Repeat Password <span style="color:salmon">*</span></label>
                                 <input id="reptir" type="password" name="password_confirmation">
-                                <span style="color:salmon">*</span>
+                                
                             </div>
+                            <div class="input-field">
+                                <label for="register_code">Register Code</label>
+                                <input id="register_code" type="text" name="register_code">
+                            </div>
+                            
+                            @if(isset($_GET['r']))
+                                <input name="referred" value="{{$_GET['r']}}" hidden>
+                            @endif
+                            
                             <center>
                                 <button class="btn indigo">Create Account</button>
                             </center>

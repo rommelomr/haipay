@@ -123,88 +123,109 @@
 											</div>
 										</div>
 									</form>
+									<div class="row">
+										<b>Referal Link</b>: {{route('register',['r'=>\Auth::user()->id])}}
+									</div>
 					    		</div>
 					    		<div class="col l6 s12">
-									@if(!$account_verified)
-										<label class="red-text text-lighten-2">Verify you account now!</label>
-									@else
-										<label class="blue-text">Account Verified!</label>
-									@endif
-					    		
-									<form method="post" action="{{url('file_Verify')}}" enctype="multipart/form-data">
-										@csrf
-										<div class="row">
+					    			<center>
+										@if(!$account_verified)
+											<label class="red-text text-lighten-2">Verify you account now!</label>
+										@else
+											<label class="blue-text">Account Verified!</label>
+										@endif
+					    			</center>
+									<div class="card-panel">
 
-											@php
-												$imagen = $current_user_data->cliente->imagenesVerificacion->all();
-											@endphp
-
-											<?php $show_button = false; ?>
-											@for($i = 0; $i < 2; $i++)
-												<?php 
-													$hay_imagen = isset($imagen[$i]);
-												 ?>
-												@if((($hay_imagen) && ($imagen[$i]->estado===2)) || (!$hay_imagen))
-													<?php 
-														if(!$show_button){
-															$show_button = true;
-														}
-													?>
-													@if($hay_imagen)
-														<div class="col s6">
-															<div class="card">
-														        <div class="card-image">
-														          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
-														        </div>
-														        <div class="card-content">
-														          <a class="">Image Refused</a>
-																	<div class="file-field input-field">
-																      <div class="btn">
-																        <span>Picture</span>
-																        <input type="file" name="file{{$i}}">
-																      </div>
-																      <div class="file-path-wrapper">
-																        <input class="file-path validate" type="text" placeholder="Upload your pictures">
-																      </div>
-																    </div>
-														        </div>
-														    </div>
+										@if($id == null || $id->estado == 2)
+												<form method="post" action="{{url('verify_client_image')}}" enctype="multipart/form-data">
+													@csrf
+													<input hidden value="0" name="type">
+													<div class="row">
+														<div class="col s12">
+															<center>
+																ID Image
+															</center>
 														</div>
-													@else
-														<div class="col s6 file-field input-field">
-													      <div class="btn">
-													        <span>Pictures</span>
-													        <input type="file" name="file{{$i}}">
-													      </div>
-													      <div class="file-path-wrapper">
-													        <input class="file-path validate" type="text" placeholder="Upload your pictures">
-													      </div>
-													    </div>
-													@endif
-												@elseif(($hay_imagen) && ($imagen[$i]->estado===0))
-													<div class="col s6">
-														<div class="card">
-													        <div class="card-image">
-													          <img class="materialboxed" src="{{Storage::url($imagen[$i]->nombre)}}" height="150" width="150">
-													        </div>
-													        <div class="card-content">
-													          <a href="#">Waiting for approval</a>
-													        </div>
-													    </div>
+														<div class="col s12 input-field">
+															<input type="file" name="picture">
+														</div>
+														<center>
+															<div class="col s12 input-field">
+																<button class="btn green">Send</button>
+															</div>
+														</center>
 													</div>
-												@endif
-
-											@endfor
-											@if($show_button)
-											    <div clas="col s12">
-											    	<center>
-											    		<button class="indigo btn">Upload</button>
-											    	</center>
-											    </div>
+												</form>
+											@if($id != null && $id->estado == 2)
+												<div class="card-action">
+													<center>
+														<span class="red-text">Last image refused</span>
+													</center>
+												</div>
 											@endif
-										</div>
 
-									</form>
+										@elseif($id != null && $id->estado == 0)
+											<center>
+												<span class="blue-text">Id image waiting for approval</span>
+											</center>
+										@elseif($id != null && $id->estado == 1)
+											<div class="card-image">
+												<img src="{{Storage::url($id->nombre)}}" class="responsive-img">
+											</div>
+											<div class="card-action">
+												<center>
+													<span class="blue-text">Image Approved</span>
+												</center>
+											</div>
+										@endif
+											
+									</div>
+									<div class="card-panel">
+										@if($date == null || $date->estado == 2)
+											<form method="post" action="{{url('verify_client_image')}}" enctype="multipart/form-data">
+												@csrf
+												<input hidden value="1" name="type">
+												<div class="row">
+													<div class="col s12">
+														<center>
+															Current date
+														</center>
+													</div>
+													<div class="col s12 input-field">
+														<input type="file" name="picture">
+													</div>
+													<center>
+														<div class="col s12 input-field">
+															<button class="btn green">Send</button>
+														</div>
+													</center>
+												</div>
+											</form>
+											@if($date != null && $date->estado == 2)
+												<div class="card-action">
+													<center>
+														<span class="red-text">Last image refused</span>
+													</center>
+												</div>
+											@endif
+
+										@elseif($date != null && $date->estado == 0)
+											<center>
+												<span class="blue-text">Date image waiting for approval</span>
+											</center>
+										@elseif($date != null && $id->estado == 1)
+											<div class="card-image">
+												<img src="{{Storage::url($date->nombre)}}" class="responsive-img">
+											</div>
+											<div class="card-action">
+												<center>
+													<span class="blue-text">Image Approved</span>
+												</center>
+											</div>
+										@endif											
+										
+									</div>
 					    
 						    	</div>
 						    </div>
@@ -232,7 +253,7 @@
 								    						<div class="row">
 								    							<div class="col s12">
 								    								
-												    				<b>Adress:</b><br>
+												    				<b>Adress: <span class="blue-text tooltipped" data-tooltip="If the adress is not setted, you can't withdraw to an external wallet" data-position="top">?</span></b><br>
 												    				<a href="#modify-modal" class="adress-link tooltipped modal-trigger" data-position="top" data-tooltip="Click to insert a new adress" data-route="{{route('update_adress')}}" data-string_type="adress" data-crypto_id="{{$cartera->haiCriptomoneda->id}}">
 												    				@if($cartera->direccion == null)
 												    					Enter adress
@@ -260,13 +281,9 @@
 								    						@endif
 								    					</div>
 								    					<div class="col s3 center">
-										    				@if($cartera->direccion == null)
-										    					You can't withdraw. Please entered the addres.<br>
-										    				@else
-												    			<a class="btn btn-small blue" href="{{route('withdraw',$cartera->haiCriptomoneda->moneda->siglas)}}">
-												    				Withdraw
-												    			</a>
-										    				@endif
+											    			<a class="btn btn-small blue" href="{{route('withdraw',$cartera->haiCriptomoneda->moneda->siglas)}}">
+											    				Withdraw
+											    			</a>
 								    					</div>
 								    					<div class="col s3 center">
 

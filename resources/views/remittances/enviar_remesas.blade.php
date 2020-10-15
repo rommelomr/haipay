@@ -64,7 +64,9 @@
 							    					</div>
 							    					<div class="col s6 input-field">
 														<select name="retirement_method" class="browser-default">
+
 															<option disabled selected value="none">Retirement Method</option>
+															
 															@foreach($retirement_methods as $retirement_method)
 																<option value="{{$retirement_method->id}}"
 																	@if(old('retirement_method') == $retirement_method->id)
@@ -81,7 +83,7 @@
 				    					<div class="row">
 				    						<div class="col s12">
 				    							<center>
-				    								<a disabled id="boton_enviar" href="#modal-confirm" class="btn btn-small green modal-trigger">Send</a>
+				    								<a id="" href="#modal-confirm" class="btn btn-small green modal-trigger">Send</a>
 				    							</center>
 				    						</div>
 				    					</div>
@@ -232,7 +234,7 @@
 		D.addEvent.onKeyUp('#cedula_receptor',function(el,ev){
 
 			if(el.value != ''){
-				
+
 				input_receiver_name.value = 'loading';
 				Me.consultarPersonasPorCedula(id_not_found_message,send_button,input_receiver_name,el.value,"{{route('consultar_persona_por_cedula')}}");
 			}

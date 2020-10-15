@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Persona;
 use App\Cliente;
+use App\Referido;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -43,20 +44,113 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    private function makeRegister($data,$persona){
+
+        $user = User::create([
+
+            'id_persona' => $persona->id,
+            'email' => $data['email'],
+            'telefono' => $data['phone'],
+            'tipo' => 1,
+            'estado' => 1,
+            'password' => Hash::make($data['password'])
+
+        ]);
+
+        $cliente = Cliente::create([
+            'id_usuario' => $user->id,
+        ]);
+
+        //Si el registro es gracias a un referido:
+        if($data->referred != null){
+
+            //Se crea el referido
+            Referido::create([
+                'id_cliente' => $data->referred,
+                'id_referido' => $cliente->id
+            ]);
+            
+        }
+
+        return redirect()->route('login');
+
+    }
     protected function registerClient(Request $data){
 
         $this->validate($data,[
-            'id' => ['nullable', 'unique:personas,cedula', 'max:20','min:0'],
+            'id' => ['required', 'max:20', 'min:0'],
             'phone' => ['nullable', 'unique:users,telefono', 'max:20','min:0'],
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'referred' => ['nullable', 'exists:users,id'],
         ]);
 
-        $persona = Persona::create([
+        //Consulto a la persona por cédula
+        $persona = Persona::where('cedula',$data->id)
+        ->with([
+            'noUsuario',
+            'usuario'=>function($query){
+                $query->with('cliente');
+            },
+        ])->first();
+
+        //Si la persona no existe se hace registro normal
+        if($persona == null){
+
+            $persona = Persona::create([
+                'nombre'=>$data['name'],
+                'cedula'=>$data['id'],
+            ]);
+
+            return $this->makeRegister($data,$persona);
+        }else{
+
+            $person_is_client = isset($persona->usuario->cliente) && $persona->usuario->cliente != null;
+
+            $person_is_only_no_user = $persona->usuario == null && $persona->noUsuario != null;
+
+            if($person_is_client){
+
+                return redirect()->route('register')->with(['messages'=>[
+                    'The ID has already been taken.'
+                ]]);
+
+            }else if($person_is_only_no_user){
+
+                $right_register_code = $data->register_code == $persona->noUsuario->codigo_registro;
+                
+                if($right_register_code){
+                    $persona->es_usuario = 1;
+                    $persona->save();
+                    return $this->makeRegister($data,$persona);
+
+                    
+                }else{
+                    return redirect()->route('register')->with(['messages'=>[
+                        'Register code is not valid.'
+                    ]]);    
+                }
+
+            }else{
+                return redirect()->route('register')->with(['messages'=>[
+                    'There was a problen with the register. Please, try again.'
+                ]]);
+            }
+        }
+
+        //Si la persona existe
+
+            //si la persona tiene cliente, se devuelve un error: ya existe una persona registrada con esta cédula
+
+            //Si la person NO tiene cliente (y está en no usuarios): Reenviar a la interfaz donde se ingresa el código de verificacion
+
+/*
+        $persona = Persona::firstOrcreate([
             'nombre'=>$data['name'],
             'cedula'=>$data['id'],
         ]);
+
         $user = User::create([
 
             'id_persona' => $persona->id,
@@ -67,11 +161,23 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Cliente::create([
+        $cliente = Cliente::create([
             'id_usuario' => $user->id,
         ]);
 
+        //Si el registro es gracias a un referido:
+        if($data->referred != null){
+
+            //Se crea el referido
+            Referido::create([
+                'id_cliente' => $data->referred,
+                'id_referido' => $cliente->id
+            ]);
+            
+        }
+
         return redirect()->route('login');
+*/
         
     }
     private function validateClient($data){

@@ -44,6 +44,7 @@
             <div class="collapsible-body">
               <ul>
                 <li><a href="{{route('remittances')}}">Send</a></li>
+                <li><a href="{{route('my_remittances')}}">Remittances to me</a></li>
                 <li><a href="{{route('verify_remittances')}}">Verify</a></li>
               </ul>
             </div>
@@ -59,16 +60,22 @@
       <li><a class="waves-effect" href="#">Referrals</a></li>
 
       <li><a class="waves-effect" href="#">Payment Settings</a></li>
+
+      <li><a class="waves-effect" href="{{route('my_deposits')}}">My deposits</a></li>
+      
     @else
 
       @if($auth->tipo == 3)
 
         <li><a class="waves-effect" href="{{route('users')}}">Users/Clients</a></li>
         <li><a class="waves-effect" href="{{route('comissions')}}">Set comissions</a></li>
+        <li><a class="waves-effect" href="{{route('root_withdrawals')}}">Withdrawalls</a></li>
 
       @elseif($auth->tipo == 2)
         <li><a class="waves-effect" href="{{route('transactions')}}">Transactions</a></li>
         <li><a class="waves-effect" href="{{route('withdrawals')}}">Withdrawals</a></li>
+        <li><a class="waves-effect" href="{{route('mod_deposits')}}">Deposits</a></li>
+        <li><a class="waves-effect" href="{{route('clients')}}">Clients</a></li>
       @endif
 
       <li><a class="waves-effect" href="{{route('all_remittances')}}">Remittances</a></li>

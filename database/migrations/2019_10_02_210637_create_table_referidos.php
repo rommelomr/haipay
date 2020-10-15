@@ -18,7 +18,7 @@ class CreateTableReferidos extends Migration
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('clientes');
             $table->unsignedBigInteger('id_referido');
-            $table->foreign('id_referido')->references('id')->on('referidos');
+            $table->foreign('id_referido')->references('id')->on('clientes');
             
             $table->timestamps();
         });

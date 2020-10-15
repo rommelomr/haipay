@@ -50,6 +50,9 @@ Route::group(['middleware' => ['tipo:1']], function() {
 	//view in which user select how much of a crypto is going to buy
     Route::get('buy_crypto/{crypto}', 'ClientesController@buyCripto')->name('buy_crypto');
     
+    //view in which user select how much of a crypto is going to buy (with)
+    Route::get('deposit_crypto/{crypto}', 'ClientesController@depositCrypto')->name('deposit_crypto');
+    
     //Script to make the buy
     Route::post('buy_crypto', 'ComprasCriptomonedaController@buyCripto')->name('buy_crypto_post');
 
@@ -104,11 +107,26 @@ Route::group(['middleware' => ['tipo:1']], function() {
     //view in which user see the remittances waiting for an admin approve
     Route::post('update_tag', 'ClientesController@updateTag')->name('update_tag');
     
+    //Script to verify a client verification image
+    Route::post('verify_client_image', 'PersonasController@verifyClientImage')->middleware('auth')->name('verify_client_image');
 
+    //View in which client can modify their personal info
+    Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');
+   
+    //View in which clients can list remittances that other people have made them
+    Route::get('my_remittances', 'ClientesController@showMyRemittancesView')->middleware('auth')->name('my_remittances');
+    
+    //Script that save a client's deposit
+    Route::post('send_deposit', 'DepositosController@saveDeposit')->name('send_deposit');
+   
+    //View in which clients can list deposits they have made
+    Route::get('my_deposits', 'DepositosController@listClientDeposits')->name('my_deposits');
+    
 });
 
 //Moderator
 Route::group(['middleware' => ['tipo:2']], function() {
+    
     //Client verify it's own account
     Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');
 
@@ -129,6 +147,22 @@ Route::group(['middleware' => ['tipo:2']], function() {
 
     //Script in which moderators complete the withdrawals
     Route::post('complete_withdraw', 'RetirosController@completeWithdraw')->name('complete_withdraw');
+
+    //View in which moderators list the clients whom they must verify
+    Route::get('clients', 'ClientesController@showViewClients')->name('clients');
+
+    //View in which moderator can see clients verification images and approve/refuse
+    Route::get('clients/verify_images/{id}', 'ClientesController@verifyImages')->name('watch_client_images');
+
+    //View in which moderator can see clients verification images and approve/refuse
+    Route::get('mod_deposits', 'DepositosController@listModDeposits')->name('mod_deposits');
+
+    //Script in which moderators complete deposits
+    Route::post('verify_deposit', 'DepositosController@verifyDeposit')->name('verify_deposit');
+
+    //Script in which moderators complete deposits
+    Route::post('deliver_remittance', 'RemesasController@deliverRemittance')->name('deliver_remittance');
+
     
 });
 
@@ -137,7 +171,7 @@ Route::post('acquireCripto', 'CriptomonedasController@acquireCripto')->name('acq
 //Moderator and Admin
 Route::group(['middleware' => ['tipo:2,3']], function() {
 
-    Route::get('change_state_remittance', 'RemesasController@chageState')->name('change_state_remittance');
+    Route::post('change_state_remittance', 'RemesasController@changeStateRemittance')->name('change_state_remittance');
     Route::get('see_remittance/{id}', 'RemesasController@seeRemittance')->name('see_remittance');
     Route::get('all_remittances', 'RemesasController@showAllRemittancesView')->name('all_remittances');
     Route::get('search_remittances', 'RemesasController@searchRemittances')->name('search_remittances');
@@ -159,12 +193,14 @@ Route::group(['middleware' => ['tipo:3']], function() {
 
     Route::post('update_network_comission', 'ComisionesController@updateNetworkComission')->middleware('auth')->name('update_network_comission');
 
+    Route::get('root_withdrawals', 'RetirosController@rootWithdrawal')->middleware('auth')->name('root_withdrawals');
+
+    Route::post('change_minimum_to_withdraw', 'RetirosController@changeMinimumToWithdraw')->middleware('auth')->name('change_minimum_to_withdraw');
+
 });
 
 
-Route::get('edit_profile', 'PersonasController@showViewEditProfile')->middleware('auth')->name('edit_profile');
 Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');
-Route::post('file_Verify', 'PersonasController@file_Verify')->middleware('auth')->name('file_Verify');
 
 Route::post('create_user','UsersController@create_user')->name('create_user');
 Route::get('search_user','UsersController@searchUser')->name('search_user');
@@ -179,7 +215,6 @@ Route::get('clients/{cedula}','ClientesController@searchClient');
 Route::post('modify_client','ClientesController@modify_client');
 
 Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
-Route::get('clients', 'ClientesController@showViewClients')->name('clients');;
 Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');
 
 

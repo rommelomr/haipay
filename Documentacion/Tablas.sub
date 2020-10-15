@@ -82,7 +82,8 @@
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
 	id_persona: (fk)
 	id_anfitrion: (fk: users)
-
+	codigo_registro: varchar(255)
+	
 21 remesas_no_usuario-> Guardará el destinatario no usuario de la remesa
 	id_remesa: (fk)
 	id_no_usuario: (fk)
@@ -133,3 +134,15 @@ Receptores-> tabla que guardará las personas que reciben remesas de los usuario
 
 	id_cliente: (fk) 
 	id_persona: (fk)
+
+32 comisiones_referido -> Tabla que guardará la moneda y el monto que se le transferirá al usuario que traiga un referido al sistema
+	id_hai_criptomoneda: (fk)
+	monto_en_usd: decimal(5,2)
+
+34 depositos -> tabla que guardará los datos de depósito que un cliente hace a haipay
+	id_cliente: (fk) identificará al cliente que hizo el depósito
+	id_hai_cripto_moneda: (fk)
+	imagen: varchar(255)
+	url: varchar(255)
+
+	

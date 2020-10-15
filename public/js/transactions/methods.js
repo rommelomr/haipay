@@ -7,8 +7,14 @@ export let Me = {
 	sendChangeStateForm:function(e){
 		let form = document.getElementById('form-change-state');
 		let input_estado = document.getElementById('csf-id-estado');
-		console.log(e.target);
+
 		input_estado.value = e.target.dataset.state;
+
+		let observacion_modal = document.getElementById('observacion_modal');
+		let observacion = document.getElementById('observacion');
+
+		observacion.value = observacion_modal.value;
+
 		form.submit();
 
 	}

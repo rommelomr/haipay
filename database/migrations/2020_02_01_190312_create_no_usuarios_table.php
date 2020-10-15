@@ -21,6 +21,7 @@ class CreateNoUsuariosTable extends Migration
             $table->unsignedBigInteger('id_anfitrion');
             $table->foreign('id_anfitrion')->references('id')->on('users');
 
+            $table->char('codigo_registro',255);
             $table->timestamps();
         });
     }

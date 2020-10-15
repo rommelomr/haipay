@@ -34,12 +34,15 @@ class CreateRetirosTable extends Migration
             $table->decimal('comision_retiro',16,9);
 
             $table->char('tipo',1);
-            $table->char('direccion',255);
+
+            $table->char('direccion',255)->default('N/A');
+
             $table->char('tag',255)->default('N/A');
 
             $table->decimal('monto_total',16,9);
 
             $table->decimal('monto_a_retirar',16,9);
+            
             $table->tinyInteger('estado');
 
             $table->timestamps();

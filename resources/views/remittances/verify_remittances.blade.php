@@ -86,8 +86,15 @@
 										>
 										@endif
 									</div>
+
 									@if(($selected_button == 0 || $selected_button == 3))
-										<a href="#modal_send_images" class="modal-trigger btn-floating halfway-fab orange"><i class="material-icons">add</i></a>
+
+								        <div class="card-action">
+
+								          <a href="#modal_send_images" class="modal-trigger">Upload verification image</a>
+
+								        </div>
+
 									@endif
 				    			</div>
 							</div>
@@ -118,6 +125,24 @@
 												@endif
 											</td>
 										</tr>
+										@if($remesas[0]->transaccion->estado == 2)
+											<tr>
+												<th>Observation</th>
+												<td id="observation">
+													{{$remesas[0]->transaccion->observacion}}
+												</td>
+											</tr>
+										@endif
+										<tr>
+											<th>Receiver's register code</th>
+											<td id="receiver-register-code">
+												@if($remesas[0]->remesaExterna != null)
+													{{$remesas[0]->remesaExterna->noUsuario->codigo_registro}}
+												@endif
+											</td>
+										</tr>
+										
+										
 									</table>
 								</div>
 							</div>
@@ -131,10 +156,25 @@
 										<li class="collection-item clickable_row"
 											data-id_transaction="{{$remesa->transaccion->id}}"
 											data-amount="{{$remesa->monto}}"
+											@if(isset($remesa->transaccion->imagen->nombre))
+												data-image="{{Storage::url($remesa->transaccion->imagen->nombre)}}"
+											@endif
+											@if($remesa->remesaExterna != null)
+
+												data-receiver_register_code="{{$remesa->remesaExterna->noUsuario->codigo_registro}}"
+
+											@else
+												data-receiver_register_code="N/A"
+											@endif
 
 											@if($remesa->remesaInterna != null)
+
 												data-receiver_id="{{$remesa->remesaInterna->cliente->usuario->persona->cedula}}"
+
+
 											@else
+
+
 												data-receiver_id="{{$remesa->remesaExterna->noUsuario->persona->cedula}}"
 												
 											@endif

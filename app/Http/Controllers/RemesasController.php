@@ -17,7 +17,6 @@ use App\Comision;
 
 class RemesasController extends Controller
 {
-
     public function confirmarRemesa(Request $req){ 
         $validations = $req->makeArrayToValidate(Remesa::class,[
             'cedula' => 'receivers_id',
@@ -76,7 +75,34 @@ class RemesasController extends Controller
     }
     public function changeStateRemittance(Request $req){
         $req->validate([
-            'id_remesa' => ['required','exists:remesas,id']
+
+            'transaction_id'    => ['required','exists:transacciones,id'],
+
+            'id_estado'         => ['required','in:1,2'],
+
+            'observacion'       => ['required_if:id_estado,2'],
+
+        ]);
+
+        $transaction = Transaccion::with('remesa')->find($req->transaction_id);
+
+        $transaction->estado = $req->id_estado;
+        if($req->id_estado == 1){
+
+            $message = 'Remittance approved successfully';
+
+        }else if($req->id_estado == 2){
+
+            $message = 'Remittance refused';
+            $transaction->observacion = $req->observacion;
+
+        }
+        $transaction->save();
+
+        return redirect()->route('transactions')->with([
+            'messages'=>[
+                $message
+            ]
         ]);
 
     }
@@ -120,8 +146,25 @@ class RemesasController extends Controller
         dd($remesas);
 
     }
+    public function deliverRemittance(Request $req){
+
+        $remittance = Remesa::find($req->remittance_id);
+
+        $remittance->estado = 1;
+
+        $remittance->save();
+
+        return redirect()->back()->with([
+            'messages'=>[
+                'Remittance delivered successfully'
+            ]
+        ]);
+
+    }
     public function showAllRemittancesView(){
+
         $remesas = Remesa::whereHas('transaccion',function($query){
+
             $query->where('estado',1);
 
         })->with([
@@ -151,7 +194,10 @@ class RemesasController extends Controller
                 ]);
             }
             ,'metodoRetiro'
-        ])->paginate(25);
+        ])
+        ->where('estado',0)
+        ->paginate(25);
+        
         return view('remittances.listar_remesas',[
             'remesas' => $remesas
         ]);
@@ -200,7 +246,7 @@ class RemesasController extends Controller
 
     public function showRemittancesView(Request $req){
 
-        $metodos_pago =MetodoPago::all();
+        $metodos_pago =MetodoPago::where('id','>',1)->get();
 
         //Verify_pyments
         $cliente = \Auth::user()->cliente;
@@ -217,7 +263,7 @@ class RemesasController extends Controller
         //Remesa con imagen rechazada
         $refused_remittances = Remesa::obtenerRemesa($cliente,2)->paginate(5,['*'],'refused_remittances');
 
-        $retirement_methods = MetodoRetiro::all();
+        $retirement_methods = MetodoRetiro::whereIn('id',[1,2])->get();
 
 
         return view('remittances.enviar_remesas',[
@@ -273,18 +319,25 @@ class RemesasController extends Controller
                 'es_usuario' => 0
             ]);
 
+            //Se genera el código de registro
+            $codigo_registro = '';
+            for($i = 0; $i < 8; $i++){
+                $codigo_registro = $codigo_registro.chr(rand(ord('a'), ord('z')));
+            }
+
             //Se registra el no usuario
             $receptor_no_usuario = NoUsuario::create([
                 'id_persona' => $receptor_persona->id,
-                'id_anfitrion' => $auth->id
+                'id_anfitrion' => $auth->id,
+                'codigo_registro' => $codigo_registro
             ]);            
 
         }
         if($receptor_persona->es_usuario){
-            $tipo_transaccion = 1;
+            $tipo = 1;
         }else{
 
-            $tipo_transaccion = 2;
+            $tipo = 2;
 
         }
         
@@ -292,7 +345,7 @@ class RemesasController extends Controller
         $transaccion = Transaccion::create([
 
             'id_cliente'            => $auth->cliente->id,
-            'id_tipo_transaccion'   => $tipo_transaccion, //2 = external remittance
+            'id_tipo_transaccion'   => $tipo, //2 = external remittance
         ]);
 
         $precio_btc = Criptomoneda::consultarPrecioMoneda([
@@ -319,31 +372,6 @@ class RemesasController extends Controller
             'compra'    => $comision_compra
         ],$precio_btc,$precio_htg);
 
-/*
-        if($req->amount_to_send <100){
-
-            $comision_compra = $comisiones['buy 1']['porcentaje'];
-        }else if($req->amount_to_send < 400){
-
-            $comision_compra = $comisiones['buy 2']['porcentaje'];
-        }else{
-
-            $comision_compra = $comisiones['buy 3']['porcentaje'];
-        }
-
-        $amount_sus_general = $req->amount_to_send;
-
-        $amount_sus_general -= $req->amount_to_send * ($comisiones['general']['porcentaje']/100);
-
-        $amount_sus_buy = $amount_sus_general;
-
-        $amount_sus_buy -= $req->amount_to_send * ($comision_compra/100);
-
-        $htg_to_deliver = ($amount_sus_buy / $precio_btc) * $precio_htg;
-*/
-
-        $tipo_remesa = 2;
-
         $remesa = Remesa::create([
 
             'id_emisor'=> $transaccion->id_cliente,
@@ -352,7 +380,7 @@ class RemesasController extends Controller
 
             'id_metodo_retiro'=> $req->retirement_method,
 
-            'id_tipo_remesa'=> $tipo_remesa,
+            'id_tipo_remesa'=> $tipo,
 
             'id_metodo_pago'=> $req->payment_method,
 

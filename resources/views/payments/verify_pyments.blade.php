@@ -76,7 +76,10 @@
 													@endif
 												</div>
 												@if(($selected_button == 0 || $selected_button == 3))
-													<a href="#modal_send_images" class="modal-trigger btn-floating halfway-fab orange"><i class="material-icons">add</i></a>
+											        <div class="card-action">
+											          <a href="#modal_send_images" class="modal-trigger">Upload verification image</a>
+											        </div>
+													<!--a href="#modal_send_images" class="modal-trigger btn-floating halfway-fab orange"><i class="material-icons">add</i></a-->
 												@endif
 												
 											</div>

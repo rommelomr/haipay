@@ -1,0 +1,17 @@
+M#1: setToPayMessage
+	Parametros:
+		e: (elemento del dom) select #type_operation
+		crypto: (string) texto con el nombre de la cripto en cuestióm
+
+	Flujo:
+		Se obtiene el span #coin (donde esta por defecto la palabra "USD")
+		Si el valor del select es 2 (es decir depósito) entonces
+			si el atributo inner del span #coin no es "USD" entonces
+				se le asignará la palabra "USD"
+			En caso contrario no ocurrira nada
+		En caso contrario
+			Si el atributo innerText del span #coin no es las siglas de la cripto en cuestión, entonces
+				se le asignará las siglas de la cripto en cuestion
+			En caso contrario no ocurrirá nada
+
+

@@ -36,7 +36,7 @@
 											<th>Withdraw method</th>
 											<td>{{$retiro_actual->metodoRetiro->nombre}}</td>
 										</tr>
-										@if($retiro_actual->metodo_retiro == 3)
+										@if($retiro_actual->id_metodo_retiro == 3)
 											<tr>
 												<th>Adress</th>
 												<td>{{$retiro_actual->direccion}}</td>

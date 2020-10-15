@@ -22,6 +22,140 @@ use App\Moneda;
 
 class ClientesController extends Controller
 {
+
+    //View in which clients can list remittances that other people have made them
+    public function showMyRemittancesView(){
+
+        $user = \Auth::user();
+
+        $remittances = Remesa::with([
+
+            'remesaInterna',
+
+            'remesaExterna',
+
+            'emisor',
+            'transaccion',
+
+            'metodoRetiro'
+
+        ])
+
+        ->where(function($query){
+            $query->where('estado',0)
+
+            ->whereHas('transaccion',function($query){
+                $query->where('estado',1);
+            });
+        })
+        ->where(function($query)use($user){
+
+            $query->whereHas('remesaInterna',function($query)use($user){
+
+                $query->where('id_cliente',$user->cliente->id);
+
+            })
+
+            ->orWhereHas('remesaExterna',function($query)use($user){
+
+                $query->whereHas('noUsuario',function($query)use($user){
+
+                    $query->where('id_persona',$user->persona->id);
+
+                });
+
+            });
+        })
+
+        ->paginate(8);
+        
+        return view('remittances.list_remittances_client',[
+            'remittances' => $remittances
+        ]);
+
+    }
+
+    public function verifyImages($id){
+
+        $client = Cliente::with([
+            'imagenesVerificacion',
+            'usuario' => function($query){
+                $query->with('persona');
+            }
+        ])
+        ->find($id);
+
+        return view('clients/verify_client',[
+            'client' => $client
+        ]);
+
+    }
+    public function depositCrypto($crypto){
+
+        $criptomoneda = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
+
+            $query->where('siglas',$crypto);
+
+        })
+        ->with(['origen','moneda'])
+        ->firstOrFail();
+
+        $metodos_pago = MetodoPago::where('id','>',2)->get();
+
+        $comisiones = Comision::getComisiones(['deposit','general']);
+
+        $user = \Auth::user();
+
+        $cliente = Cliente::where('id_usuario',$user->id)->first();
+        
+        $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
+            $query->with('moneda');
+        }])->where('id_cliente',$cliente->id)->paginate(10);
+
+        return view('buys.deposit',[
+            'carteras' => $carteras,
+            'criptomoneda' => $criptomoneda,
+            'metodos_pago' => $metodos_pago,
+            'comisiones' => $comisiones,
+        ]);
+
+    }
+    public function buyCripto($crypto){
+
+        $criptomoneda = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
+
+            $query->where('siglas',$crypto);
+
+        })
+        ->with(['origen','moneda'])
+        ->firstOrFail();
+
+        $metodos_pago =MetodoPago::where('id','<>',1)->where('id','<>',12)->get();
+
+        $comisiones = Comision::getComisiones();
+        
+        $user = \Auth::user();
+
+        $cliente = Cliente::where('id_usuario',$user->id)->first();
+        
+        $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
+            $query->with('moneda');
+        }])->where('id_cliente',$cliente->id)->paginate(10);
+
+        return view('buy_crypto',[
+            'carteras' => $carteras,
+            'criptomoneda' => $criptomoneda,
+            'metodos_pago' => $metodos_pago,
+            'comision_general' => $comisiones['general']['porcentaje'],
+
+            'comisiones_compra' => json_encode([
+                'buy_1' => $comisiones['buy 1'],
+                'buy_2' => $comisiones['buy 2'],
+                'buy_3' => $comisiones['buy 3'],
+            ]),
+        ]);
+
+    }
     public function updateTag(Request $request){
 
         session()->flash('wallet',true);
@@ -155,61 +289,27 @@ class ClientesController extends Controller
             $info_cryptos = HaiCriptomoneda::obtenerInfoCriptos($coinbase_cryptos,$coinlore_cryptos);
 
             $all_pairs = HaiCriptomoneda::inicializarPares($coinbase_cryptos,$coinlore_cryptos,$current_crypto);
-
+            
             return view('trade',[
                 'all_pairs'       => json_encode($all_pairs),
 
                 'current_crypto'    => $current_crypto,
                 'info_cryptos_arr'       => $info_cryptos,
                 'info_cryptos_json'      => json_encode($info_cryptos),
-                'comision_trade'    => $comision['cambio'],
-                'comision_general'    => $comision['general'],
+                'comision_trade'    => $comision['trade']['porcentaje'],
+                'comision_general'    => $comision['general']['porcentaje'],
             ]);
         }
     }
-    public function buyCripto($crypto){
 
-        $criptomoneda = HaiCriptomoneda::whereHas('moneda',function($query)use($crypto){
-
-            $query->where('siglas',$crypto);
-
-        })
-        ->with(['origen','moneda'])
-        ->firstOrFail();
-
-        $metodos_pago =MetodoPago::where('id','<>',1)->get();
-
-        $comisiones = Comision::getComisiones();
-        
-        $user = \Auth::user();
-
-        $cliente = Cliente::where('id_usuario',$user->id)->first();
-        
-        $carteras = Cartera::with(['haiCriptomoneda'=>function($query){
-            $query->with('moneda');
-        }])->where('id_cliente',$cliente->id)->paginate(10);
-
-        return view('buy_crypto',[
-            'carteras' => $carteras,
-            'criptomoneda' => $criptomoneda,
-            'metodos_pago' => $metodos_pago,
-            'comision_general' => $comisiones['general']['porcentaje'],
-
-            'comisiones_compra' => json_encode([
-                'buy_1' => $comisiones['buy 1'],
-                'buy_2' => $comisiones['buy 2'],
-                'buy_3' => $comisiones['buy 3'],
-            ]),
-        ]);
-
-    }
     public function showDashboard(){
+
         //Buy cripto
-		$hai_criptomonedas =HaiCriptomoneda::with('Moneda')->paginate(25);
+		$hai_criptomonedas = HaiCriptomoneda::with('Moneda')->paginate(25);
 
-		$monedas =Moneda::all();
+		$monedas = Moneda::all();
 
-		$metodos_pago =MetodoPago::all();
+		$metodos_pago = MetodoPago::all();
 
         //Verify_pyments
         $cliente = \Auth::user()->cliente;
@@ -294,13 +394,19 @@ class ClientesController extends Controller
 
     }
     public function showViewClients($string = '', $cliente_editar = null){
+        $moderador = \Auth::user()->moderador;
+        
+		$clientes_verificar =Cliente::where('estado',0)->where('id_moderador',$moderador->id)->whereHas('imagenesVerificacion',function($query){
+            $query->where('estado',0);
 
-		$clientes_verificar =Cliente::where('estado',0)->whereHas('imagenesVerificacion')->with(['imagenesVerificacion','usuario'=>function($query){
+        })->with(['imagenesVerificacion','usuario'=>function($query){
 			$query->with(['persona']);
 		}])->paginate(10);
 
 		$clientes_todos = $this->smartClientsSearcher($string);
+
 		$a=$cliente_editar;
+
     	return view('clients', [
     		'clientes_verificar' => $clientes_verificar,
     		'clientes_todos' => $clientes_todos,
@@ -367,8 +473,8 @@ class ClientesController extends Controller
 
             $comissions = Comision::getComisiones();
 
-            $general_comision =$comissions['general'];
-            $change_comision =$comissions['cambio'];
+            $general_comision =$comissions['general']['porcentaje'];
+            $change_comision =$comissions['trade']['porcentaje'];
 
 
             $cartera = Cartera::where('id_cliente',\Auth::user()->cliente->id)

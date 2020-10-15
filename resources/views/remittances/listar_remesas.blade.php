@@ -23,33 +23,51 @@
 	    			<table class="centered">
 	    				<thead>
 		    				<tr>
-								<th>Transmitter</th>
 								<th>Receiver</th>
+								<th>I.D.</th>
 								<th>Amount to deliver</th>
+								<th>Retirement method</th>
+								<th>Options</th>
 		    				</tr>
 	    				</thead>
-	    				@forelse($remesas as $remesa)
-	    					<tr class="clickable_row" data-url="{{route('see_remittance',$remesa->id)}}">
-	    						
-		    					<td>{{$remesa->emisor->usuario->persona->nombre}}</td>
-		    					
-		    					@if($remesa->id_tipo_remesa == 1)
-		    						<td></td>
-		    					@elseif($remesa->id_tipo_remesa == 2)
-		    						@if($remesa->remesaExterna->noUsuario->persona->nombre == null)
-		    							<td>Empty</td>
-		    						@else
-		    							<td>{{$remesa->remesaExterna->noUsuario->persona->nombre}}</td>
-		    						@endif
-		    					@endif
-	    						
-	    						<td>{{$remesa->monto_total}} HTG</td>
-	    					</tr>
-	    				
-	    				@empty
+	    				<tbody>
+	    					
+		    				@forelse($remesas as $remesa)
+		    					<tr class="clickable_row" data-url="{{route('see_remittance',$remesa->id)}}" data-emisor="" data-receiver="" data-receivers-ID="" >
+		    						
+			    					
+			    					@if($remesa->id_tipo_remesa == 1)
+			    						<td>
+			    							{{$remesa->remesaInterna->cliente->usuario->persona->nombre}}
+			    						</td>
+			    					@elseif($remesa->id_tipo_remesa == 2)
+		    							<td>
+		    								{{$remesa->remesaExterna->noUsuario->persona->nombre}}
+		    							</td>
+			    					@endif
+		    						
+			    					@if($remesa->id_tipo_remesa == 1)
+			    						<td>
+			    							{{$remesa->remesaInterna->cliente->usuario->persona->cedula}}
+			    						</td>
+			    					@elseif($remesa->id_tipo_remesa == 2)
+		    							<td>
+		    								{{$remesa->remesaExterna->noUsuario->persona->cedula}}
+		    							</td>
+			    					@endif
+		    						
+		    						<td>{{$remesa->monto_total}} HTG</td>
+
+		    						<td>{{$remesa->metodoRetiro->nombre}}</td>
+
+		    						<td><a href="#modal-confirm" data-remittance_id="{{$remesa->id}}" class="modal-trigger deliver btn green">delivered</a></td>
+		    					</tr>
+		    				
+		    				@empty
+	    				</tbody>
 	    					<tr>
 	    						
-	    						<td colspan="3">
+	    						<td colspan="5">
 		    						there's not remittances to deliver
 	    						</td>
 	    					</tr>
@@ -59,21 +77,38 @@
 	    	</div>
     	</div>
     </div>
-
+<div hidden>
+	<form action="{{route('deliver_remittance')}}" method="post">
+		@csrf
+		<input id="remittance_id" name="remittance_id">
+		<input type="submit" id="submit">
+	</form>
+</div>
 <div id="modal-confirm" class="modal">
+
 	<div id="modal-content" class="modal-content margin-0">
+
 		<center>
-			<h5>Are you sure you want to send now?</h4>
+
+			<h5>Are you sure you want to check as delivered?</h4>
+
 		</center>
+
 	</div>
 	<div class="modal-footer">
-		<label for="input-submit" class="btn green">Yes</label>
-		<button class="btn red darken-2 modal-close">No</button>
+
+		<label for="submit" class="btn green darken-2">Confirm</label>
+
+		<button class="btn red darken-2 modal-close">Cancel</button>
+
 	</div>
 </div>
 @endsection
 
-<script>
+<script type="module">
+
+	import {D} from "{{asset('js/Domm/Domm.js')}}";
+
 	document.addEventListener('DOMContentLoaded', function() {
 		@if(session('messages'))
 			@foreach(session('messages') as $messages)
@@ -87,6 +122,7 @@
 	  			M.toast({html: '{{ $error }}'})
             @endforeach
 		@endif
+
 		let el_tabs = document.querySelector('.tabs');
 		let instance_tabs = M.Tabs.init(el_tabs);
 

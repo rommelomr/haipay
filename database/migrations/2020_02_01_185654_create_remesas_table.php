@@ -24,6 +24,9 @@ class CreateRemesasTable extends Migration
             $table->unsignedBigInteger('id_metodo_retiro');
             $table->foreign('id_metodo_retiro')->references('id')->on('metodos_retiro');
 
+            $table->unsignedBigInteger('id_moderador')->nullable();
+            $table->foreign('id_moderador')->references('id')->on('moderadores');
+
             $table->unsignedBigInteger('id_tipo_remesa')->nullable();
             $table->foreign('id_tipo_remesa')->references('id')->on('tipos_remesa');
 

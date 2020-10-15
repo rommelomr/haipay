@@ -176,69 +176,83 @@
 							</nav>
 							<div class="row">
 								<div class="col s10 offset-s1">
+									
+									<ul class="collection">
+										@forelse($clientes_verificar as $cliente)
+											<li class="collection-item pointer client" data-link="{{route('watch_client_images',$cliente->id)}}">
+												<i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}	
+											</li>
+										@endforeach
+									</ul>
+								</div>
+							</div>
+							<div class="row" hidden>
+								<div class="col s10 offset-s1">
 							  <ul class="collapsible">
 								@foreach($clientes_verificar as $cliente)
-							    <li>
-							      <div class="collapsible-header"><i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}</div>
-							      <div class="collapsible-body">
-							      	<table>
-							      		<thead>
-							      		<tr>
-							      			
-								      	<th>
-								      		<center><b>Nombre Completo</b></center>
-								      	</th>
-								      	<th>
-								      		<center>
-								      			<b>Opciones</b>
-								      		</center>
-								      	</th>
-							      		</tr>	
-							      		</thead>
-							      		<tbody>
-							      			<tr>
-							      				
-										      	<td>
-										      		<center>
-													  {{$cliente->usuario->persona->nombre}}
-										      		</center>
-										      	</td>
-										      	<td>
-									      			@php
-									      				$num_attr = 1;
+								    <li>
+								      <div class="collapsible-header">
+								      	<i class="material-icons">person</i>#{{$cliente->id}} {{$cliente->usuario->persona->nombre}}
+								      </div>
+								      <div class="collapsible-body">
+								      	<table>
+								      		<thead>
+								      		<tr>
+								      			
+									      	<th>
+									      		<center><b>Nombre Completo</b></center>
+									      	</th>
+									      	<th>
+									      		<center>
+									      			<b>Opciones</b>
+									      		</center>
+									      	</th>
+								      		</tr>	
+								      		</thead>
+								      		<tbody>
+								      			<tr>
+								      				
+											      	<td>
+											      		<center>
+														  {{$cliente->usuario->persona->nombre}}
+											      		</center>
+											      	</td>
+											      	<td>
+										      			@php
+										      				$num_attr = 1;
 
-									      				$max_images = count($cliente->imagenesVerificacion);
+										      				$max_images = count($cliente->imagenesVerificacion);
 
-									      				$str = '';	
-									      				foreach($cliente->imagenesVerificacion as $imagen){
+										      				$str = '';	
+										      				foreach($cliente->imagenesVerificacion as $imagen){
 
-									      					$str .= '"'.$imagen->id.'":"'.$imagen->nombre.'"';
+										      					$str .= '"'.$imagen->id.'":"'.$imagen->nombre.'"';
 
-									      					//$str .= $imagen->nombre.'"';
+										      					//$str .= $imagen->nombre.'"';
 
-										      				if($num_attr++<$max_images){
-										      					$str .= ',';
+											      				if($num_attr++<$max_images){
+											      					$str .= ',';
+											      				}
 										      				}
-									      				}
-										      				
-									      			@endphp
-										      		<center>
-										      			<a
+											      				
+										      			@endphp
+											      		<center>
+											      			<a
 
-										      			class="btn indigo modal-trigger see_images"
-										      			href="#see_images"
-										      			data-nombre="{{$cliente->usuario->persona->nombre}}"
-										      			data-id="{{$cliente->id}}"
-										      				data-imagenes='{ {{$str}} }'
-										      			>See images</a>
+											      			class="btn indigo modal-trigger see_images"
+											      			href="#see_images"
+											      			data-nombre="{{$cliente->usuario->persona->nombre}}"
+											      			data-id="{{$cliente->id}}"
+											      				data-imagenes='{ {{$str}} }'
+											      			>See images</a>
 
-										      		</center>
-										      	</td>
-							      			</tr>
-								      </tbody>
-							      	</table>
-							    </div>
-							    </li>
+											      		</center>
+											      	</td>
+								      			</tr>
+									      </tbody>
+								      	</table>
+								      </div>
+								    </li>
 								@endforeach
 							  </ul>
 
@@ -257,11 +271,11 @@
       		<center>
       			<h3 id="modal-client-name">Carlos Bolivar</h3>
       		</center>
-<form action="{{asset('verify_image_moderator')}}" method="POST" id="verify_image_form" hidden>
-	@csrf
-	<input type="text" name="id_imagen" id="id_imagen">
-	<input type="text" name="estado" id="estado">
-</form>
+			<form action="{{asset('verify_image_moderator')}}" method="POST" id="verify_image_form" hidden>
+				@csrf
+				<input type="text" name="id_imagen" id="id_imagen">
+				<input type="text" name="estado" id="estado">
+			</form>
       	</div>
       </div>
       <div class="row">
@@ -276,8 +290,17 @@
           
 @endsection
   <!-- Modal Structure -->
-<script>
-	
+<script type="module">
+	import {D} from "{{asset('js/Domm/Domm.js')}}";
+
+	D.dom.load(function(){
+		D.addEvent.onClick('.client',function(el){
+			window.location = el.dataset.link;
+		});
+
+	})
+
+
 	var submitEnabled = false;
 	function selectInput(e){
 	  	var element = e.target;

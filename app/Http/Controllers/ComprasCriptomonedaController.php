@@ -11,6 +11,8 @@ use App\Cartera;
 use App\Transaccion;
 use App\MetodoRetiro;
 use App\CompraCriptomoneda;
+use App\TipoTransaccion;
+use Illuminate\Support\Facades\DB;
 
 class ComprasCriptomonedaController extends Controller
 {
@@ -52,6 +54,7 @@ class ComprasCriptomonedaController extends Controller
 			'id' => $buy->id,
 			'siglas' => $buy->siglas,
 		]);
+
 		$pay_price = CriptomonedasController::consultarPrecioMoneda([
 			'id' => $pay->id,
 			'siglas' => $pay->siglas,
@@ -129,6 +132,7 @@ class ComprasCriptomonedaController extends Controller
 		}
     }
 	public function buyCripto(Request $req){
+
 		$error= $this->validate($req,[
 
 			'base' =>	'required|exists:hai_criptomonedas,id',
@@ -175,7 +179,29 @@ class ComprasCriptomonedaController extends Controller
 				]
 			]);
 		}else{
-	
+
+			$tipo_transaccion = TipoTransaccion::where('nombre','Buy')->first();
+
+			$compra_criptomoneda = CompraCriptomoneda::buyCrypto(
+				\Auth::user()->cliente->id,
+				$tipo_transaccion->id,
+				$req->base,
+				$pay->id,
+				$req->amount,
+				$price_crip_to_buy,
+				1,
+				$req->type_operation,
+				$comision_general['porcentaje'],
+				$total_add_compra['comision'],
+				$total_sin_comision,
+				$total_add_compra['total_con_comision_compra'],
+				'g'
+			);
+
+
+	    	session()->flash('pursache');
+			return redirect()->route('pursache_notice');
+/*
 			$transaccion = Transaccion::create([
 	    		'id_cliente' => \Auth::user()->cliente->id,
 	    		'id_tipo_transaccion'=>3,
@@ -207,8 +233,7 @@ class ComprasCriptomonedaController extends Controller
 				'total_con_comision' => $total_add_compra['total_con_comision_compra'],
 
 	    	]);
-	    	session()->flash('pursache');
-			return redirect()->route('pursache_notice');
+*/	    	
 		}
 	}	
 }

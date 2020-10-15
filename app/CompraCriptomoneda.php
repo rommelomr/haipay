@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Moneda;
+use Illuminate\Support\Facades\DB;
 
 class CompraCriptomoneda extends Model
 {
@@ -62,6 +63,75 @@ class CompraCriptomoneda extends Model
         }
         
         
+    }
+    public static function buyCrypto(
+        $client_id,
+        $transaction_type,
+        $base,
+        $pay_id,
+        $amount,
+        $price_crip_to_buy,
+        $price_coin_to_pay,
+        $type_operation,
+        $comision_general,
+        $other_comission,
+        $total_sin_comision,
+        $total_con_comision,
+        $type){
+        $transaction = Transaccion::create([
+            'id_cliente' => $client_id,
+            'id_tipo_transaccion'=>$transaction_type,
+        ]);
+        
+        $compra_criptomoneda = CompraCriptomoneda::create([
+
+            'id_hai_criptomoneda' => $base,
+
+            'id_moneda' => $pay_id,
+
+            'monto' => $amount,
+
+            'precio_moneda_a_comprar' => $price_crip_to_buy,
+
+            'precio_moneda_a_pagar' => $price_coin_to_pay,
+
+            'id_metodo_pago' => $type_operation,
+
+            'id_transaccion' => $transaction->id,
+
+            'comision_general' => $comision_general,
+
+            //'comision_compra' => $other_comission,
+
+            'total_sin_comision' => $total_sin_comision,
+
+            'ganancia' => $total_con_comision-$total_sin_comision,
+
+            'total_con_comision' => $total_con_comision,
+
+        ]);
+
+        if($type == 'd'){
+
+            DB::table('compras_generales')->insert([
+
+                'id_compra_criptomoneda' => $compra_criptomoneda->id,
+
+                'comision_compra' => $other_comission,
+
+            ]);
+
+        }else if($type == 'g'){
+
+            DB::table('compras_generales')->insert([
+
+                'id_compra_criptomoneda' => $compra_criptomoneda->id,
+
+                'comision_compra' => $other_comission,
+
+            ]);
+
+        }
     }
     
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Persona;
 use App\User;
+use App\Moderador;
 use App\Cartera;
 use App\ImagenVerificacion;
 use Illuminate\Support\Facades\Auth;
@@ -64,8 +65,12 @@ class PersonasController extends Controller
         }
 
         $imagenes = $data->cliente->imagenesVerificacion;
+
         $account_verified = true;
 
+        $id = ImagenVerificacion::where('id_cliente',$data->cliente->id)->where('tipo',0)->first();
+        $date = ImagenVerificacion::where('id_cliente',$data->cliente->id)->where('tipo',1)->first();
+        
         if($imagenes == null || (count($imagenes)!=2)){
             $account_verified = false;
         }else{
@@ -96,6 +101,8 @@ class PersonasController extends Controller
             'account_verified' => $account_verified,
             'carteras' => $carteras,
             'pestana' => $pestana,
+            'id' => $id,
+            'date' => $date,
     	]);
     }
     public function saveProfile(Request $req){
@@ -114,7 +121,7 @@ class PersonasController extends Controller
 
         	$user->push();
 
-            $message = "Password changed succesfuly";
+            $message = "Password changed successfuly";
 
         }else{
 
@@ -132,6 +139,34 @@ class PersonasController extends Controller
         
     }
 
+    public function verifyClientImage(Request $request){
+
+        $request->validate([
+            'type' => ['required','in:0,1'],
+            'picture' => ['required','image','max:7680']
+        ]);
+        
+        $client = \Auth::user()->cliente;
+        if($request->type == 0){
+            $type = 'ID';
+        }else{
+            $type = 'date';
+
+        }
+        if($client->id_moderador == null){
+            $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_cliente');
+            $client->id_moderador = $moderador_turno->id;
+            $client->save();
+        }
+        $imagen = ImagenVerificacion::where('id_cliente',$client->id)->where('tipo',$request->type)->first();
+
+        $this->createImagenVerificacion($client->id, $this->guardarDocumentos($request->file('picture'), $client->id,$type,$imagen),$request->type,$imagen);
+
+        return redirect()->back()->with(['messages'=>[
+            'Image uploaded successfuly'
+        ]]);
+
+    }
     public function file_Verify(Request $request){
         $messages = [
             'file0.required' => 'Debe enviar una imagen de su cedula',
@@ -160,24 +195,36 @@ class PersonasController extends Controller
         return redirect()->back();
     }
     
-    private function guardarDocumentos($file, $idCliente ,$typeDocument){
-        
-        $name=$typeDocument.'_'.auth::user()->cliente->id;
-        $file->storeAs('public', $name.'.'.explode(".",$file->getClientOriginalName())[1]);
-        return $name.'.'.explode(".",$file->getClientOriginalName())[1];
+    private function guardarDocumentos($file, $idCliente ,$typeDocument,$imagen){
+
+        $extension = explode(".",$file->getClientOriginalName());
+        $extension = $extension[count($extension)-1];
+
+        $name=$typeDocument.'_'.auth::user()->cliente->id.'.'.$extension;
+
+        if($imagen != null){
+            
+            Storage::delete('public/'.$imagen->nombre);
+        }
+
+        $file->storeAs('public', $name);
+
+        return $name;
     }
 
-    private function createImagenVerificacion($idCliente, $ruta,$tipo){
-        $consulta = ImagenVerificacion::where('id_cliente',$idCliente)->where('tipo',$tipo)->first();
-        if($consulta == null)
+    private function createImagenVerificacion($idCliente, $ruta,$tipo,$imagen){
+        
+        if($imagen == null)
             ImagenVerificacion::create([
                 'id_cliente' => $idCliente,
                 'nombre' => $ruta,
                 'tipo' => $tipo,
             ]);
         else{
-            $consulta->nombre = $ruta;
-            $consulta->save();
+            
+            $imagen->nombre = $ruta;
+            $imagen->estado = 0;
+            $imagen->save();
         }
     }
 

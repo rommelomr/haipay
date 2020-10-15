@@ -24,16 +24,18 @@ class CreateComprasCriptomonedaTable extends Migration
             $table->unsignedBigInteger('id_transaccion');
             $table->foreign('id_transaccion')->references('id')->on('transacciones');
 
+            $table->unsignedBigInteger('id_moderador')->nullable();
+            $table->foreign('id_moderador')->references('id')->on('moderadores');
+
             $table->unsignedBigInteger('id_metodo_pago');
             $table->foreign('id_metodo_pago')->references('id')->on('metodos_pago');
 
-            $table->decimal('precio_moneda_a_comprar',13,9);
-            $table->decimal('precio_moneda_a_pagar',13,9);
+            $table->decimal('precio_moneda_a_comprar',15,9);
+            $table->decimal('precio_moneda_a_pagar',15,9);
             $table->decimal('comision_general',5,2);
-            $table->decimal('comision_compra',5,2);
-            $table->decimal('monto',13,9);
-            $table->decimal('total_sin_comision',13,9);
-            $table->decimal('total_con_comision',13,9);
+            $table->decimal('monto',15,9);
+            $table->decimal('total_sin_comision',15,9);
+            $table->decimal('total_con_comision',15,9);
             $table->decimal('ganancia',13,9);
             $table->timestamps();
         });

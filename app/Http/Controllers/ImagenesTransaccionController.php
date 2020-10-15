@@ -16,22 +16,28 @@ class ImagenesTransaccionController extends Controller
             'id_transaction' => 'required|exists:transacciones,id',
             'file' => 'required|image|max:7680'
         ]);
+
         $name = time();
+
         $data->file('file')->storeAs('public',$name);
-        //Storage::putFile('public', $request->file('file'));
+
         return $name;
     }
     public function verifyPyment(Request $request){
         
         $transaccion = Transaccion::where('estado',null)
         ->where('id',$request->id_transaction)
+        ->with([
+            'compraCriptomoneda',
+            'remesa',
+        ])
         ->firstOrFail();
 
         $name = $this->saveImage($request);
         
-        $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_transaccion');
-        $transaccion->id_moderador = $moderador_turno->id;
-        $transaccion->save();
+        $transaccion->setModerator();
+        
+        $transaccion->push();
 
         ImagenTransaccion::create([
             'id_transaccion'=>$request->id_transaction,
@@ -48,7 +54,7 @@ class ImagenesTransaccionController extends Controller
 
         $transaccion = Transaccion::find($request->id_transaction);
 
-        $moderador_turno = Moderador::obtenerModeradorDeTurno();
+        $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_transaccion');
         $transaccion->id_moderador = $moderador_turno->id;
         $imagen = ImagenTransaccion::where('id_transaccion',$request->id_transaction)
 

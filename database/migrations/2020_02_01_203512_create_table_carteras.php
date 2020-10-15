@@ -22,7 +22,7 @@ class CreateTableCarteras extends Migration
             $table->foreign('id_hai_criptomoneda')->references('id')->on('hai_criptomonedas');
             
             $table->decimal('cantidad',20,9);
-            $table->char('direccion',255)->nullable();
+            $table->char('direccion',255)->default('N/A');
 
             $table->timestamps();
         });

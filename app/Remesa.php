@@ -27,7 +27,7 @@ class Remesa extends Model
                 }
             }),'regex:/^[A-Za-z\s]+$/'],
 
-            'monto' =>  'required|numeric',
+            'monto' =>  'required|numeric|min:20|max:3000',
 
             'id_tipo_operacion' => 'required|exists:metodos_pago,id',
 
@@ -83,7 +83,8 @@ class Remesa extends Model
                     }
                 ]);
 
-            }
+            },
+            'transaccion'
         ])->whereHas('transaccion',function($query)use($type){
             $auth = \Auth::user();
             $query->where('id_cliente',$auth->cliente->id)
@@ -134,6 +135,9 @@ class Remesa extends Model
     }
     public function metodoRetiro(){
         return $this->belongsTo('App\MetodoRetiro','id_metodo_retiro');
+    }
+    public function metodoPago(){
+        return $this->belongsTo('App\MetodoPago','id_metodo_pago');
     }
     public static function obtenerRemesa($cliente,$estado){
 

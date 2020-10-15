@@ -130,7 +130,7 @@
 			</div>
 		</div>
 	</div>
-<div >
+<div hidden>
 	<input id="real-time-crypto-price">
 </div>
 <div id="help-modal" class="modal">

@@ -13,24 +13,52 @@
 						<center>
 							<div class="row">
 								@foreach($criptomonedas as $criptomoneda)
+
+									<?php $siglas = $criptomoneda->moneda->siglas; ?>
+
 								<div class="card-cripto col s12 l6">
 									<div class="card">
 										<div class="card-content">
-											<b>{{$criptomoneda->moneda->siglas}}</b><br>
-											<span class="precio-{{$criptomoneda->moneda->siglas}}-USD">cargando</span> $
+
+											<b>{{$siglas}}</b><br>
+
+											<span class="precio-{{$siglas}}-USD">cargando</span> $
+
 										</div>
 										<div class="card-action">
+
 											<div class="row" style="margin:0">
+
 												<div class="col s6">
+
 													<center>
-														<a href="{{route('buy_crypto',$criptomoneda->moneda->siglas)}}" class="tooltipped" data-position="top" data-tooltip="Buy">
+
+														  <ul id='dropdown{{$criptomoneda->id}}' class='dropdown-content'>
+
+														    <li>
+
+														    	<a href="{{route('buy_crypto',$siglas)}}">
+														    		Buy
+														    	</a>
+
+														    </li>
+
+														    <li>
+														    	<a href="{{route('deposit_crypto',$siglas)}}">
+														    		Deposit
+														    	</a>
+
+														    </li>
+
+														  </ul>
+														<a href='#' data-target='dropdown{{$criptomoneda->id}}' class="dropdown-trigger tooltipped" data-position="top" data-tooltip="Buy">
 															<i class="material-icons" style="color:green">add_shopping_cart</i>
 														</a>
 													</center>
 												</div>
 												<div class="col s6">
 													<center>
-														<a href="{{route('trade',$criptomoneda->moneda->siglas)}}" class="tooltipped" data-position="top" data-tooltip="Trade"><i class="material-icons">autorenew</i></a>
+														<a href="{{route('trade',$siglas)}}" class="tooltipped" data-position="top" data-tooltip="Trade"><i class="material-icons">autorenew</i></a>
 													</center>
 												</div>
 
@@ -70,6 +98,9 @@
 <script>
 
 	document.addEventListener('DOMContentLoaded', function() {
+
+	    var elems_drop_down = document.querySelectorAll('.dropdown-trigger');
+	    var instances_drop_down = M.Dropdown.init(elems_drop_down);
 
 		@if(session('messages'))
 			@foreach(session('messages') as $messages)

@@ -17,20 +17,32 @@
 2 Clientes-> Tipo de usuario
 	id_usuario: (fk)
 	estado: Guardará si un moderador ya le ha aprobado sus dos imagenes de verificacion
+	id_moderador_verificador: id del moderador encargado de verificar las imágenes de cedula y fecha
 
 3 Moderadores-> Tipo de usuario
 	id_usuario: (fk)
+
 	turno_transaccion: Guardará un numero entre 1 y 0 que indicará si el moderadór está en cola para que se le asigne una transacción (de cualquier tipo. Verificación de compra, remesas, etc).
+
+	turno_retiro: Guardará un numero entre 1 y 0 que indicará si el moderadór está en cola para que se le asigne un retiro
+	
+	turno_cliente: Guardará un numero entre 1 y 0 que indicará si el moderadór está en cola para que se le asigne un cliente para verificar
+
 
 4 Tipo_Transaccion-> Guardará el nombre de los tipo de transacción  
 	nombre: nombre de las transacciones
 
 5 Transacciones-> Guardará las compras de cripto, retiros, remesas y cambios que realizan los clientes
+
 	estado: guardará el estado de la transacción  null:Sin verificar 0:esperando ser aprobada 1: aprobada 2:cancelada por el moderador 3: Eliminada por el usuario
 	
 	id_moderador: (fk) identifica al moderador que verifica o rechaza la transaccion
+
 	id_cliente: (fk) identifica el cliente que hizo la transaccion
+
 	id_tipo_transaccion: (fk) // 1 Internal Remittance 2 External Remittance 3 Buy 4 Trade 5 Retirement
+	Observación: Para indicar por qué fue rechazada la transacción
+	
 
 6 monedas-> Guardará todas las monedas que se trabajaran en el sistema
 	nombre: guardará el nombre de la criptomoneda
@@ -72,6 +84,7 @@
 20 No_usuarios-> Guardará a las personas no registradas a las que se le haran remesas
 	id_persona: (fk)
 	id_anfitrion: (fk) guardará el id del usuario que va a añadir/añadió a la persona a la base de datos
+	codigo_registro: código que se generará para verificar el registro de un no usuario
 
 21 Remesas_No_Usuario-> Guardará el destinatario no usuario de la remesa
 	id_remesa: (fk) Para identificar a la remesa a la que pertenece esta
@@ -80,10 +93,11 @@
 22 tipos_remesa-> Guardará el nombre de los tipos de remesa
 	nombre: nombre del tipo de remesa: 1 internal 2 external
 
-  	metodos_retiro-> guardará los métodos de retiro que puede elegir una persona para retirar una remesa
-  		nombre: Nombre del metodo de retiro //1 Cash 2 Moncash
+metodos_retiro-> guardará los métodos de retiro que puede elegir una persona para retirar una remesa
+	nombre: Nombre del metodo de retiro //1 Cash 2 Moncash
 
 14 Remesas-> Guardará las remesas realizadas por los clientes
+
 	id_emisor: (fk id_cliente) identifica al cliente que enviará la remesa
 
 	monto: cantidad en $ a enviar al receptor
@@ -110,8 +124,8 @@
 	id_cliente: (fk)
 
 18 remesas_cliente-> Guardará el destinatario usuario de la remesa
-	id_remesa: (fk)
-	id_cliente: (fk)
+	id_remesa: (fk) Para identificar a la remesa a la que pertenece esta
+	id_cliente: (fk) Para identificar a qué cliente se le envió la remesa
 
 24 hai_criptomoneda-> Guardará el id de las criptomonedas que se podrán comprar en la página
 	id_moneda: (fk)
@@ -122,23 +136,23 @@
 	id_moneda: (fk) moneda con la que se va a pagar
 	id_metodo_pago: (fk)
 	id_transaccion: (fk)
-	
-
-	monto: decimal Cantidad de la moneda que se va a comprar
-
 	precio_moneda_a_comprar: decimal precio de la moneda que se va a comprar en el momento de la compra
-
 	precio_moneda_a_pagar: decimal precio de la moneda con que se va a pagar en el momento de la compra
-	
+	total_sin_comision: monto de la compra expresado en la moneda que se va a pagar sin comision
+	total_con_comision: (monto expresado en la moneda que se va a pagar) + todas las comisiones (lo que dependera del tipo de compra (si es general o depósito))
+	monto: decimal Cantidad de la moneda que se va a comprar
+	ganancia: ganancia de la transaccion expresada en $
 	comision_general: porcentaje que se le agregará al precio real de todas las criptomonedas del sistema
 
+30 compras_generales -> Tabla que guardará las comisiones que se aplican para una compra general. Una compra general es cuando el cliente pagará con Dolares
+
+	id_compra_criptomoneda: (fk)
 	comision_compra: porcentaje que se le agregará al precio de compra de la criptomoneda
 
-	total_con_comision: (monto expresado en la moneda que se va a pagar) + porcentaje de comision general + porcentaje de comision de compra
+31 compra_deposito -> Tabla que guardará la comisión que se aplicarán para una compra depósito. Una compra depósito es cuando el cliente va a pagar con la misma criptomoneda que esta comprando pero proveniente de una cartera externa
 
-	total_sin_comision: monto de la compra expresado en la moneda que se va a pagar sin comision
-	
-	ganancia: ganancia de la transaccion 
+	id_compra_criptomoneda: (fk)
+	comision_deposito: porcentaje que se le agregará al precio de compra de la criptomoneda
 
 26 comisiones-> tabla donde se guardarán las comisiones que se cobrarán en el sistema
     nombre: nombre de la comision
@@ -147,11 +161,11 @@
     porcentaje: porcentaje de la comision
     //Por ejemplo: La comision de "COMPRAS 1" es de 4% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 0 y 99.99$. La comision de "COMPRAS 2" es de 3% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 100 y 399.99$. La comision de "COMPRAS 3" es de 2.5% y se aplica si el cliente adquiere N cantidad de X criptomoneda, y lo que tiene que pagar esta entre 400 y 1000$.
 
-Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
+27 Origenes-> Tabla que guardará la url de las páginas a las que se consultan las criptomonedas
 	nombre: varchar(255)
 	tipo: Letra que indicará el tipo de consulta a la url: W: websocket H:Http
 
-Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los clientes
+28 Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los clientes
     id_cliente: (fk)
     id_hai_criptomoneda: (fk)
     id_moderador: (fk)
@@ -163,8 +177,22 @@ Retiros-> Tabla que guardará los retiros de criptomonedas que hagan los cliente
     estado: 0: sin enviar 1:enviada
     id_metodo_retiro: (fk) indica si a la persona se le transferirá a la wallet 0 o por moncash (1)
 
-Receptores-> tabla que guardará las personas que reciben remesas de los usuarios (tabla pivote entre clientes y persona)
+29 Receptores-> tabla que guardará las personas que reciben remesas de los usuarios (tabla pivote entre clientes y persona)
 
 	id_cliente: (fk) cliente que hizo la remesa
 	id_persona: (fk) persona que recibe la remesa (se utilizará esta tabla porque puede ser un usuario o un no usuario el que se registe. y si el no usuario se registra, podria dar conflicto)
+
 	
+32 comisiones_referido -> Tabla que guardará la moneda y el monto que se le transferirá al usuario que traiga un referido al sistema
+	id_hai_criptomoneda: (fk) para saber en qué criptomoneda se le transferirá
+	monto_en_usd: monto en dolares que se convertiran a la criptomoneda en cuestion 
+
+33 comisiones_referidos -> Tabla que guardará todas las comisiones que se le han otorgado a los usuarios por traer referidos al sistema
+
+34 depositos -> tabla que guardará los datos de depósito que un cliente hace a haipay
+	id_cliente: (fk) identificará al cliente que hizo el depósito
+	id_moderador: (fk) identificará al moderador que verificará el depósito
+	imagen: contendrá la url de la imagen que envia el cliente
+	id_hai_cripto_moneda: (fk) identificará la hai_criptomoneda que se está comprando
+	url: url de la transaccion pública que el cliente debe ingresar
+	estado: indicará si el depósito está en espera de verificacion: 0, si está aprobado:1 o cancelado: 2

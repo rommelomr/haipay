@@ -4,7 +4,7 @@ export let Me = {
 	updateComission:function(amount_to_retire,comissions){
 
 		let comission_input = document.getElementById('comission');
-		comission_input.value = D.math.decimals(parseFloat(comissions['network']) + (amount_to_retire.value*(comissions['retiro']/100)),2);
+		comission_input.value = D.math.decimals(parseFloat(comissions['network']) + (amount_to_retire.value*(comissions['retiro']/100)),25);
 
 		
 

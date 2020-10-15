@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Moderador;
 
 class Transaccion extends Model
 {
@@ -35,6 +36,22 @@ class Transaccion extends Model
     public function remesa(){
         return $this->hasOne('App\Remesa','id_transaccion');
     }
+    public function setModerator(){
+
+
+        if($this->id_tipo_transaccion == 1 || $this->id_tipo_transaccion == 2){
+
+            $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_remesa');
+            $this->remesa->id_moderador = $moderador_turno->id;
+
+        }else if($this->id_tipo_transaccion == 3){
+
+            $moderador_turno = Moderador::obtenerModeradorDeTurno('turno_compra');
+            $this->compraCriptomoneda->id_moderador = $moderador_turno->id;
+
+        }
+    }
+    
     /*
     *
     * Busca las transacciones de un usuario en especifico

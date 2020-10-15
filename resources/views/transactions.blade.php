@@ -47,6 +47,7 @@
 			</div>
 		</div>
     @if($watch)
+
   		<div class="col s12 l6">
   			
   			<div class="card-panel">
@@ -86,15 +87,16 @@
                           </center>
                         </div>
                       @else
-                        <div class="col s12">
+                        <div class="col s6">
                           <center>
 
-                            <!--button class="btn btn-small z-depth-1 green lighten-1 change-state"><i data-state="1" class="material-icons">check_circle</i></button>
-                            <button class="btn btn-small z-depth-1 red lighten-1 change-state"><i data-state="2"class="material-icons">cancel</i></button-->
-
                             <a href="#modal-motivo-aprobacion" class="btn btn-small z-depth-1 green lighten-1 modal-trigger"><i class="material-icons">check_circle</i></a>
-                            <a href="#modal-motivo-rechazo" class="btn btn-small z-depth-1 red lighten-1 modal-trigger"><i class="material-icons">cancel</i></a>
                               
+                          </center>
+                        </div>
+                        <div class="col s6">
+                          <center>
+                            <a href="#modal-motivo-rechazo" class="btn btn-small z-depth-1 red lighten-1 modal-trigger"><i class="material-icons">cancel</i></a>
                           </center>
                         </div>
                       @endif
@@ -137,7 +139,11 @@
               @if($transaction->id_tipo_transaccion <= 2)
                 <tr>
                   <td><b>Remittance's Commission</b></td>
-                  <td>{{$transaction->remesa->comision_remesa}} %</td>
+                  <td>{{$transaction->remesa->comision_compra}} %</td>
+                </tr>
+                <tr>
+                  <td><b>Payment Method</b></td>
+                  <td>{{$transaction->remesa->metodoPago->nombre}}</td>
                 </tr>
                 <tr>
                   <td><b>Retirement Method</b></td>
@@ -147,8 +153,8 @@
                 <!--Si es una Remesa interna-->
                 @if($transaction->id_tipo_transaccion == 1)
                   <tr>
-                    <td><b>Transaction without commission</b></td>
-                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->remesaInterna->cliente->usuario->persona->nombre}} - {{$transaction->remesa->remesaInterna->cliente->usuario->persona->cedula}}</td>
+                    <td><b>Transaction</b></td>
+                    <td>{{$transaction->remesa->monto}} $ to {{$transaction->remesa->remesaInterna->cliente->usuario->persona->nombre}} (<b>{{$transaction->remesa->remesaInterna->cliente->usuario->persona->cedula}}</b>)</td>
                   </tr>
                   <tr>
                     <td><b>To pay</b></td>
@@ -205,9 +211,22 @@
           </div>
   			</div>
   		</div>
-      <form id="form-change-state" action="{{route('change_state_transaction')}}" method="post" hidden>
+      <form id="form-change-state"
+        @if($transaction->remesa != null)
+
+          action="{{route('change_state_remittance')}}"
+
+        @elseif($transaction->compraCriptomoneda != null)
+
+          action="{{route('change_state_transaction')}}"
+
+        @endif
+
+        method="post" hidden>
         @csrf
-        <input name="id_transaction" value="{{$transaction->id}}">
+
+        <input id="observacion" name="observacion">
+        <input name="transaction_id" value="{{$transaction->id}}">
         <input id="csf-id-estado" name="id_estado">
         
       </form>
@@ -219,11 +238,8 @@
       <div class="row">
         <div class="col s12">
           <center>
-
               <button class="btn btn-small z-depth-1 green lighten-1 change-state" data-state="1">Do it</button>
-
               <button class="btn btn-small z-depth-1 red lighten-1 modal-close">Cancel</button>
-
           </center>
         </div>
       </div>
@@ -232,6 +248,11 @@
   <div id="modal-motivo-rechazo" class="modal">
     <div id="modal-content" class="modal-content margin-0">
       <center><h5 id="modal-title">Are you sure you want to deny this transaction?</h5></center>
+      <div class="row">
+        <div class="col s12">
+          <input type="text" id="observacion_modal" placeholder="Observation">
+        </div>
+      </div>
       <div class="row">
         <div class="col s12">
           <center>
