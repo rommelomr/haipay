@@ -17,13 +17,16 @@
                         </center>
                     </div>
                     <div class="col s10 offset-s1">
-                        <div class="input-field">
-                            <label for="">Email</label>
-                            <input type="text">
-                        </div>                        
-                        <center>
-                            <button class="btn indigo">Send</button>
-                        </center>
+                        <form action="{{route('send_recover_email')}}" method="post">
+                            @csrf
+                            <div class="input-field">
+                                <label for="email">Email</label>
+                                <input id="email" type="text" name="email">
+                            </div>                        
+                            <center>
+                                <button class="btn indigo">Send</button>
+                            </center>
+                        </form>
                     </div>
                 </div>
 
@@ -32,3 +35,27 @@
     </div>
 @endsection
 
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var elems_drop_down = document.querySelectorAll('.dropdown-trigger');
+        var instances_drop_down = M.Dropdown.init(elems_drop_down);
+
+        @if(session('messages'))
+            @foreach(session('messages') as $messages)
+              M.toast({html: '{{$messages}}'})
+            @endforeach
+
+        @endif
+        
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                M.toast({html: '{{ $error }}'})
+            @endforeach
+        @endif
+        let elems_tooltip = document.querySelectorAll('.tooltipped');
+        let instances = M.Tooltip.init(elems_tooltip);
+    });
+
+</script>

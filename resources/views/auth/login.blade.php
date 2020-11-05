@@ -33,20 +33,43 @@
                                 </div>
                                 <input id="submit" type="submit" hidden>
                             </form>
+
                     </div>
+
                     <div class="col s5 offset-s1">
                         
                         <label for="submit" class="col s12 btn indigo">login</label>
                     </div>
+
                     <div class="col s5">
                         <a href="{{route('register')}}" class="col s12 btn grey lighten-3 text-black">Register</a>
                     </div>
                 </div>
                 <center>
-                    Forgot <a href="#">password</a>?<br><br>
+                    Forgot <a href="{{route('password_reset')}}">password</a>?<br><br>
                 </center>
             </div>
         </div>
     </div>
 @endsection
 
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        @if(session('messages'))
+            @foreach(session('messages') as $messages)
+              M.toast({html: '{{$messages}}'})
+            @endforeach
+
+        @endif
+        
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                M.toast({html: '{{ $error }}'})
+            @endforeach
+        @endif
+
+    });
+
+</script>

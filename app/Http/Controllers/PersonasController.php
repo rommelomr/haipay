@@ -9,7 +9,6 @@ use App\Moderador;
 use App\Cartera;
 use App\ImagenVerificacion;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -107,32 +106,28 @@ class PersonasController extends Controller
     }
     public function saveProfile(Request $req){
         $this->validate($req,[
-    		'password' => 'required',
-            'old_password' => 'required',
-    	]);
+            'password' => [Rule::requiredIf(function()use($req){
 
+                return $req->old_password != null;
+
+            })],
+            'moncash'  => ['nullable','digits_between:1,20'],
+            'telefono'  => ['nullable','digits_between:1,20'],
+    	]);
+        
     	$user = Auth::user();
 
         $persona = $user->persona;
-
-        if(Hash::check('plain-text',$req->old_password)){
-
-        	$user->password = Hash::make($req->password);
-
-        	$user->push();
-
-            $message = "Password changed successfuly";
-
-        }else{
-
-            $message = "The old password is not valid";
-
-        }
+        $messages = [];
+        $user->updateMoncash($messages,$req);
+        $user->updateTelefono($messages,$req);
+        $user->updatePassword($messages,$req);
+        
+        
+       	$user->push();
     	
     	return redirect()->back()->with([
-            'messages'=>[
-                $message
-            ]
+            'messages'=>$messages
         ]);
     }
     private function verifyUser(){

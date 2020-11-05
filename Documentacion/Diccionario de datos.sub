@@ -11,8 +11,8 @@
 	telefono: Guardará el número de telefono de la persona
 	fecha_nacimiento: Guardará la fecha de nacimiento del usuario
 	token: Guardará el token con el que se permitirá cambiar la contraseña
-	verificado: Guardará si el usuario está 0 no verificado, 1 verificado
-	estado: Guardará si el usuario está 1 activo, 0 inactivo
+	verificado: Guardará si el usuario ha verificado o no su dirección de correo electrónico
+	estado: Guardará si el usuario está 1 activo, 2 lista negra
 
 2 Clientes-> Tipo de usuario
 	id_usuario: (fk)

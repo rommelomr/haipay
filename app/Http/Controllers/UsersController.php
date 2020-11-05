@@ -45,7 +45,9 @@ class UsersController extends Controller
 
         if($request->email != $user->email){
             $request->validate([
+
                 'email' =>  'required|email|unique:users,email',
+                
             ]);
             $user->email = $request->email;
         }

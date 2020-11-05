@@ -27,7 +27,7 @@
 							@endif
 							class="btn btn-small indigo tooltipped"
 							data-position="top"
-							data-tooltip="Verify payments">
+							data-tooltip="Verify remittances">
 
 							<i class="material-icons">camera_alt</i>
 
@@ -39,7 +39,7 @@
 							@endif
 							class="btn btn-small orange tooltipped"
 							data-position="top"
-							data-tooltip="Payments waiting for approval">
+							data-tooltip="remittances waiting for approval">
 							<i class="material-icons">access_time</i>
 						</a>
 						<a href="{{route('approved_remittances')}}"
@@ -48,7 +48,7 @@
 							@endif
 							class="btn btn-small green tooltipped"
 							data-position="top"
-							data-tooltip="Approved payments">
+							data-tooltip="Approved remittances">
 							<i class="material-icons">check</i>
 						</a>
 						<a href="{{route('canceled_remittances')}}"
@@ -57,7 +57,7 @@
 							@endif
 							class="btn btn-small red tooltipped"
 							data-position="top"
-							data-tooltip="Not approved payments">
+							data-tooltip="Not approved remittances">
 							<i class="material-icons">cancel</i>
 						</a>
 					</center>

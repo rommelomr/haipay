@@ -19,17 +19,27 @@ Route::post('login', 'Auth\LoginController@login');
 
 if ($options['register'] ?? true) {
 
+    //View in which people can register
     Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register'); 
+
+    //Script that store the person data into the database
     Route::post('register', 'Auth\RegisterController@registerClient');
 
 }
 if ($options['reset'] ?? true) {
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+
+    //View in which people enter an email to restore the haipay password
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password_reset');
 }
-Route::get('password/recover/{token}', 'Auth\ForgotPasswordController@showViewResetPassword')->name('verification.notice');
 
-Route::get('account_dont_verified', 'Auth\LoginController@showViewAccountDontVerified');
+//Script that send the email with the link to change the haipay password
+Route::post('password/reset', 'Auth\ForgotPasswordController@sendResetPasswordEmail')->name('send_recover_email');
 
+//View in which user access from the link sended to the email
+Route::get('password/recover/{token}', 'Auth\ForgotPasswordController@showViewRestorePassword')->name('restore_password_view');
+
+//Script that change the haipay password
+Route::post('password/recover', 'Auth\ForgotPasswordController@restorePassword')->name('restore_password');
 
 
 //Clients
@@ -127,8 +137,6 @@ Route::group(['middleware' => ['tipo:1']], function() {
 //Moderator
 Route::group(['middleware' => ['tipo:2']], function() {
     
-    //Client verify it's own account
-    Route::get('verify_accounts', 'ClientesController@verifyAccounts')->middleware('auth')->name('verify_accounts');
 
     //Moderator verify client's account
     Route::post('verify_image_moderator', 'ImagenesVerificacionController@verifyImage')->middleware('auth')->name('verify_image_moderator');
@@ -199,9 +207,25 @@ Route::group(['middleware' => ['tipo:3']], function() {
 
 });
 
-
 Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth')->name('save_profile');
 
+//Client verify it's own account with email verification link
+Route::get('verify_accounts/{code}', 'ClientesController@verifyAccount')->name('verify_accounts');
+
+
+
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
 Route::post('create_user','UsersController@create_user')->name('create_user');
 Route::get('search_user','UsersController@searchUser')->name('search_user');
 Route::get('search_user/{id}','UsersController@seeUser')->name('see_user');
@@ -218,6 +242,5 @@ Route::get('disabled_users', 'UsersController@showViewDisabledUsers');
 Route::get('watch_video', 'VideosController@showViewWatchVideo')->name('watch_video');
 
 
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('consultar_persona_por_cedula','PersonasController@consultarPorCedula')->name('consultar_persona_por_cedula');

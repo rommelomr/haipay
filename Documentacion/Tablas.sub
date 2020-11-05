@@ -10,6 +10,7 @@
 	fecha_nacimiento: date
 	telefono: varchar(20)
 	token: varchar(255)
+	verificado: TinyInt // 0: email no verificado 1: email verificado
 	estado: tinyint // 1:activo 2:listanegra
 
 2 clientes-> Tipo de usuario

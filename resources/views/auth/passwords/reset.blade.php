@@ -1,65 +1,192 @@
 @extends('layouts.app')
+@section('head')
+@endsection
+@section('main')
+    <div class="container">
+        <div class="card">
+            <div class="row">
+                <div class="col s12">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
-
-                        <input type="hidden" name="token" value="{{ $token }}">
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                    <nav class="nav-extended indigo">
+                        <div class="nav-content">
+                            <center>
+                                <span class="nav-title">Disabled Users</span>
+                            </center>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                    </nav>
+                    <br>
+                    <div class=" row">
+                        <div class="col s8 offset-s2">
+                            <form action="searchUser" method="post">
+                                @csrf
+                                <div class="row">
+                                    
+                                    <div class="input-field">
+                                        <center>
+                                            <p>
+                                                <label class="col s6">
+                                                    <input class="check-editable with-gap" type="checkbox" name="id_rol" checked value="1">
+                                                    <span>Disabled</span>
+                                                </label>
+                                                <label class="col s6">
+                                                    <input class="check-editable with-gap" type="checkbox" name="id_rol" checked value="2">
+                                                    <span>Black List</span>
+                                                </label>
+                                            </p>
+                                        </center>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                        <div class="col s10 offset-s1">
+                          <ul class="collapsible">
+                            <li>
+                              <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#123 Nombre Apellido</div>
+                              <div class="collapsible-body">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        
+                                    <th>
+                                        <center><b>Nombre Completo</b></center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Descripción</b>
+                                        </center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Opciones</b>
+                                        </center>
+                                    </th>
+                                    </tr>   
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            
+                                            <td>
+                                                <center>
+                                                    Nombre completo
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit aperiam asperiores, labore a, beatae rem hic cumque, repellat autem eaque quos magni, tenetur delectus consequuntur minima ipsum! Cum dolorum, quia!
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <button class="btn indigo">Enable again</button><br><br>
+                                                    <button class="btn red">Delete definitely</button>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                  </tbody>
+                                </table>
                             </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Reset Password') }}
-                                </button>
+                            </li>
+                            <li>
+                              <div class="collapsible-header black" style="color:white"><i class="material-icons">person</i>#123 Nombre Apellido</div>
+                              <div class="collapsible-body">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        
+                                    <th>
+                                        <center><b>Nombre Completo</b></center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Descripción</b>
+                                        </center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Opciones</b>
+                                        </center>
+                                    </th>
+                                    </tr>   
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            
+                                            <td>
+                                                <center>
+                                                    Nombre completo
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio vitae repudiandae eveniet provident, sint id iste vero corporis reprehenderit dolorum dolor dicta culpa iure sapiente, voluptates assumenda. Sint, magnam, aliquam!
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <button class="btn indigo">Enable again</button><br><br>
+                                                    <button class="btn red">Delete definitely</button>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                  </tbody>
+                                </table>
                             </div>
+                            </li>
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">person</i>#123 Nombre Apellido</div>
+                              <div class="collapsible-body">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        
+                                    <th>
+                                        <center><b>Nombre Completo</b></center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Descripción</b>
+                                        </center>
+                                    </th>
+                                    <th>
+                                        <center>
+                                            <b>Opciones</b>
+                                        </center>
+                                    </th>
+                                    </tr>   
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            
+                                            <td>
+                                                <center>
+                                                    Nombre completo
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae optio similique repellendus. Necessitatibus ad, quidem. Repudiandae reprehenderit, ipsum officiis incidunt quasi vel vitae temporibus tempore ipsa aperiam quam, voluptatum cum!
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <button class="btn indigo">Enable again</button><br><br>
+                                                    <button class="btn red">Delete definitely</button>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                            </li>
+                          </ul>
+                                
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection

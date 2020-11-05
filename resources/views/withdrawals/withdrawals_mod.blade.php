@@ -48,10 +48,10 @@
 
 										@else
 											<tr>
-												<th>Telephone</th>
+												<th>Moncash</th>
 												<td>
-													@if($retiro_actual->cliente->usuario->telefono !== null)
-														{{$retiro_actual->cliente->usuario->telefono}}
+													@if($retiro_actual->cliente->usuario->moncash !== null)
+														{{$retiro_actual->cliente->usuario->moncash}}
 													@else
 														Don't setted
 													@endif

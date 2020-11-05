@@ -22,8 +22,36 @@ use App\Moneda;
 
 class ClientesController extends Controller
 {
-
     //View in which clients can list remittances that other people have made them
+    public function verifyAccount($code){
+        
+        $user = User::where('remember_token',$code)->first();
+        if($user != null){
+
+            $user->verificado = 1;
+
+            $user->updateRememberToken();
+            $user->save();
+            
+            $message = 'Your email has been verified';
+
+        }else{
+
+            $message = 'The validation URL is not valid';
+            
+        }
+            return redirect()->route('login')->with([
+                'messages'=>[
+                    $message
+                ]
+            ]);
+        //Cambiar el estado del usuario
+
+        //Cambiar el token
+
+        //Redirigir al login
+
+    }
     public function showMyRemittancesView(){
 
         $user = \Auth::user();

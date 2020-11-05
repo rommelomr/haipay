@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -35,6 +37,80 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public static function generateRememberToken(){
+
+        $token = '';
+
+        for($i = 0; $i < 50; $i++){
+            $token .= chr(rand(65,90));
+        }
+
+        return $token.strtotime('now');
+
+    }
+
+    public function updateRememberToken(){
+
+        $this->remember_token = User::generateRememberToken();
+
+    }
+    
+    public function updateMoncash(&$message,$req){
+
+        if($req->moncash != null && $this->moncash != $req->moncash){
+
+            $this->moncash = $req->moncash;
+            $message[] = 'Moncash changed successfully';
+        }
+
+
+    }    
+    public function updateTelefono(&$message,$req){
+
+        $telefono_existe = 
+            DB::table('historial_telefonos')
+            ->where('telefono',$req->telefono)
+            ->where('id_usuario',$this->id)
+            ->exists();
+
+        if(!$telefono_existe){
+
+            DB::table('historial_telefonos')->insert([
+                'telefono' => $req->telefono,
+                'id_usuario' => $this->id
+            ]);
+
+            $this->telefono = $req->telefono;
+
+            $message[] = 'Telephone changed successfully';
+            
+        }else{
+
+        }
+
+
+    }    
+    public function updatePassword(&$message,$req){
+
+        if($req->password != null){
+            
+            if(Hash::check($req->old_password,$this->password) ){
+
+                $this->password = Hash::make($req->password);
+
+
+                $message[] = "Password changed successfuly";
+
+            }else{
+
+                $message[] = "The old password is not valid";
+
+            }
+        }
+        
+
+    } 
+    
     public function cliente(){
         return $this->hasOne('App\Cliente','id_usuario');
     }    

@@ -7,6 +7,7 @@
 	<div class="row">
 		<div class="col s10 offset-s1">
 			<div class="card-panel">
+
 				<div class="row">
 					<div class="col s12">
 						<center>
@@ -15,6 +16,7 @@
 						
 					</div>
 				</div>
+
 				<div class="row">
 
 					<div class="col s12">
@@ -26,7 +28,7 @@
 					        		class="active"
 					        	@endif
 					        	href="#test1">Info</a></li>
-					        <li class="tab col s6"><a @if(session('wallet') || $pestana == 2) class="active" @endif href="#test2">Wallet</a></li>
+					        <li class="tab col s6"><a @if(session('wallet') || $pestana == 2) class="active" @endif href="#test2">Wallets</a></li>
 
 					    </ul>
 
@@ -102,6 +104,18 @@
 												</center>
 											</div>
 										</div>
+
+										<div class="row">
+											<div class="col s3">
+												
+												<span class="left">Moncash</span>
+											</div>
+											<div class="col s9">
+												<center>
+													<input class="browser-default" name="moncash" type="text" value="{{$current_user_data->moncash}}">
+												</center>
+											</div>
+										</div>
 										
 										<div class="row">
 											<div class="col s3">
@@ -110,10 +124,11 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" type="text" value="{{$current_user_data->telefono}}" disabled>
+													<input class="browser-default" type="text" value="{{$current_user_data->telefono}}" name="telefono">
 												</center>
 											</div>
 										</div>
+										
 										<div class="row">
 											
 											<div class="input-field col s12">
@@ -237,9 +252,9 @@
 							    	<ul class="collapsible">
 								    	@forelse($carteras as $cartera)
 								    		@if($cartera->id == session('cartera'))
-								    			<li class="active">
+								    			<li class="active hoverable">
 								    		@else
-								    			<li>
+								    			<li class="hoverable">
 								    		@endif
 								    			<div class="collapsible-header">	    						
 							    					<b style="margin-right:2%">{{$cartera->haiCriptomoneda->moneda->nombre}}:</b> 

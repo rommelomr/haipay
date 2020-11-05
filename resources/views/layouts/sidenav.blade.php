@@ -29,31 +29,44 @@
               <div class="collapsible-body">
                 <ul>
                   <li><a href="{{route('edit_profile',['p'=>1])}}">Edit profile</a></li>
-                  <li><a href="{{route('edit_profile',['p'=>2])}}">Portfolio</a></li>
+                  <li><a href="{{route('edit_profile',['p'=>2])}}">Wallets</a></li>
                 </ul>
               </div>
             </li>
           </ul>
       </li>
-      <li><a href="{{route('dashboard_clients')}}">Buy/Sell/Exchange</a></li>
+      <li>
+        <ul class="collapsible collapsible-accordion">
+            <li>
+              <a class="collapsible-header">Buy/Sell/Exchange<i class="material-icons">arrow_drop_down</i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="{{route('dashboard_clients')}}">Buy/Sell/Exchange</a></li>
+                  <li><a href="{{route('verify_payments')}}">Verify payments</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+      </li>      
+      <!--li><a href="{{route('dashboard_clients')}}">Buy/Sell/Exchange</a></li-->
 
     <li>
       <ul class="collapsible collapsible-accordion">
           <li>
-            <a class="collapsible-header">Money<i class="material-icons">arrow_drop_down</i></a>
+            <a class="collapsible-header">Send money from your bank<i class="material-icons">arrow_drop_down</i></a>
             <div class="collapsible-body">
               <ul>
                 <li><a href="{{route('remittances')}}">Send</a></li>
-                <li><a href="{{route('my_remittances')}}">Remittances to me</a></li>
-                <li><a href="{{route('verify_remittances')}}">Verify</a></li>
+                <li><a href="{{route('verify_remittances')}}">Verify pending transfer</a></li>
+                <li><a href="{{route('my_remittances')}}">Received transfers</a></li>
               </ul>
             </div>
           </li>
         </ul>
     </li>
-      <li><a href="{{route('verify_payments')}}">Verify payments</a></li>
+    <li><a class="waves-effect" href="{{route('my_deposits')}}">Recent crypto deposits</a></li>
 
-      <li><a href="#">Transactions History</a></li>
+      <!--li><a href="#">Transactions History</a></li-->
 
       <li><a class="waves-effect" href="{{route('watch_video')}}">Earn money</a></li>
 
@@ -61,7 +74,6 @@
 
       <li><a class="waves-effect" href="#">Payment Settings</a></li>
 
-      <li><a class="waves-effect" href="{{route('my_deposits')}}">My deposits</a></li>
       
     @else
 

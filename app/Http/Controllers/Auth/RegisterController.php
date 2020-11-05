@@ -5,6 +5,9 @@ use App\User;
 use App\Persona;
 use App\Cliente;
 use App\Referido;
+
+use App\MailAssistant;
+
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -46,6 +49,8 @@ class RegisterController extends Controller
      */
     private function makeRegister($data,$persona){
 
+        $token = User::generateRememberToken();
+
         $user = User::create([
 
             'id_persona' => $persona->id,
@@ -53,6 +58,7 @@ class RegisterController extends Controller
             'telefono' => $data['phone'],
             'tipo' => 1,
             'estado' => 1,
+            'remember_token' => $token,
             'password' => Hash::make($data['password'])
 
         ]);
@@ -72,7 +78,15 @@ class RegisterController extends Controller
             
         }
 
-        return redirect()->route('login');
+        $mail = new MailAssistant;
+
+        $mail->sendValidationLink([
+            'name' => $persona->nombre,
+            'email' => $user->email,
+            'token' => $token
+        ]);
+
+        return redirect()->route('account_dont_verified');
 
     }
     protected function registerClient(Request $data){

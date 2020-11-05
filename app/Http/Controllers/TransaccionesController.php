@@ -144,26 +144,4 @@ class TransaccionesController extends Controller
         ]);
 
     }
-    /*
-    public function deleteTransaction(Request $request){
-
-        $user = \Auth::user();
-
-        $cliente = Cliente::where('id_usuario',$user->id)->first();
-
-        $transaccion = Transaccion::where('id',$request->id_transaction)
-        ->where('id_cliente',$cliente->id)
-        ->first();
-
-        $transaccion->estado = 3;
-        $transaccion->save();
-
-        return redirect()->back()->with([
-            'messages' => [
-                'Transaction deleted succesfuly'
-            ]
-        ]);
-
-    }
-    */
 }

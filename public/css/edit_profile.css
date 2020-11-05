@@ -5,3 +5,7 @@ body{
 .card-content{
 	padding:3%;
 }
+
+.hoverable :hover{
+	background: lightgrey;
+}

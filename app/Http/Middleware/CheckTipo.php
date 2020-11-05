@@ -24,7 +24,7 @@ class CheckTipo
 
             if(!in_array($user->tipo,$tipos)){
 
-                return redirect('/home');
+                return redirect('/dashboard_clients');
             }
         }
 

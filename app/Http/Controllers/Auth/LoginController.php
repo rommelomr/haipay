@@ -34,16 +34,25 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+
+    public function __construct(){
+
         $this->middleware('guest')->except('logout');
+        
     }
-    public function showViewAccountDontVerified()
-    {
+
+    public function showViewAccountDontVerified(){
+
         return view('auth.dont_verified');
+
     }
-public function login(Request $request)
+    public function showLoginForm()
     {
+        return view('auth.login');
+    }
+    public function login(Request $request)
+    {
+        
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -55,13 +64,24 @@ public function login(Request $request)
 
             return $this->sendLockoutResponse($request);
         }
-
         if ($this->attemptLogin($request)) {
             $user = Auth::user();
-            if($user->estado != 3 && $user->estado != 2){
+            if($user->estado == 1){
+
+
                 if($user->tipo == 1){
-                    $this->redirectTo = '/edit_profile';
+                    
+                    if($user->verificado == 1){
+                    
+                        $this->redirectTo = '/dashboard_clients';
     
+                    }else{
+
+                        Auth::logout();
+                        return redirect()->route('account_dont_verified');
+
+                    }
+
                 }else if($user->tipo == 2){
                     $this->redirectTo = '/clients';
     
@@ -69,6 +89,7 @@ public function login(Request $request)
                     $this->redirectTo = '/users';
 
                 }
+                        
     
                 return $this->sendLoginResponse($request);
             }else{
