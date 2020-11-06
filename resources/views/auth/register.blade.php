@@ -32,7 +32,7 @@
                                 
                             </div>              
                             <div class="input-field">
-                                <label for="id">ID</label>
+                                <label for="id">ID <span style="color:salmon">*</span></label>
                                 <input id="id" type="text" name="id" value="{{old('id')}}">
                             </div>              
                             <div class="input-field">

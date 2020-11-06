@@ -17,7 +17,7 @@
                         </center>
                     </div>
                     <div class="col s10 offset-s1">
-                    	We have send you an email with a link to verify your account. Please check it! After that you could log in normaly
+                    	We have sent you an email with a link to verify your account. Please check it! After that you could log in normaly
                     </div>
                 </div>
 

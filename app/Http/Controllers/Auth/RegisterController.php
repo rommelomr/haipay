@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\DB;
+
 class RegisterController extends Controller
 {
     /*
@@ -63,6 +66,15 @@ class RegisterController extends Controller
 
         ]);
 
+        if($data['phone']!=null){
+
+            DB::table('historial_telefonos')->insert([
+                'telefono' => $data['phone'],
+                'id_usuario' => $user->id,
+            ]);
+
+        }
+
         $cliente = Cliente::create([
             'id_usuario' => $user->id,
         ]);
@@ -78,13 +90,25 @@ class RegisterController extends Controller
             
         }
 
-        $mail = new MailAssistant;
+        $mail = new MailAssistant([
 
-        $mail->sendValidationLink([
-            'name' => $persona->nombre,
-            'email' => $user->email,
-            'token' => $token
+            'subject' => 'HaiPay validation link',
+
+            'destination' => $user->email,
+
+            'view' => 'emails.validation_link',
+
+            'data' => [
+
+                'name' => $persona->nombre,
+
+                'link' => route('verify_accounts',$token),
+
+            ],
+
         ]);
+
+        $mail->send();
 
         return redirect()->route('account_dont_verified');
 
@@ -93,7 +117,7 @@ class RegisterController extends Controller
 
         $this->validate($data,[
             'id' => ['required', 'max:20', 'min:0'],
-            'phone' => ['nullable', 'unique:users,telefono', 'max:20','min:0'],
+            'phone' => ['nullable', 'unique:historial_telefonos,telefono', 'max:20','min:0'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -152,47 +176,10 @@ class RegisterController extends Controller
                 ]]);
             }
         }
-
-        //Si la persona existe
-
-            //si la persona tiene cliente, se devuelve un error: ya existe una persona registrada con esta cédula
-
-            //Si la person NO tiene cliente (y está en no usuarios): Reenviar a la interfaz donde se ingresa el código de verificacion
-
-/*
-        $persona = Persona::firstOrcreate([
-            'nombre'=>$data['name'],
-            'cedula'=>$data['id'],
-        ]);
-
-        $user = User::create([
-
-            'id_persona' => $persona->id,
-            'email' => $data['email'],
-            'telefono' => $data['phone'],
-            'tipo' => 1,
-            'estado' => 1,
-            'password' => Hash::make($data['password']),
-        ]);
-
-        $cliente = Cliente::create([
-            'id_usuario' => $user->id,
-        ]);
-
-        //Si el registro es gracias a un referido:
-        if($data->referred != null){
-
-            //Se crea el referido
-            Referido::create([
-                'id_cliente' => $data->referred,
-                'id_referido' => $cliente->id
-            ]);
-            
-        }
-
-        return redirect()->route('login');
-*/
         
+    }
+    public function showDontVerifiedAccountView(){
+        return view('auth.dont_verified');
     }
     private function validateClient($data){
     }

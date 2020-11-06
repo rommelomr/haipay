@@ -57,8 +57,7 @@ class MailAssistant
 		$this->setDestination($data['email']);
 		$this->setView('emails.validation_link');
 		$this->setData([
-			'name' => $data['name'],
-			'link' => route('verify_accounts',$data['token']),
+
 
 		]);
 		$this->send();

@@ -112,7 +112,7 @@ class PersonasController extends Controller
 
             })],
             'moncash'  => ['nullable','digits_between:1,20'],
-            'telefono'  => ['nullable','digits_between:1,20'],
+            'telephone'  => ['nullable','digits_between:1,20','unique:historial_telefonos,telefono'],
     	]);
         
     	$user = Auth::user();

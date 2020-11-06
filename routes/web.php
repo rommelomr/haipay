@@ -26,6 +26,10 @@ if ($options['register'] ?? true) {
     Route::post('register', 'Auth\RegisterController@registerClient');
 
 }
+
+//View in which system notify user that must verify the email
+Route::get('account_dont_verified', 'Auth\RegisterController@showDontVerifiedAccountView')->name('account_dont_verified');
+
 if ($options['reset'] ?? true) {
 
     //View in which people enter an email to restore the haipay password
@@ -40,7 +44,6 @@ Route::get('password/recover/{token}', 'Auth\ForgotPasswordController@showViewRe
 
 //Script that change the haipay password
 Route::post('password/recover', 'Auth\ForgotPasswordController@restorePassword')->name('restore_password');
-
 
 //Clients
 Route::group(['middleware' => ['tipo:1']], function() {
@@ -170,7 +173,6 @@ Route::group(['middleware' => ['tipo:2']], function() {
 
     //Script in which moderators complete deposits
     Route::post('deliver_remittance', 'RemesasController@deliverRemittance')->name('deliver_remittance');
-
     
 });
 
@@ -211,8 +213,6 @@ Route::post('save_profile', 'PersonasController@saveProfile')->middleware('auth'
 
 //Client verify it's own account with email verification link
 Route::get('verify_accounts/{code}', 'ClientesController@verifyAccount')->name('verify_accounts');
-
-
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 

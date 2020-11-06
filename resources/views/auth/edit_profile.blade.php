@@ -124,7 +124,7 @@
 											</div>
 											<div class="col s9">
 												<center>
-													<input class="browser-default" type="text" value="{{$current_user_data->telefono}}" name="telefono">
+													<input class="browser-default" type="text" value="{{$current_user_data->telefono}}" name="telephone">
 												</center>
 											</div>
 										</div>
